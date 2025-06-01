@@ -1,10 +1,11 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "trading-strategy-tracker/app",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Professional Trading Strategy Tracker with FX Blue integration and comprehensive strategy management.",
+    "keywords": ["trading", "strategy", "tracker", "fx-blue", "laravel", "forex"],
     "license": "MIT",
+    "version": "0.1.4",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",

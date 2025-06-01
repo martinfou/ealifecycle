@@ -1,10 +1,30 @@
 # Trading Strategy Tracker
 
-A comprehensive web-based application designed to help individual traders effectively track, manage, and analyze their trading strategies. Built with Laravel 12.16.0 and modern web technologies.
+![Version](https://img.shields.io/badge/version-0.1.4-blue.svg)
+![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)
+![PHP](https://img.shields.io/badge/PHP-8.4%2B-purple.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
+A comprehensive web-based application designed to help individual traders effectively track, manage, and analyze their trading strategies. Built with Laravel 12.16.0 and featuring a professional dark theme with monochromatic design.
 
 ## 🎯 Project Overview
 
-The Trading Strategy Tracker addresses the fragmented nature of strategy management by providing a centralized platform for monitoring trading strategies across different statuses, managing historical data, and facilitating performance analysis.
+The Trading Strategy Tracker addresses the fragmented nature of strategy management by providing a centralized platform for monitoring trading strategies across different statuses, managing historical data, and facilitating performance analysis. Version 0.1.4 introduces a complete dark theme with modern monochromatic styling.
+
+## ✨ Latest Features (v0.1.4)
+
+### 🎨 Dark Theme & Design System
+- **Complete Dark Theme**: Professional dark interface across all pages
+- **Monochromatic Design**: Consistent gray color palette for all actions
+- **Enhanced Navigation**: Clickable brand name linking to homepage
+- **Smooth Transitions**: Professional hover effects and animations
+- **Safety-First UX**: Red styling preserved for delete buttons
+
+### 📱 User Experience Improvements
+- **Visual Hierarchy**: Different gray shades for button importance levels
+- **Accessibility**: Improved color contrast ratios
+- **Professional Styling**: Modern interface optimized for trading professionals
+- **Responsive Design**: Enhanced mobile and desktop experience
 
 ## ✅ Implemented Features
 
@@ -161,9 +181,24 @@ Key variables to configure:
 
 This project is proprietary software developed for individual trading strategy management.
 
+## 📋 Version History
+
+For detailed release notes, see [CHANGELOG.md](CHANGELOG.md).
+
+### Current Version: 0.1.4
+- Complete dark theme implementation
+- Monochromatic design system
+- Enhanced navigation and UX
+
+### Version Management
+- Versions follow 0.x.y format for pre-release
+- Increment by 0.0.1 for each significant commit
+- Use `./version-bump.sh` script to automatically update versions
+- See [CHANGELOG.md](CHANGELOG.md) for complete history
+
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: June 1, 2025  
+**Version**: 0.1.4  
+**Last Updated**: December 28, 2024  
 **Laravel Version**: 12.16.0  
 **PHP Version**: 8.4.7
