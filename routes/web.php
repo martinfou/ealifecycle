@@ -1,0 +1,60 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StrategyController;
+use App\Http\Controllers\TradeController;
+use App\Http\Controllers\Admin\StatusController;
+use App\Http\Controllers\Admin\TimeframeController;
+use App\Http\Controllers\Admin\GroupController;
+use App\Http\Controllers\Admin\UserController;
+
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
+// Protected routes
+Route::middleware(['auth'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Strategy management
+    Route::resource('strategies', StrategyController::class);
+    Route::post('strategies/{strategy}/change-status', [StrategyController::class, 'changeStatus'])->name('strategies.change-status');
+    Route::get('strategies/{strategy}/history', [StrategyController::class, 'history'])->name('strategies.history');
+    
+    // Trade management
+    Route::get('trades', [TradeController::class, 'index'])->name('trades.index');
+    Route::get('trades/import', [TradeController::class, 'import'])->name('trades.import');
+    Route::post('trades/import', [TradeController::class, 'processImport'])->name('trades.process-import');
+    Route::get('trades/{trade}', [TradeController::class, 'show'])->name('trades.show');
+    
+    // Admin routes (protected by middleware)
+    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+        // Status management
+        Route::resource('statuses', StatusController::class);
+        
+        // Timeframe management
+        Route::resource('timeframes', TimeframeController::class);
+        
+        // Group management
+        Route::resource('groups', GroupController::class);
+        
+        // User management
+        Route::resource('users', UserController::class);
+        Route::post('users/{user}/assign-groups', [UserController::class, 'assignGroups'])->name('users.assign-groups');
+    });
+});

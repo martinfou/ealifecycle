@@ -1,0 +1,104 @@
+# Laravel
+*.log
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+.phpactor.json
+.phpunit.result.cache
+/.fleet
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE Files
+*.swp
+*.swo
+*~
+.project
+.metadata
+.buildpath
+.settings/
+*.tmproj
+*.tmproject
+tmtags
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Development Tools
+/coverage
+/.nyc_output
+.coverage
+htmlcov/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+database/*.sqlite
+database/*.sqlite3
+
+# Logs and Runtime
+storage/logs/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/debugbar/*
+
+# Compiled assets
+/public/css
+/public/js
+/public/mix-manifest.json
+
+# Package managers
+composer.phar
+package-lock.json
+yarn.lock
+
+# Testing
+.phpunit.cache
+/coverage
+/.phpunit.cache
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.tmp
+
+# Trading-specific
+/storage/app/imports/*
+!/storage/app/imports/.gitkeep
+/storage/app/exports/*
+!/storage/app/exports/.gitkeep
