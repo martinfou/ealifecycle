@@ -26,6 +26,9 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 
+# Allow deployment templates
+!.env.production.example
+
 # System Files
 .DS_Store
 .DS_Store?
