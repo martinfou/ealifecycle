@@ -1,0 +1,162 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F172A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E293B;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+            refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="600" height="400" fill="url(#bgGradient)"/>
+  
+  <!-- Flow Lines -->
+  <g stroke="#3B82F6" stroke-width="3" fill="none" marker-end="url(#arrowhead)" opacity="0.8">
+    <path d="M 140 100 L 260 100">
+      <animate attributeName="stroke-dasharray" values="0,300;20,280;40,260" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 380 100 L 460 100">
+      <animate attributeName="stroke-dasharray" values="0,300;20,280;40,260" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 140 200 L 260 200">
+      <animate attributeName="stroke-dasharray" values="0,300;20,280;40,260" dur="1.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 380 200 L 460 200">
+      <animate attributeName="stroke-dasharray" values="0,300;20,280;40,260" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 140 300 L 260 300">
+      <animate attributeName="stroke-dasharray" values="0,300;20,280;40,260" dur="2.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 380 300 L 460 300">
+      <animate attributeName="stroke-dasharray" values="0,300;20,280;40,260" dur="1.5s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Data Sources (Left Column) -->
+  <g>
+    <!-- Market Data -->
+    <circle cx="80" cy="100" r="40" fill="url(#nodeGradient)" stroke="#1E40AF" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">
+      <text x="80" y="95">📊</text>
+      <text x="80" y="108">Market Data</text>
+    </g>
+    
+    <!-- News Feed -->
+    <circle cx="80" cy="200" r="40" fill="url(#nodeGradient)" stroke="#1E40AF" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">
+      <text x="80" y="195">📰</text>
+      <text x="80" y="208">News Feed</text>
+    </g>
+    
+    <!-- Technical Indicators -->
+    <circle cx="80" cy="300" r="40" fill="url(#nodeGradient)" stroke="#1E40AF" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">
+      <text x="80" y="295">📈</text>
+      <text x="80" y="308">Indicators</text>
+    </g>
+  </g>
+  
+  <!-- AI Processing (Center Column) -->
+  <g>
+    <!-- Algorithm Engine -->
+    <rect x="220" y="60" width="120" height="80" rx="15" fill="#10B981" stroke="#059669" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" text-anchor="middle">
+      <text x="280" y="85" font-size="12" font-weight="bold">🤖 AI Engine</text>
+      <text x="280" y="105" font-size="10">Pattern Recognition</text>
+      <text x="280" y="120" font-size="10">Signal Generation</text>
+    </g>
+    
+    <!-- Risk Management -->
+    <rect x="220" y="160" width="120" height="80" rx="15" fill="#F59E0B" stroke="#D97706" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" text-anchor="middle">
+      <text x="280" y="185" font-size="12" font-weight="bold">⚖️ Risk Mgmt</text>
+      <text x="280" y="205" font-size="10">Position Sizing</text>
+      <text x="280" y="220" font-size="10">Stop Loss</text>
+    </g>
+    
+    <!-- Decision Matrix -->
+    <rect x="220" y="260" width="120" height="80" rx="15" fill="#8B5CF6" stroke="#7C3AED" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" text-anchor="middle">
+      <text x="280" y="285" font-size="12" font-weight="bold">🎯 Decision</text>
+      <text x="280" y="305" font-size="10">Entry/Exit Logic</text>
+      <text x="280" y="320" font-size="10">Trade Validation</text>
+    </g>
+  </g>
+  
+  <!-- Trading Actions (Right Column) -->
+  <g>
+    <!-- Buy Orders -->
+    <circle cx="520" cy="100" r="40" fill="#10B981" stroke="#059669" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">
+      <text x="520" y="95">📈</text>
+      <text x="520" y="108">BUY</text>
+    </g>
+    
+    <!-- Hold Position -->
+    <circle cx="520" cy="200" r="40" fill="#F59E0B" stroke="#D97706" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">
+      <text x="520" y="195">⏸️</text>
+      <text x="520" y="208">HOLD</text>
+    </g>
+    
+    <!-- Sell Orders -->
+    <circle cx="520" cy="300" r="40" fill="#EF4444" stroke="#DC2626" stroke-width="2" filter="url(#glow)"/>
+    <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">
+      <text x="520" y="295">📉</text>
+      <text x="520" y="308">SELL</text>
+    </g>
+  </g>
+  
+  <!-- Performance Metrics (Bottom) -->
+  <rect x="150" y="360" width="300" height="30" rx="15" fill="#1F2937" stroke="#374151" stroke-width="1"/>
+  <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10">
+    <text x="160" y="375">Performance:</text>
+    <text x="230" y="375" fill="#10B981">+2.4% Daily</text>
+    <text x="300" y="375">Trades:</text>
+    <text x="340" y="375" fill="#3B82F6">127</text>
+    <text x="370" y="375">Win Rate:</text>
+    <text x="420" y="375" fill="#10B981">73%</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    Algorithmic Trading Automation Flow
+  </text>
+  
+  <!-- Data Flow Indicators -->
+  <g fill="#3B82F6" opacity="0.6">
+    <circle cx="200" cy="100" r="3">
+      <animate attributeName="cx" values="200;240;200" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="200" cy="200" r="3">
+      <animate attributeName="cx" values="200;240;200" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="200" cy="300" r="3">
+      <animate attributeName="cx" values="200;240;200" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    
+    <circle cx="400" cy="100" r="3">
+      <animate attributeName="cx" values="400;440;400" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="200" r="3">
+      <animate attributeName="cx" values="400;440;400" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="400" cy="300" r="3">
+      <animate attributeName="cx" values="400;440;400" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg> 

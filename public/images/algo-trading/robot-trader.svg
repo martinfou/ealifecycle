@@ -1,0 +1,137 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="robotGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#60A5FA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563EB;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="screenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1F2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F172A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E293B;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bgGradient)"/>
+  
+  <!-- Robot Body -->
+  <g transform="translate(150, 80)">
+    <!-- Main Body -->
+    <rect x="0" y="40" width="100" height="120" rx="10" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    
+    <!-- Head -->
+    <rect x="20" y="0" width="60" height="50" rx="25" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    
+    <!-- Eyes -->
+    <circle cx="35" cy="20" r="6" fill="#10B981" filter="url(#glow)"/>
+    <circle cx="65" cy="20" r="6" fill="#10B981" filter="url(#glow)"/>
+    
+    <!-- Mouth/Speaker -->
+    <rect x="40" y="30" width="20" height="8" rx="4" fill="#374151"/>
+    <rect x="42" y="32" width="4" height="4" fill="#6B7280"/>
+    <rect x="48" y="32" width="4" height="4" fill="#6B7280"/>
+    <rect x="54" y="32" width="4" height="4" fill="#6B7280"/>
+    
+    <!-- Arms -->
+    <rect x="-15" y="50" width="20" height="60" rx="10" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    <rect x="95" y="50" width="20" height="60" rx="10" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    
+    <!-- Hands -->
+    <circle cx="-5" cy="120" r="12" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    <circle cx="105" cy="120" r="12" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    
+    <!-- Chest Panel -->
+    <rect x="20" y="60" width="60" height="40" rx="5" fill="url(#screenGradient)" stroke="#374151" stroke-width="1"/>
+    
+    <!-- Status Indicators -->
+    <circle cx="30" cy="70" r="3" fill="#10B981" filter="url(#glow)"/>
+    <circle cx="40" cy="70" r="3" fill="#F59E0B" filter="url(#glow)"/>
+    <circle cx="50" cy="70" r="3" fill="#EF4444" filter="url(#glow)"/>
+    
+    <!-- Mini Chart on Chest -->
+    <g transform="translate(25, 75)">
+      <polyline points="0,15 10,12 20,8 30,5 40,3 50,0" 
+                stroke="#3B82F6" stroke-width="2" fill="none"/>
+      <polyline points="0,20 10,18 20,15 30,12 40,10 50,8" 
+                stroke="#10B981" stroke-width="1" fill="none"/>
+    </g>
+    
+    <!-- Legs -->
+    <rect x="25" y="160" width="20" height="40" rx="10" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    <rect x="55" y="160" width="20" height="40" rx="10" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    
+    <!-- Feet -->
+    <ellipse cx="35" cy="210" rx="15" ry="8" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+    <ellipse cx="65" cy="210" rx="15" ry="8" fill="url(#robotGradient)" stroke="#1E40AF" stroke-width="2"/>
+  </g>
+  
+  <!-- Trading Screens -->
+  <g transform="translate(280, 60)">
+    <!-- Screen 1 -->
+    <rect x="0" y="0" width="80" height="60" rx="5" fill="url(#screenGradient)" stroke="#374151" stroke-width="2"/>
+    <rect x="5" y="5" width="70" height="50" fill="#000000"/>
+    
+    <!-- Mini Chart -->
+    <g transform="translate(8, 10)">
+      <polyline points="0,30 15,25 30,15 45,10 60,5" 
+                stroke="#10B981" stroke-width="2" fill="none"/>
+      <rect x="10" y="35" width="3" height="8" fill="#10B981"/>
+      <rect x="25" y="30" width="3" height="13" fill="#EF4444"/>
+      <rect x="40" y="25" width="3" height="18" fill="#10B981"/>
+    </g>
+    
+    <!-- Screen 2 -->
+    <rect x="0" y="80" width="80" height="60" rx="5" fill="url(#screenGradient)" stroke="#374151" stroke-width="2"/>
+    <rect x="5" y="85" width="70" height="50" fill="#000000"/>
+    
+    <!-- Data Lines -->
+    <g transform="translate(8, 90)" stroke="#3B82F6" stroke-width="1">
+      <line x1="0" y1="5" x2="64" y2="5"/>
+      <line x1="0" y1="15" x2="64" y2="15"/>
+      <line x1="0" y1="25" x2="64" y2="25"/>
+      <line x1="0" y1="35" x2="64" y2="35"/>
+    </g>
+    
+    <!-- Status Text -->
+    <g fill="#10B981" font-family="Arial, sans-serif" font-size="8">
+      <text x="8" y="100">ACTIVE</text>
+      <text x="8" y="110">+2.4%</text>
+      <text x="8" y="120">EUR/USD</text>
+    </g>
+  </g>
+  
+  <!-- Data Flow Lines -->
+  <g stroke="#3B82F6" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M 250 100 Q 265 100 280 110" stroke-dasharray="5,5">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 250 130 Q 265 140 280 150" stroke-dasharray="5,5">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="1.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Binary Code Background -->
+  <g fill="#1E40AF" opacity="0.1" font-family="monospace" font-size="12">
+    <text x="20" y="30">01010101</text>
+    <text x="20" y="50">11001100</text>
+    <text x="20" y="70">10101010</text>
+    <text x="320" y="30">01110011</text>
+    <text x="320" y="250">10011001</text>
+    <text x="320" y="270">11110000</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="200" y="280" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    AI-Powered Trading Robot
+  </text>
+</svg> 

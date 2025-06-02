@@ -1,0 +1,91 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:0.3" />
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#111827;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1F2937;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bgGradient)" rx="12"/>
+  
+  <!-- Grid Lines -->
+  <g stroke="#374151" stroke-width="0.5" opacity="0.5">
+    <line x1="50" y1="50" x2="350" y2="50"/>
+    <line x1="50" y1="100" x2="350" y2="100"/>
+    <line x1="50" y1="150" x2="350" y2="150"/>
+    <line x1="50" y1="200" x2="350" y2="200"/>
+    <line x1="50" y1="250" x2="350" y2="250"/>
+    
+    <line x1="50" y1="50" x2="50" y2="250"/>
+    <line x1="120" y1="50" x2="120" y2="250"/>
+    <line x1="190" y1="50" x2="190" y2="250"/>
+    <line x1="260" y1="50" x2="260" y2="250"/>
+    <line x1="330" y1="50" x2="330" y2="250"/>
+  </g>
+  
+  <!-- Candlestick Chart -->
+  <g>
+    <!-- Bullish candles -->
+    <rect x="70" y="180" width="8" height="30" fill="#10B981"/>
+    <line x1="74" y1="170" x2="74" y2="210" stroke="#10B981" stroke-width="1"/>
+    
+    <rect x="140" y="160" width="8" height="40" fill="#10B981"/>
+    <line x1="144" y1="150" x2="144" y2="200" stroke="#10B981" stroke-width="1"/>
+    
+    <rect x="280" y="140" width="8" height="35" fill="#10B981"/>
+    <line x1="284" y1="130" x2="284" y2="175" stroke="#10B981" stroke-width="1"/>
+    
+    <!-- Bearish candles -->
+    <rect x="105" y="190" width="8" height="25" fill="#EF4444"/>
+    <line x1="109" y1="185" x2="109" y2="215" stroke="#EF4444" stroke-width="1"/>
+    
+    <rect x="210" y="170" width="8" height="30" fill="#EF4444"/>
+    <line x1="214" y1="165" x2="214" y2="200" stroke="#EF4444" stroke-width="1"/>
+    
+    <rect x="315" y="155" width="8" height="20" fill="#EF4444"/>
+    <line x1="319" y1="150" x2="319" y2="175" stroke="#EF4444" stroke-width="1"/>
+  </g>
+  
+  <!-- Trend Line -->
+  <path d="M 50 220 Q 150 200 250 140 Q 300 120 350 110" 
+        stroke="#3B82F6" stroke-width="2" fill="none"/>
+  
+  <!-- Moving Average -->
+  <path d="M 50 210 L 120 195 L 190 180 L 260 165 L 330 150" 
+        stroke="#FBBF24" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+  
+  <!-- Price Area Chart -->
+  <path d="M 50 220 Q 120 210 190 180 Q 260 160 330 150 L 330 250 L 50 250 Z" 
+        fill="url(#chartGradient)" opacity="0.4"/>
+  
+  <!-- Chart Title -->
+  <text x="200" y="35" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Algorithmic Trading Analysis
+  </text>
+  
+  <!-- Legend -->
+  <g transform="translate(20, 20)">
+    <rect x="0" y="0" width="8" height="8" fill="#10B981"/>
+    <text x="12" y="8" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="10">Bullish</text>
+    
+    <rect x="50" y="0" width="8" height="8" fill="#EF4444"/>
+    <text x="62" y="8" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="10">Bearish</text>
+    
+    <line x1="100" y1="4" x2="115" y2="4" stroke="#3B82F6" stroke-width="2"/>
+    <text x="120" y="8" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="10">Trend</text>
+  </g>
+  
+  <!-- Price Labels -->
+  <g fill="#9CA3AF" font-family="Arial, sans-serif" font-size="10">
+    <text x="45" y="55" text-anchor="end">1.20</text>
+    <text x="45" y="105" text-anchor="end">1.15</text>
+    <text x="45" y="155" text-anchor="end">1.10</text>
+    <text x="45" y="205" text-anchor="end">1.05</text>
+    <text x="45" y="255" text-anchor="end">1.00</text>
+  </g>
+</svg> 

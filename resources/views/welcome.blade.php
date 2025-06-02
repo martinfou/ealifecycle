@@ -48,29 +48,40 @@
         <section class="relative bg-gray-900 py-20 lg:py-32">
             <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
             <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-                        Expert Advisor 
-                        <span class="text-blue-400">
-                            Lifecycle Management
-                        </span>
-                    </h1>
-                    <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-                        The definitive platform for managing Expert Advisors professionally. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading teams and trading robot operations.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        @guest
-                            <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
-                                Start Managing EAs Today
-                            </a>
-                            <a href="#features" class="border-2 border-gray-600 hover:border-gray-500 text-gray-300 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all">
-                                Explore EA Features
-                            </a>
-                        @else
-                            <a href="{{ route('dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
-                                View EA Dashboard
-                            </a>
-                        @endguest
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Text Content -->
+                    <div>
+                        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                            Expert Advisor 
+                            <span class="text-blue-400">
+                                Lifecycle Management
+                            </span>
+                        </h1>
+                        <p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+                            The definitive platform for managing Expert Advisors professionally. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading teams and trading robot operations.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            @guest
+                                <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
+                                    Start Managing EAs Today
+                                </a>
+                                <a href="#features" class="border-2 border-gray-600 hover:border-gray-500 text-gray-300 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all">
+                                    Explore EA Features
+                                </a>
+                            @else
+                                <a href="{{ route('dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
+                                    View EA Dashboard
+                                </a>
+                            @endguest
+                        </div>
+                    </div>
+                    
+                    <!-- Hero Image -->
+                    <div class="flex justify-center lg:justify-end">
+                        <div class="relative">
+                            <img src="{{ asset('images/algo-trading/automation-flow.svg') }}" alt="Algorithmic Trading Automation Flow" class="w-full max-w-lg h-auto"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent rounded-lg"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,6 +177,33 @@
                     <p class="text-xl text-gray-400">
                         From initial development to production deployment and retirement
                     </p>
+                </div>
+
+                <!-- Trading Visualization -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                    <div>
+                        <img src="{{ asset('images/algo-trading/trading-charts.svg') }}" alt="Algorithmic Trading Charts" class="w-full h-auto rounded-lg"/>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Real-Time Market Analysis</h3>
+                        <p class="text-gray-400 mb-6">
+                            Advanced algorithmic trading visualization with candlestick charts, trend analysis, and moving averages. Our platform provides comprehensive market data analysis to help your Expert Advisors make informed trading decisions.
+                        </p>
+                        <ul class="space-y-3 text-gray-400">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
+                                Live candlestick chart analysis
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-green-400 rounded-full mr-3"></span>
+                                Trend line identification
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>
+                                Moving average calculations
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -302,26 +340,9 @@
                         </div>
                     </div>
 
-                    <!-- Screenshot/Demo -->
-                    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
-                        <div class="bg-gray-900 rounded-lg p-6 mb-6">
-                            <h4 class="text-white font-semibold mb-4">Live Dashboard Preview</h4>
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center p-3 bg-gray-800 rounded">
-                                    <span class="text-gray-300">Scalping Strategy Pro</span>
-                                    <span class="bg-green-600 text-white px-2 py-1 rounded text-xs">Production</span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-gray-800 rounded">
-                                    <span class="text-gray-300">Trend Following EA</span>
-                                    <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs">Demo</span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-gray-800 rounded">
-                                    <span class="text-gray-300">News Trading Bot</span>
-                                    <span class="bg-yellow-600 text-white px-2 py-1 rounded text-xs">On Hold</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 text-sm">Real-time strategy monitoring with status indicators and performance metrics</p>
+                    <!-- AI Robot Trader Image -->
+                    <div class="flex justify-center">
+                        <img src="{{ asset('images/algo-trading/robot-trader.svg') }}" alt="AI-Powered Trading Robot" class="w-full max-w-md h-auto"/>
                     </div>
                 </div>
             </div>
