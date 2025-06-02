@@ -45,14 +45,25 @@ jobs:
           --exclude='.github' \
           --exclude='node_modules' \
           --exclude='.env.example' \
+          --exclude='.env.local' \
+          --exclude='.env.*.local' \
           --exclude='tests' \
           --exclude='storage/logs/*' \
           --exclude='storage/framework/cache/*' \
           --exclude='storage/framework/sessions/*' \
           --exclude='storage/framework/views/*' \
+          --exclude='storage/app/public/*' \
           --exclude='README.md' \
           --exclude='CHANGELOG.md' \
           --exclude='TODO.md' \
+          --exclude='phpunit.xml' \
+          --exclude='.phpunit.cache' \
+          --exclude='*.log' \
+          --exclude='*.tmp' \
+          --exclude='.DS_Store' \
+          --exclude='Thumbs.db' \
+          --exclude='deploy.tar.gz' \
+          --warning=no-file-changed \
           .
           
     - name: Deploy to Dreamhost via SSH

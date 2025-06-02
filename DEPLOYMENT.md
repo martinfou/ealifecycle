@@ -6,6 +6,87 @@ This guide explains how to set up automatic deployment to Dreamhost using GitHub
 
 The GitHub Actions workflow (`.github/workflows/deploy.yml`) will automatically deploy your EALifeCycle to Dreamhost when you push to the `master` or `main` branch.
 
+## 📁 Subdirectory Deployment Example
+
+### For https://4xhacker.com/ealifecycle Setup
+
+If you want your EALifeCycle application accessible at `https://4xhacker.com/ealifecycle/`, here's the exact folder structure and commands:
+
+#### Server Directory Structure
+```
+/home/dh_4xhacker/
+├── ealifecycle/                    # Laravel application (SECURE - outside web root)
+│   ├── app/
+│   ├── config/
+│   ├── database/
+│   ├── resources/
+│   ├── storage/
+│   ├── vendor/
+│   ├── public/                     # Laravel's public directory
+│   │   ├── index.php
+│   │   ├── build/
+│   │   └── assets/
+│   ├── .env
+│   └── .env.production
+└── 4xhacker.com/                   # Your web root (document root)
+    ├── index.html                  # Your main site files
+    ├── other-files/
+    └── ealifecycle/                # SYMLINK → ../../ealifecycle/public
+```
+
+#### Setup Commands
+```bash
+# 1. SSH into your Dreamhost server
+ssh dh_4xhacker@4xhacker.com
+
+# 2. Navigate to your web root
+cd /home/dh_4xhacker/4xhacker.com
+
+# 3. Remove any existing ealifecycle directory
+rm -rf ealifecycle
+
+# 4. Create symlink to Laravel's public folder
+ln -s ../ealifecycle/public ealifecycle
+
+# 5. Verify the symlink is correct
+ls -la ealifecycle
+# Should show: ealifecycle -> ../ealifecycle/public
+
+# 6. Test symlink by checking if Laravel's index.php exists
+ls -la ealifecycle/index.php
+# Should show the Laravel index.php file
+```
+
+#### Environment Configuration
+Create `/home/dh_4xhacker/ealifecycle/.env.production`:
+```env
+APP_NAME="EALifeCycle"
+APP_ENV=production
+APP_URL=https://4xhacker.com/ealifecycle
+APP_DEBUG=false
+
+# Database configuration
+DB_CONNECTION=mysql
+DB_HOST=mysql.4xhacker.com
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+
+# Email configuration
+MAIL_FROM_ADDRESS=noreply@4xhacker.com
+MAIL_FROM_NAME="EALifeCycle"
+```
+
+#### GitHub Repository Secrets
+For this specific setup, configure these secrets in your "prod" environment:
+
+| Secret Name | Value |
+|-------------|-------|
+| `DREAMHOST_HOST` | `4xhacker.com` |
+| `DREAMHOST_USERNAME` | `dh_4xhacker` |
+| `DREAMHOST_PATH` | `/home/dh_4xhacker` |
+| `DREAMHOST_SSH_KEY` | Your complete private SSH key |
+
 ## 📋 Prerequisites
 
 ### 1. Dreamhost Setup
@@ -140,97 +221,28 @@ php artisan key:generate
 ## 🚀 Deployment Process
 
 ### Automatic Deployment
-1. Push changes to `master` or `main` branch
-2. GitHub Actions automatically triggers deployment
-3. Application is built, tested, and deployed
-4. Zero-downtime deployment with automatic rollback on failure
-
-### Manual Deployment
-You can also trigger deployment manually:
-1. Go to GitHub repository → Actions
-2. Select "Deploy to Dreamhost" workflow
-3. Click "Run workflow"
-
-## 📊 Deployment Steps
-
-The workflow performs these steps:
-1. ✅ **Build**: Install dependencies and compile assets
-2. ✅ **Package**: Create deployment archive
-3. ✅ **Backup**: Save current deployment
-4. ✅ **Upload**: Transfer new version to server
-5. ✅ **Configure**: Set up environment and permissions
-6. ✅ **Optimize**: Cache routes, views, and config
-7. ✅ **Migrate**: Run database migrations
-8. ✅ **Activate**: Switch to new deployment
-9. 🔄 **Rollback**: Automatic rollback on failure
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Permission Errors:**
-```bash
-# Fix file permissions on server
-chmod -R 755 storage bootstrap/cache
-chmod -R 777 storage/logs storage/framework
-```
-
-**Composer Not Found:**
-```bash
-# Install Composer on Dreamhost
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar /home/username/bin/composer
-```
-
-**Database Connection Issues:**
-- Verify MySQL credentials in .env.production
-- Check Dreamhost MySQL hostname (usually mysql.yourdomain.com)
-- Ensure database user has proper permissions
+1. Push changes to `master` or `
 
 **SSH Connection Issues:**
 - Verify SSH key is properly added to GitHub secrets
 - Test SSH connection: `ssh username@yourdomain.com`
 - Check Dreamhost SSH settings
 
-### Logs and Debugging
-
-**GitHub Actions Logs:**
-- Go to repository → Actions → Select failed workflow
-- Check each step for error details
-
-**Server Logs:**
+**Symlink Issues (for subdirectory deployment):**
 ```bash
-# Laravel logs
-tail -f /home/username/yourdomain.com/current/storage/logs/laravel.log
+# Check if symlink exists and points to correct location
+ls -la /home/dh_4xhacker/4xhacker.com/ealifecycle
 
-# Apache/Nginx logs (check Dreamhost panel)
+# Remove broken symlink and recreate
+rm /home/dh_4xhacker/4xhacker.com/ealifecycle
+ln -s ../ealifecycle/public /home/dh_4xhacker/4xhacker.com/ealifecycle
+
+# Test if Laravel app is accessible
+curl -I https://4xhacker.com/ealifecycle/
+# Should return 200 OK response
+
+# Check Laravel public folder exists
+ls -la /home/dh_4xhacker/ealifecycle/public/index.php
 ```
 
-## 🔐 Security Considerations
-
-- ✅ SSH keys are encrypted in GitHub secrets
-- ✅ Environment variables are not committed to repository
-- ✅ Production environment has debug disabled
-- ✅ Database credentials are secured
-- ✅ Automatic rollback prevents broken deployments
-
-## 📈 Monitoring
-
-After deployment, verify:
-- [ ] Website loads correctly
-- [ ] Database migrations completed
-- [ ] User authentication works
-- [ ] Expert Advisor management functions
-- [ ] FX Blue import works
-- [ ] Admin interfaces accessible
-
-## 🎉 Success!
-
-Once configured, your deployment workflow will:
-- 🚀 Deploy automatically on every push to master
-- 🔄 Provide zero-downtime deployments
-- 📊 Show deployment status in GitHub Actions
-- 🛡️ Rollback automatically on failures
-- 📧 Notify you of deployment results
-
-Your EALifeCycle is now production-ready with professional CI/CD! 🎯 
+### Logs and Debugging
