@@ -1,0 +1,223 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Portfolio;
+use App\Models\Strategy;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class PortfolioController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $portfolios = Portfolio::forUser(Auth::id())
+                               ->with(['strategies' => function ($query) {
+                                   $query->whereIn('portfolio_strategies.status', ['active', 'paused']);
+                               }])
+                               ->orderByDesc('created_at')
+                               ->paginate(10);
+
+        return view('portfolios.index', compact('portfolios'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('portfolios.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'initial_capital' => 'required|numeric|min:0',
+            'status' => 'required|in:active,paused,archived',
+        ]);
+
+        $validated['user_id'] = Auth::id();
+
+        $portfolio = Portfolio::create($validated);
+
+        return redirect()->route('portfolios.show', $portfolio)
+                        ->with('success', 'Portfolio created successfully!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Portfolio $portfolio)
+    {
+        // Check if user can view this portfolio
+        if (!$portfolio->canUserView(Auth::user())) {
+            abort(403, 'You do not have permission to view this portfolio.');
+        }
+
+        $portfolio->load([
+            'strategies' => function ($query) {
+                $query->whereIn('portfolio_strategies.status', ['active', 'paused'])
+                      ->with(['status', 'timeframes']);
+            }
+        ]);
+
+        return view('portfolios.show', compact('portfolio'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Portfolio $portfolio)
+    {
+        // Check if user can edit this portfolio
+        if (!$portfolio->canUserEdit(Auth::user())) {
+            abort(403, 'You do not have permission to edit this portfolio.');
+        }
+
+        return view('portfolios.edit', compact('portfolio'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Portfolio $portfolio)
+    {
+        // Check if user can edit this portfolio
+        if (!$portfolio->canUserEdit(Auth::user())) {
+            abort(403, 'You do not have permission to edit this portfolio.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'initial_capital' => 'required|numeric|min:0',
+            'status' => 'required|in:active,paused,archived',
+        ]);
+
+        $portfolio->update($validated);
+
+        return redirect()->route('portfolios.show', $portfolio)
+                        ->with('success', 'Portfolio updated successfully!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Portfolio $portfolio)
+    {
+        // Check if user can edit this portfolio
+        if (!$portfolio->canUserEdit(Auth::user())) {
+            abort(403, 'You do not have permission to delete this portfolio.');
+        }
+
+        $portfolio->delete();
+
+        return redirect()->route('portfolios.index')
+                        ->with('success', 'Portfolio deleted successfully!');
+    }
+
+    /**
+     * Show the form for adding strategies to the portfolio.
+     */
+    public function addStrategies(Portfolio $portfolio)
+    {
+        // Check if user can edit this portfolio
+        if (!$portfolio->canUserEdit(Auth::user())) {
+            abort(403, 'You do not have permission to edit this portfolio.');
+        }
+
+        // Get strategies user can access that are not already in this portfolio
+        $availableStrategies = Auth::user()->strategies()
+                                          ->whereNotIn('id', $portfolio->strategies()->pluck('strategies.id'))
+                                          ->with(['status', 'timeframes'])
+                                          ->orderBy('name')
+                                          ->get();
+
+        return view('portfolios.add-strategies', compact('portfolio', 'availableStrategies'));
+    }
+
+    /**
+     * Add strategies to the portfolio.
+     */
+    public function storeStrategies(Request $request, Portfolio $portfolio)
+    {
+        // Check if user can edit this portfolio
+        if (!$portfolio->canUserEdit(Auth::user())) {
+            abort(403, 'You do not have permission to edit this portfolio.');
+        }
+
+        $validated = $request->validate([
+            'strategies' => 'required|array|min:1',
+            'strategies.*.strategy_id' => 'required|exists:strategies,id',
+            'strategies.*.allocation_amount' => 'nullable|numeric|min:0',
+            'strategies.*.allocation_percent' => 'nullable|numeric|min:0|max:100',
+            'strategies.*.notes' => 'nullable|string',
+        ]);
+
+        DB::transaction(function () use ($validated, $portfolio) {
+            foreach ($validated['strategies'] as $strategyData) {
+                $portfolio->strategies()->attach($strategyData['strategy_id'], [
+                    'allocation_amount' => $strategyData['allocation_amount'] ?? 0,
+                    'allocation_percent' => $strategyData['allocation_percent'] ?? 0,
+                    'status' => 'active',
+                    'date_added' => now()->toDateString(),
+                    'notes' => $strategyData['notes'],
+                ]);
+            }
+        });
+
+        return redirect()->route('portfolios.show', $portfolio)
+                        ->with('success', 'Strategies added to portfolio successfully!');
+    }
+
+    /**
+     * Update a strategy's allocation in the portfolio.
+     */
+    public function updateStrategyAllocation(Request $request, Portfolio $portfolio, Strategy $strategy)
+    {
+        // Check if user can edit this portfolio
+        if (!$portfolio->canUserEdit(Auth::user())) {
+            abort(403, 'You do not have permission to edit this portfolio.');
+        }
+
+        $validated = $request->validate([
+            'allocation_amount' => 'nullable|numeric|min:0',
+            'allocation_percent' => 'nullable|numeric|min:0|max:100',
+            'status' => 'required|in:active,paused',
+            'notes' => 'nullable|string',
+        ]);
+
+        $portfolio->strategies()->updateExistingPivot($strategy->id, $validated);
+
+        return redirect()->route('portfolios.show', $portfolio)
+                        ->with('success', 'Strategy allocation updated successfully!');
+    }
+
+    /**
+     * Remove a strategy from the portfolio.
+     */
+    public function removeStrategy(Portfolio $portfolio, Strategy $strategy)
+    {
+        // Check if user can edit this portfolio
+        if (!$portfolio->canUserEdit(Auth::user())) {
+            abort(403, 'You do not have permission to edit this portfolio.');
+        }
+
+        $portfolio->strategies()->updateExistingPivot($strategy->id, [
+            'status' => 'removed',
+            'date_removed' => now()->toDateString(),
+        ]);
+
+        return redirect()->route('portfolios.show', $portfolio)
+                        ->with('success', 'Strategy removed from portfolio successfully!');
+    }
+}

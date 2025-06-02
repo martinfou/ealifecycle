@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StrategyController;
+use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\TradeController;
 use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\TimeframeController;
@@ -35,6 +36,13 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('strategies', StrategyController::class);
     Route::post('strategies/{strategy}/change-status', [StrategyController::class, 'changeStatus'])->name('strategies.change-status');
     Route::get('strategies/{strategy}/history', [StrategyController::class, 'history'])->name('strategies.history');
+    
+    // Portfolio management
+    Route::resource('portfolios', PortfolioController::class);
+    Route::get('portfolios/{portfolio}/add-strategies', [PortfolioController::class, 'addStrategies'])->name('portfolios.add-strategies');
+    Route::post('portfolios/{portfolio}/add-strategies', [PortfolioController::class, 'storeStrategies'])->name('portfolios.store-strategies');
+    Route::patch('portfolios/{portfolio}/strategies/{strategy}', [PortfolioController::class, 'updateStrategyAllocation'])->name('portfolios.update-strategy-allocation');
+    Route::delete('portfolios/{portfolio}/strategies/{strategy}', [PortfolioController::class, 'removeStrategy'])->name('portfolios.remove-strategy');
     
     // Trade management
     Route::get('trades', [TradeController::class, 'index'])->name('trades.index');

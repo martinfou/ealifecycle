@@ -119,6 +119,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the portfolios for the user.
+     */
+    public function portfolios(): HasMany
+    {
+        return $this->hasMany(Portfolio::class);
+    }
+
+    /**
      * Get the trades imported by the user.
      */
     public function importedTrades(): HasMany
