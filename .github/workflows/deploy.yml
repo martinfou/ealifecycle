@@ -47,6 +47,8 @@ jobs:
           --exclude='.git' \
           --exclude='.github' \
           --exclude='node_modules' \
+          --exclude='.env' \
+          --exclude='.env.production' \
           --exclude='.env.example' \
           --exclude='.env.local' \
           --exclude='.env.*.local' \
@@ -80,6 +82,17 @@ jobs:
         script: |
           # Navigate to your domain directory
           cd ${{ secrets.DREAMHOST_PATH }}
+          
+          # Backup environment files before deployment
+          if [ -f "ealifecycle/.env.production" ]; then
+            echo "Backing up .env.production"
+            cp ealifecycle/.env.production /tmp/env-production-backup
+          fi
+          
+          if [ -f "ealifecycle/.env" ]; then
+            echo "Backing up .env"
+            cp ealifecycle/.env /tmp/env-backup
+          fi
           
           # Create backup of current deployment
           if [ -d "ealifecycle" ]; then
@@ -132,8 +145,26 @@ jobs:
           tar -xzf deploy.tar.gz
           rm deploy.tar.gz
           
-          # Set up environment file
-          cp .env.production .env
+          # Restore environment files from backup
+          if [ -f "/tmp/env-production-backup" ]; then
+            echo "Restoring .env.production from backup"
+            cp /tmp/env-production-backup .env.production
+            rm /tmp/env-production-backup
+          fi
+          
+          if [ -f "/tmp/env-backup" ]; then
+            echo "Restoring .env from backup"
+            cp /tmp/env-backup .env
+            rm /tmp/env-backup
+          else
+            # Only create .env from .env.production if no existing .env was backed up
+            if [ -f ".env.production" ]; then
+              echo "Creating .env from .env.production"
+              cp .env.production .env
+            else
+              echo "WARNING: No .env.production file found for environment setup"
+            fi
+          fi
           
           # Ensure .htaccess file exists in public directory for Laravel routing
           if [ ! -f "public/.htaccess" ]; then
@@ -195,6 +226,21 @@ jobs:
         port: 22
         script: |
           cd ${{ secrets.DREAMHOST_PATH }}
+          
+          # Restore environment files from backup if they exist
+          if [ -f "/tmp/env-production-backup" ]; then
+            echo "Restoring .env.production from backup during rollback"
+            cp /tmp/env-production-backup ealifecycle/.env.production 2>/dev/null || true
+            rm /tmp/env-production-backup
+          fi
+          
+          if [ -f "/tmp/env-backup" ]; then
+            echo "Restoring .env from backup during rollback"
+            cp /tmp/env-backup ealifecycle/.env 2>/dev/null || true
+            rm /tmp/env-backup
+          fi
+          
+          # Perform rollback to previous version
           if [ -d "ealifecycle-backup" ]; then
             rm -rf ealifecycle
             mv ealifecycle-backup ealifecycle
