@@ -20,6 +20,10 @@
                         {{ __('Expert Advisors') }}
                     </x-nav-link>
                     
+                    <x-nav-link :href="route('portfolios.index')" :active="request()->routeIs('portfolios.*')">
+                        {{ __('Portfolios') }}
+                    </x-nav-link>
+                    
                     <x-nav-link :href="route('trades.index')" :active="request()->routeIs('trades.*')">
                         {{ __('Trades') }}
                     </x-nav-link>
@@ -114,6 +118,10 @@
             
             <x-responsive-nav-link :href="route('strategies.index')" :active="request()->routeIs('strategies.*')">
                 {{ __('Expert Advisors') }}
+            </x-responsive-nav-link>
+            
+            <x-responsive-nav-link :href="route('portfolios.index')" :active="request()->routeIs('portfolios.*')">
+                {{ __('Portfolios') }}
             </x-responsive-nav-link>
             
             <x-responsive-nav-link :href="route('trades.index')" :active="request()->routeIs('trades.*')">

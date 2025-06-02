@@ -63,7 +63,16 @@
                                             {{ $strategy->name }}
                                         </a>
                                     </p>
-                                    <p class="text-xs text-gray-400">{{ $strategy->timeframe->name }} • {{ $strategy->symbols_traded }}</p>
+                                    <p class="text-xs text-gray-400">
+                                        @if($strategy->timeframes->count() > 0)
+                                            {{ $strategy->timeframes->pluck('name')->join(', ') }}
+                                        @else
+                                            No timeframes
+                                        @endif
+                                        @if($strategy->symbols_traded)
+                                            • {{ $strategy->symbols_traded }}
+                                        @endif
+                                    </p>
                                 </div>
                                 <div class="flex items-center">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 

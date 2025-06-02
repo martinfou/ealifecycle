@@ -60,6 +60,25 @@ class Strategy extends Model
     }
 
     /**
+     * Get the portfolios that include this strategy.
+     */
+    public function portfolios(): BelongsToMany
+    {
+        return $this->belongsToMany(Portfolio::class, 'portfolio_strategies')
+                    ->withPivot('allocation_amount', 'allocation_percent', 'status', 'date_added', 'date_removed', 'notes')
+                    ->withTimestamps()
+                    ->orderBy('date_added');
+    }
+
+    /**
+     * Get only active portfolio associations for this strategy.
+     */
+    public function activePortfolios(): BelongsToMany
+    {
+        return $this->portfolios()->wherePivot('status', 'active');
+    }
+
+    /**
      * Get the primary timeframe for the strategy.
      */
     public function primaryTimeframe()

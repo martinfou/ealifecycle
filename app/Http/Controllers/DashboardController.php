@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         // Get recent strategies
         $recentStrategies = Strategy::where('user_id', $user->id)
-            ->with(['status', 'timeframe'])
+            ->with(['status', 'timeframes'])
             ->orderBy('updated_at', 'desc')
             ->limit(5)
             ->get();
