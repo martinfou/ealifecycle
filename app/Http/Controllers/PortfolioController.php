@@ -202,6 +202,24 @@ class PortfolioController extends Controller
             abort(403, 'You do not have permission to edit this portfolio.');
         }
 
+        // First, let's filter out any empty strategy entries (unselected checkboxes)
+        $strategies = collect($request->input('strategies', []))
+            ->filter(function ($strategy) {
+                return isset($strategy['strategy_id']) && !empty($strategy['strategy_id']);
+            })
+            ->values()
+            ->toArray();
+
+        // Validate that at least one strategy was selected
+        if (empty($strategies)) {
+            return redirect()->back()
+                           ->withErrors(['strategies' => 'Please select at least one strategy to add to the portfolio.'])
+                           ->withInput();
+        }
+
+        // Update the request data with filtered strategies
+        $request->merge(['strategies' => $strategies]);
+
         $validated = $request->validate([
             'strategies' => 'required|array|min:1',
             'strategies.*.strategy_id' => 'required|exists:strategies,id',

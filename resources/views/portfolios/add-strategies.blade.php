@@ -40,11 +40,10 @@
                                             <!-- Strategy Selection -->
                                             <div class="flex items-center mt-2">
                                                 <input type="checkbox" 
-                                                       name="strategies[{{ $index }}][strategy_id]" 
                                                        value="{{ $strategy->id }}"
                                                        id="strategy_{{ $strategy->id }}"
                                                        class="h-4 w-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
-                                                       onchange="toggleStrategyInputs({{ $strategy->id }})">
+                                                       onchange="toggleStrategyInputs({{ $strategy->id }}, {{ $index }})">
                                             </div>
 
                                             <!-- Strategy Info -->
@@ -80,6 +79,13 @@
 
                                             <!-- Allocation Inputs -->
                                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-96" id="inputs_{{ $strategy->id }}" style="display: none;">
+                                                <!-- Hidden strategy_id field that gets enabled when checkbox is checked -->
+                                                <input type="hidden" 
+                                                       name="strategies[{{ $index }}][strategy_id]" 
+                                                       value="{{ $strategy->id }}"
+                                                       id="hidden_strategy_{{ $strategy->id }}"
+                                                       disabled>
+                                                
                                                 <!-- Allocation Amount -->
                                                 <div>
                                                     <label class="block text-xs font-medium text-gray-300 mb-1">Amount ($)</label>
@@ -87,8 +93,10 @@
                                                            name="strategies[{{ $index }}][allocation_amount]" 
                                                            step="0.01" 
                                                            min="0"
+                                                           id="amount_{{ $strategy->id }}"
                                                            class="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                                           placeholder="0.00">
+                                                           placeholder="0.00"
+                                                           disabled>
                                                 </div>
 
                                                 <!-- Allocation Percentage -->
@@ -99,8 +107,10 @@
                                                            step="0.1" 
                                                            min="0" 
                                                            max="100"
+                                                           id="percent_{{ $strategy->id }}"
                                                            class="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                                           placeholder="0.0">
+                                                           placeholder="0.0"
+                                                           disabled>
                                                 </div>
 
                                                 <!-- Notes -->
@@ -108,8 +118,10 @@
                                                     <label class="block text-xs font-medium text-gray-300 mb-1">Notes</label>
                                                     <input type="text" 
                                                            name="strategies[{{ $index }}][notes]" 
+                                                           id="notes_{{ $strategy->id }}"
                                                            class="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                                           placeholder="Optional notes">
+                                                           placeholder="Optional notes"
+                                                           disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -183,29 +195,43 @@
     </div>
 
     <script>
-        function toggleStrategyInputs(strategyId) {
+        function toggleStrategyInputs(strategyId, index) {
             const checkbox = document.getElementById('strategy_' + strategyId);
             const inputs = document.getElementById('inputs_' + strategyId);
+            const hiddenInput = document.getElementById('hidden_strategy_' + strategyId);
+            const amountInput = document.getElementById('amount_' + strategyId);
+            const percentInput = document.getElementById('percent_' + strategyId);
+            const notesInput = document.getElementById('notes_' + strategyId);
             
             if (checkbox.checked) {
                 inputs.style.display = 'grid';
+                // Enable all inputs for this strategy
+                hiddenInput.disabled = false;
+                amountInput.disabled = false;
+                percentInput.disabled = false;
+                notesInput.disabled = false;
             } else {
                 inputs.style.display = 'none';
-                // Clear the inputs when unchecked
-                const inputFields = inputs.querySelectorAll('input');
-                inputFields.forEach(input => input.value = '');
+                // Disable all inputs and clear values
+                hiddenInput.disabled = true;
+                amountInput.disabled = true;
+                amountInput.value = '';
+                percentInput.disabled = true;
+                percentInput.value = '';
+                notesInput.disabled = true;
+                notesInput.value = '';
             }
         }
 
         // Select all / deselect all functionality
         function toggleAll() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"][name*="strategy_id"]');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="strategy_"]');
             const allChecked = Array.from(checkboxes).every(cb => cb.checked);
             
-            checkboxes.forEach(checkbox => {
+            checkboxes.forEach((checkbox, index) => {
                 checkbox.checked = !allChecked;
                 const strategyId = checkbox.value;
-                toggleStrategyInputs(strategyId);
+                toggleStrategyInputs(strategyId, index);
             });
         }
     </script>
