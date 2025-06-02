@@ -50,9 +50,7 @@ class PortfolioController extends Controller
 
         $portfolio = Portfolio::create($validated);
 
-        // Temporarily commented out for production hotfix
         // Log portfolio creation
-        /*
         PortfolioHistory::logActivity(
             portfolioId: $portfolio->id,
             actionType: 'created',
@@ -63,7 +61,6 @@ class PortfolioController extends Controller
                 'status' => $portfolio->status,
             ]
         );
-        */
 
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Portfolio created successfully!');
@@ -129,9 +126,7 @@ class PortfolioController extends Controller
 
         $portfolio->update($validated);
 
-        // Temporarily commented out for production hotfix
         // Log portfolio update
-        /*
         $changedFields = [];
         foreach ($validated as $key => $value) {
             if ($oldValues[$key] !== $value) {
@@ -150,7 +145,6 @@ class PortfolioController extends Controller
                 newValues: $validated
             );
         }
-        */
 
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Portfolio updated successfully!');
@@ -239,9 +233,7 @@ class PortfolioController extends Controller
                         'date_removed' => null,
                     ]));
                     
-                    // Temporarily commented out for production hotfix
                     // Log strategy re-activation
-                    /*
                     PortfolioHistory::logActivity(
                         portfolioId: $portfolio->id,
                         actionType: 'strategy_activated',
@@ -249,14 +241,11 @@ class PortfolioController extends Controller
                         strategyId: $strategyId,
                         newValues: $allocationData
                     );
-                    */
                 } else {
                     // Create new relationship
                     $portfolio->strategies()->attach($strategyId, $allocationData);
                     
-                    // Temporarily commented out for production hotfix
                     // Log strategy addition
-                    /*
                     PortfolioHistory::logActivity(
                         portfolioId: $portfolio->id,
                         actionType: 'strategy_added',
@@ -264,7 +253,6 @@ class PortfolioController extends Controller
                         strategyId: $strategyId,
                         newValues: $allocationData
                     );
-                    */
                 }
             }
         });
@@ -301,9 +289,7 @@ class PortfolioController extends Controller
 
         $portfolio->strategies()->updateExistingPivot($strategy->id, $validated);
 
-        // Temporarily commented out for production hotfix
         // Log the change
-        /*
         $actionType = $oldValues['status'] !== $validated['status'] 
             ? ($validated['status'] === 'paused' ? 'strategy_paused' : 'strategy_activated')
             : 'strategy_updated';
@@ -316,7 +302,6 @@ class PortfolioController extends Controller
             oldValues: $oldValues,
             newValues: $validated
         );
-        */
 
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Strategy allocation updated successfully!');
@@ -346,9 +331,7 @@ class PortfolioController extends Controller
             'date_removed' => now()->toDateString(),
         ]);
 
-        // Temporarily commented out for production hotfix
         // Log strategy removal
-        /*
         PortfolioHistory::logActivity(
             portfolioId: $portfolio->id,
             actionType: 'strategy_removed',
@@ -357,7 +340,6 @@ class PortfolioController extends Controller
             oldValues: $oldValues,
             newValues: ['status' => 'removed', 'date_removed' => now()->toDateString()]
         );
-        */
 
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Strategy removed from portfolio successfully!');
