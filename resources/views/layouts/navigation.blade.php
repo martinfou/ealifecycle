@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ url('/') }}" class="text-white font-bold text-xl hover:text-gray-300 transition-colors">
-                        🤖 EALifecycle
+                        🤖 EALifeCycle
                     </a>
                 </div>
 

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'EALifecycle'),
+    'name' => env('APP_NAME', 'EALifeCycle'),
 
     /*
     |--------------------------------------------------------------------------

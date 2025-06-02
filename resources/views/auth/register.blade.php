@@ -1,7 +1,7 @@
 <x-guest-layout>
     <!-- Welcome Message -->
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">Join EALifecycle</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Join EALifeCycle</h2>
         <p class="text-sm text-gray-600">
             Create your account to start managing your Expert Advisor lifecycle professionally
         </p>

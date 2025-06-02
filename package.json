@@ -2,7 +2,7 @@
     "$schema": "https://json.schemastore.org/package.json",
     "name": "ealifecycle",
     "version": "0.3.0",
-    "description": "EALifecycle - The definitive platform for managing Expert Advisors professionally. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading.",
+    "description": "EALifeCycle - The definitive platform for managing Expert Advisors professionally. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading.",
     "keywords": ["expert-advisor", "ea-lifecycle", "algorithmic-trading", "trading-robots", "automated-trading", "laravel", "tailwind", "dark-theme", "devops", "lifecycle-management"],
     "private": true,
     "type": "module",

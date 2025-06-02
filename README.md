@@ -1,4 +1,4 @@
-# 🤖 EALifecycle: Expert Advisor Lifecycle Management
+# 🤖 EALifeCycle: Expert Advisor Lifecycle Management
 
 ![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
 ![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)
@@ -7,9 +7,9 @@
 
 **The definitive platform for managing Expert Advisors professionally** - Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading teams.
 
-## 🎯 What is EALifecycle?
+## 🎯 What is EALifeCycle?
 
-EALifecycle helps algorithmic traders manage their Expert Advisors (trading robots) through their complete lifecycle: Development → Testing → Production → Maintenance → Retirement. Built with Laravel 12 and designed for trading teams, prop firms, and EA developers.
+EALifeCycle helps algorithmic traders manage their Expert Advisors (trading robots) through their complete lifecycle: Development → Testing → Production → Maintenance → Retirement. Built with Laravel 12 and designed for trading teams, prop firms, and EA developers.
 
 **Key Features:**
 - 📚 **EA Registry**: Central repository for all trading robots
@@ -292,7 +292,7 @@ php artisan route:cache
 ### Environment Variables (.env)
 ```bash
 # Application
-APP_NAME=EALifecycle
+APP_NAME=EALifeCycle
 APP_URL=http://localhost:8000
 
 # Database (default: SQLite)

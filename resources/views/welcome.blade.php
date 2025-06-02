@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name', 'EALifecycle') }} - The Definitive Platform for Managing Expert Advisors Professionally</title>
-        <meta name="description" content="EALifecycle - Expert Advisor Lifecycle Management. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading and trading robot operations.">
+        <title>{{ config('app.name', 'EALifeCycle') }} - The Definitive Platform for Managing Expert Advisors Professionally</title>
+        <meta name="description" content="EALifeCycle - Expert Advisor Lifecycle Management. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading and trading robot operations.">
         
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,7 +24,7 @@
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <h1 class="text-2xl font-bold text-white">
-                                🤖 EALifecycle
+                                🤖 EALifeCycle
                             </h1>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                        Why Algorithmic Trading Teams Choose EALifecycle
+                        Why Algorithmic Trading Teams Choose EALifeCycle
                     </h2>
                     <p class="text-xl text-gray-400 max-w-3xl mx-auto">
                         Comprehensive EA management tools designed for professional trading robot development and operations
@@ -246,7 +246,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                        Why EALifecycle Is Essential
+                        Why EALifeCycle Is Essential
                     </h2>
                 </div>
 
@@ -334,7 +334,7 @@
                     Ready to Take Control of Your Trading Strategies?
                 </h2>
                 <p class="text-xl mb-8 max-w-3xl mx-auto text-gray-300">
-                    Join professional traders who use EALifecycle to manage, optimize, and scale their algorithmic trading operations.
+                    Join professional traders who use EALifeCycle to manage, optimize, and scale their algorithmic trading operations.
                 </p>
                 @guest
                     <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 inline-block shadow-lg">
@@ -353,7 +353,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
-                        <h3 class="text-xl font-bold mb-4 text-white">EALifecycle</h3>
+                        <h3 class="text-xl font-bold mb-4 text-white">EALifeCycle</h3>
                         <p class="text-gray-400">
                             The definitive platform for managing Expert Advisors professionally.
                         </p>
@@ -384,7 +384,7 @@
                     </div>
                 </div>
                 <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                    <p>&copy; {{ date('Y') }} EALifecycle. All rights reserved.</p>
+                    <p>&copy; {{ date('Y') }} EALifeCycle. All rights reserved.</p>
                 </div>
             </div>
         </footer>
