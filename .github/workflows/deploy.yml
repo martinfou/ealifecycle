@@ -69,8 +69,16 @@ jobs:
           --exclude='Thumbs.db' \
           --exclude='deploy-staging'
         
-        # Create tar archive from staging directory
+        # List contents to verify everything is there
+        echo "=== Contents of deploy-staging ==="
+        ls -la deploy-staging/
+        
+        # Create tar archive from staging directory  
         tar -czf deploy.tar.gz -C deploy-staging .
+        
+        # Verify tar contents
+        echo "=== Contents of deploy.tar.gz ==="
+        tar -tzf deploy.tar.gz | head -20
           
     - name: Deploy to Dreamhost via SSH
       uses: appleboy/ssh-action@v1.0.3
@@ -142,8 +150,25 @@ jobs:
           $PHP_BINARY -v
           
           # Extract deployment package
+          echo "=== Extracting deployment package ==="
           tar -xzf deploy.tar.gz
           rm deploy.tar.gz
+          
+          # Verify extraction worked correctly
+          echo "=== Verifying extracted files ==="
+          ls -la
+          echo "=== Checking for Laravel directories ==="
+          ls -la app/ config/ database/ 2>/dev/null || echo "ERROR: Laravel directories not found!"
+          
+          # Ensure we have a proper Laravel application structure
+          if [ ! -d "app" ] || [ ! -d "config" ] || [ ! -d "database" ] || [ ! -f "artisan" ]; then
+            echo "ERROR: Laravel application structure not found. Deployment failed!"
+            echo "Current directory contents:"
+            ls -la
+            exit 1
+          fi
+          
+          echo "✅ Laravel application structure verified successfully"
           
           # Restore environment files from backup
           if [ -f "/tmp/env-production-backup" ]; then
