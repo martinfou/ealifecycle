@@ -5,7 +5,7 @@
     "description": "Professional Trading Strategy Tracker with FX Blue integration and comprehensive strategy management.",
     "keywords": ["trading", "strategy", "tracker", "fx-blue", "laravel", "forex"],
     "license": "MIT",
-    "version": "0.1.4",
+    "version": "0.2.0",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",

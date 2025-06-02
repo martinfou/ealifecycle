@@ -1,8 +1,8 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
     "name": "trading-strategy-tracker",
-    "version": "0.1.4",
-    "description": "Professional Trading Strategy Tracker with dark theme and monochromatic design",
+    "version": "0.2.0",
+    "description": "Professional Trading Strategy Tracker with complete user management system and group-based permissions",
     "keywords": ["trading", "strategy", "tracker", "laravel", "tailwind", "dark-theme"],
     "private": true,
     "type": "module",

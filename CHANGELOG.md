@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2024-12-28
+
+### Added
+- **Complete Admin User Management System**: Full CRUD operations for user administration
+- **User Creation Interface**: Admin can create new users with group assignments during creation
+- **User Detail Management**: Comprehensive user profiles with group membership management
+- **Interactive Group Assignment**: Real-time user-group permission management interface
+- **User Activity Tracking**: Display user strategies, trade imports, and system activity
+- **Data Integrity Protection**: Prevents deletion of users with associated data
+- **Advanced User Statistics**: Group memberships, strategy counts, and activity metrics
+
+### Enhanced
+- **User Listing Interface**: Advanced table with group badges, permission indicators, and activity counts
+- **Group Permission Management**: Inline permission editing (read/write) for user-group associations
+- **User Search and Filtering**: Comprehensive user management with detailed information display
+- **Admin Navigation**: Complete admin panel integration with user management workflows
+
+### Fixed
+- **Strategy Edit View**: Converted from light theme to consistent dark theme styling
+- **Missing Group Selection**: Added group assignment field to strategy edit form
+- **View Cache Issues**: Resolved template rendering problems with proper cache clearing
+- **Pivot Table Timestamps**: Fixed null timestamp formatting errors in group memberships
+- **Permission Validation**: Enhanced user-group permission checking and validation
+
+### Changed
+- **Strategy Edit Form**: Updated to include group selection dropdown with permission validation
+- **Button Styling**: Consistent monochromatic gray design with smooth transitions
+- **Form Elements**: All strategy edit inputs converted to dark theme with proper contrast
+- **Version Increment**: Major version bump (0.1.x → 0.2.0) reflecting significant feature additions
+
+### Security
+- **Enhanced Authorization**: Comprehensive permission checking in user management operations
+- **Group Access Control**: Proper validation of user permissions before group assignments
+- **Data Protection**: Safe user deletion with dependency checks to prevent data loss
+- **Session Management**: Improved admin session handling and security validation
+
+### Technical
+- **Admin Controllers**: Complete UserController implementation with all CRUD operations
+- **View Templates**: Four new admin user management views with consistent dark theme
+- **Database Operations**: Optimized queries with proper eager loading and relationships
+- **Form Validation**: Robust server-side validation for all user management operations
+- **Error Handling**: Comprehensive error messages and user feedback systems
+
 ## [0.1.5] - 2024-12-28
 
 ### Added
@@ -25,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - **Access Control**: Strategies are now filtered based on user group membership
 - **Permission Validation**: Write operations require appropriate group permissions
-- **Owner Override**: Strategy owners maintain full access regardless of group permissions
+- **Owner Override**: Strategy creators maintain full access regardless of group permissions
 
 ### Technical
 - **Database Migrations**: Added group_id foreign key to strategies and permissions column to user_groups
