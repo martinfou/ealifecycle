@@ -110,6 +110,24 @@ jobs:
         script: |
           cd ${{ secrets.DREAMHOST_PATH }}/ealifecycle
           
+          # Check and use PHP 8.4 if available on Dreamhost
+          if command -v php8.4 &> /dev/null; then
+            export PHP_BINARY=php8.4
+            echo "Using PHP 8.4"
+          elif command -v php8.3 &> /dev/null; then
+            export PHP_BINARY=php8.3
+            echo "Using PHP 8.3"
+          elif command -v php8.2 &> /dev/null; then
+            export PHP_BINARY=php8.2
+            echo "Using PHP 8.2"
+          else
+            export PHP_BINARY=php
+            echo "Using default PHP version"
+          fi
+          
+          # Check PHP version meets requirements
+          $PHP_BINARY -v
+          
           # Extract deployment package
           tar -xzf deploy.tar.gz
           rm deploy.tar.gz
@@ -121,18 +139,18 @@ jobs:
           chmod -R 755 storage bootstrap/cache
           chmod -R 777 storage/logs storage/framework/cache storage/framework/sessions storage/framework/views
           
-          # Install/update Composer dependencies (production)
-          composer install --optimize-autoloader --no-dev --no-interaction
+          # Install/update Composer dependencies with specific PHP version
+          $PHP_BINARY $(which composer) install --optimize-autoloader --no-dev --no-interaction --ignore-platform-req=php
           
-          # Laravel deployment commands
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
-          php artisan migrate --force
+          # Laravel deployment commands with specific PHP version
+          $PHP_BINARY artisan config:cache
+          $PHP_BINARY artisan route:cache
+          $PHP_BINARY artisan view:cache
+          $PHP_BINARY artisan migrate --force
           
           # Clear any old caches
-          php artisan config:clear
-          php artisan cache:clear
+          $PHP_BINARY artisan config:clear
+          $PHP_BINARY artisan cache:clear
           
           # Create symlink to web directory if it doesn't exist
           if [ ! -L "${{ secrets.DREAMHOST_PATH }}/4xhacker.com/ealifecycle" ]; then
