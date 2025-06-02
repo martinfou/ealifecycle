@@ -79,7 +79,7 @@
                     <!-- Hero Image -->
                     <div class="flex justify-center lg:justify-end">
                         <div class="relative">
-                            <img src="{{ asset('images/algo-trading/automation-flow.svg') }}" alt="Algorithmic Trading Automation Flow" class="w-full max-w-lg h-auto"/>
+                            <img src="{{ asset('images/algo-trading/trading-dashboard.svg') }}" alt="EA Lifecycle Control Center - Professional Trading Dashboard" class="w-full max-w-7xl h-auto"/>
                             <div class="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent rounded-lg"></div>
                         </div>
                     </div>
@@ -124,44 +124,7 @@
                 </div>
                 
                 <div class="flex justify-center mb-12">
-                    <img src="{{ asset('images/algo-trading/ea-lifecycle-flow.svg') }}" alt="Expert Advisor Lifecycle Flow" class="w-full max-w-4xl h-auto"/>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 text-center">
-                    <!-- Idea Stage -->
-                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-colors">
-                        <div class="text-3xl mb-3">💡</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Idea</h3>
-                        <p class="text-sm text-gray-400">Strategy concept and initial development phase</p>
-                    </div>
-                    
-                    <!-- Demo Stage -->
-                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-blue-500 transition-colors">
-                        <div class="text-3xl mb-3">🧪</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Demo</h3>
-                        <p class="text-sm text-gray-400">Risk-free testing and validation environment</p>
-                    </div>
-                    
-                    <!-- Production Stage -->
-                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-green-500 transition-colors">
-                        <div class="text-3xl mb-3">🚀</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Production</h3>
-                        <p class="text-sm text-gray-400">Live trading with real money operations</p>
-                    </div>
-                    
-                    <!-- Pause Stage -->
-                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-colors">
-                        <div class="text-3xl mb-3">⏸️</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Pause</h3>
-                        <p class="text-sm text-gray-400">Temporary suspension and monitoring</p>
-                    </div>
-                    
-                    <!-- Retired Stage -->
-                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-500 transition-colors">
-                        <div class="text-3xl mb-3">📦</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Retired</h3>
-                        <p class="text-sm text-gray-400">Archived for historical analysis</p>
-                    </div>
+                    <img src="{{ asset('images/algo-trading/ea-lifecycle-flow.svg') }}" alt="Expert Advisor Lifecycle Flow" class="w-full max-w-7xl h-auto"/>
                 </div>
                 
                 <div class="mt-12 text-center">

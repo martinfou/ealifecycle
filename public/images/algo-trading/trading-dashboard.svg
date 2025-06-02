@@ -1,0 +1,206 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dashboardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F172A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E293B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="profitGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="controlGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D97706;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Header Bar -->
+  <rect x="70" y="70" width="660" height="60" rx="10" fill="#374151" stroke="#4B5563" stroke-width="1" opacity="0.8"/>
+  <text x="90" y="95" fill="#F3F4F6" font-family="Arial, sans-serif" font-size="16" font-weight="bold">EA LIFECYCLE CONTROL CENTER</text>
+  <text x="90" y="115" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="12">Real-time Portfolio Management &amp; Analytics</text>
+  
+  <!-- Status Indicators -->
+  <circle cx="650" cy="90" r="8" fill="#10B981">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <text x="665" y="95" fill="#10B981" font-family="Arial, sans-serif" font-size="11" font-weight="bold">ACTIVE</text>
+  
+  <circle cx="650" cy="110" r="4" fill="#F59E0B"/>
+  <circle cx="665" cy="110" r="4" fill="#3B82F6"/>
+  <circle cx="680" cy="110" r="4" fill="#10B981"/>
+  
+  <!-- Main Content Area -->
+  
+  <!-- Left Panel - Profit Chart -->
+  <rect x="90" y="150" width="320" height="180" rx="8" fill="#111827" stroke="#374151" stroke-width="1" opacity="0.6"/>
+  <text x="110" y="175" fill="#F3F4F6" font-family="Arial, sans-serif" font-size="14" font-weight="bold">PORTFOLIO PERFORMANCE</text>
+  <text x="110" y="195" fill="#10B981" font-family="Arial, sans-serif" font-size="12">+24.7% YTD</text>
+  
+  <!-- Profit Chart -->
+  <g transform="translate(110, 210)">
+    <!-- Chart Grid -->
+    <g stroke="#374151" stroke-width="0.5" opacity="0.5">
+      <line x1="0" y1="0" x2="280" y2="0"/>
+      <line x1="0" y1="30" x2="280" y2="30"/>
+      <line x1="0" y1="60" x2="280" y2="60"/>
+      <line x1="0" y1="90" x2="280" y2="90"/>
+      <line x1="0" y1="0" x2="0" y2="90"/>
+      <line x1="70" y1="0" x2="70" y2="90"/>
+      <line x1="140" y1="0" x2="140" y2="90"/>
+      <line x1="210" y1="0" x2="210" y2="90"/>
+      <line x1="280" y1="0" x2="280" y2="90"/>
+    </g>
+    
+    <!-- Profit Line -->
+    <path d="M 0 75 Q 35 65 70 55 Q 105 50 140 45 Q 175 35 210 25 Q 245 20 280 15" 
+          stroke="url(#profitGradient)" stroke-width="3" fill="none" filter="url(#glow)">
+      <animate attributeName="stroke-dasharray" values="0,300;300,0" dur="3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Fill Area -->
+    <path d="M 0 75 Q 35 65 70 55 Q 105 50 140 45 Q 175 35 210 25 Q 245 20 280 15 L 280 90 L 0 90 Z" 
+          fill="url(#profitGradient)" opacity="0.2"/>
+    
+    <!-- Data Points -->
+    <circle cx="70" cy="55" r="3" fill="#10B981" filter="url(#glow)">
+      <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="140" cy="45" r="3" fill="#10B981" filter="url(#glow)">
+      <animate attributeName="r" values="3;5;3" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="210" cy="25" r="3" fill="#10B981" filter="url(#glow)">
+      <animate attributeName="r" values="3;5;3" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Right Panel - Control Metrics -->
+  <rect x="430" y="150" width="300" height="180" rx="8" fill="#111827" stroke="#374151" stroke-width="1" opacity="0.6"/>
+  <text x="450" y="175" fill="#F3F4F6" font-family="Arial, sans-serif" font-size="14" font-weight="bold">CONTROL METRICS</text>
+  
+  <!-- Risk Gauge -->
+  <g transform="translate(460, 190)">
+    <circle cx="50" cy="50" r="35" fill="none" stroke="#374151" stroke-width="6"/>
+    <circle cx="50" cy="50" r="35" fill="none" stroke="#10B981" stroke-width="6" 
+            stroke-dasharray="110" stroke-dashoffset="30" transform="rotate(-90 50 50)">
+      <animate attributeName="stroke-dashoffset" values="30;20;30" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <text x="50" y="45" text-anchor="middle" fill="#10B981" font-family="Arial, sans-serif" font-size="12" font-weight="bold">LOW</text>
+    <text x="50" y="60" text-anchor="middle" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="10">RISK</text>
+  </g>
+  
+  <!-- Stability Meter -->
+  <g transform="translate(570, 190)">
+    <rect x="10" y="15" width="80" height="15" rx="7" fill="#374151"/>
+    <rect x="12" y="17" width="65" height="11" rx="5" fill="url(#profitGradient)">
+      <animate attributeName="width" values="65;70;65" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="50" y="45" text-anchor="middle" fill="#10B981" font-family="Arial, sans-serif" font-size="10" font-weight="bold">STABLE</text>
+    <text x="50" y="60" text-anchor="middle" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="9">PERFORMANCE</text>
+  </g>
+  
+  <!-- Control Buttons -->
+  <g transform="translate(450, 250)">
+    <rect x="0" y="0" width="80" height="30" rx="15" fill="url(#controlGradient)" stroke="#60A5FA" stroke-width="1">
+      <animate attributeName="opacity" values="1;0.8;1" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <text x="40" y="20" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="11" font-weight="bold">START EA</text>
+    
+    <rect x="90" y="0" width="80" height="30" rx="15" fill="#DC2626" stroke="#F87171" stroke-width="1"/>
+    <text x="130" y="20" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="11" font-weight="bold">STOP EA</text>
+    
+    <rect x="180" y="0" width="80" height="30" rx="15" fill="url(#goldGradient)" stroke="#FBBF24" stroke-width="1"/>
+    <text x="220" y="20" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="11" font-weight="bold">OPTIMIZE</text>
+  </g>
+  
+  <!-- Bottom Section - EA Status Cards -->
+  <rect x="90" y="350" width="640" height="120" rx="8" fill="#111827" stroke="#374151" stroke-width="1" opacity="0.6"/>
+  <text x="110" y="375" fill="#F3F4F6" font-family="Arial, sans-serif" font-size="14" font-weight="bold">EXPERT ADVISOR STATUS</text>
+  
+  <!-- EA Status Cards -->
+  <g transform="translate(110, 390)">
+    <!-- EA 1 - IDEA -->
+    <rect x="0" y="0" width="120" height="60" rx="6" fill="#F59E0B" opacity="0.2" stroke="#FBBF24" stroke-width="1"/>
+    <text x="10" y="20" fill="#FBBF24" font-family="Arial, sans-serif" font-size="11" font-weight="bold">💡 IDEA</text>
+    <text x="10" y="35" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="9">Strategy Concept</text>
+    <text x="10" y="50" fill="#FBBF24" font-family="Arial, sans-serif" font-size="10">Development</text>
+    <circle cx="100" cy="30" r="4" fill="#FBBF24">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- EA 2 - DEMO -->
+    <rect x="130" y="0" width="120" height="60" rx="6" fill="#3B82F6" opacity="0.2" stroke="#60A5FA" stroke-width="1"/>
+    <text x="140" y="20" fill="#60A5FA" font-family="Arial, sans-serif" font-size="11" font-weight="bold">🧪 DEMO</text>
+    <text x="140" y="35" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="9">Paper Trading</text>
+    <text x="140" y="50" fill="#60A5FA" font-family="Arial, sans-serif" font-size="10">Testing</text>
+    <circle cx="230" cy="30" r="4" fill="#60A5FA">
+      <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- EA 3 - PRODUCTION -->
+    <rect x="260" y="0" width="120" height="60" rx="6" fill="#059669" opacity="0.2" stroke="#10B981" stroke-width="1"/>
+    <text x="270" y="20" fill="#10B981" font-family="Arial, sans-serif" font-size="11" font-weight="bold">🚀 PRODUCTION</text>
+    <text x="270" y="35" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="9">Live Trading</text>
+    <text x="270" y="50" fill="#10B981" font-family="Arial, sans-serif" font-size="10">+$2,450</text>
+    <circle cx="360" cy="30" r="4" fill="#10B981">
+      <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- EA 4 - PAUSED -->
+    <rect x="390" y="0" width="120" height="60" rx="6" fill="#F59E0B" opacity="0.2" stroke="#FBBF24" stroke-width="1"/>
+    <text x="400" y="20" fill="#FBBF24" font-family="Arial, sans-serif" font-size="11" font-weight="bold">⏸️ PAUSED</text>
+    <text x="400" y="35" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="9">On Hold</text>
+    <text x="400" y="50" fill="#FBBF24" font-family="Arial, sans-serif" font-size="10">Suspended</text>
+    <circle cx="490" cy="30" r="4" fill="#FBBF24"/>
+    
+    <!-- EA 5 - RETIRED -->
+    <rect x="520" y="0" width="120" height="60" rx="6" fill="#6B7280" opacity="0.2" stroke="#9CA3AF" stroke-width="1"/>
+    <text x="530" y="20" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="11" font-weight="bold">📦 RETIRED</text>
+    <text x="530" y="35" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="9">Archived</text>
+    <text x="530" y="50" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="10">End of Life</text>
+    <circle cx="620" cy="30" r="4" fill="#6B7280"/>
+  </g>
+  
+  <!-- Floating Profit Indicators -->
+  <g transform="translate(600, 200)">
+    <text x="0" y="0" fill="#10B981" font-family="Arial, sans-serif" font-size="20" font-weight="bold">$</text>
+    <animateTransform attributeName="transform" type="translate" values="600,200;620,180;600,200" dur="3s" repeatCount="indefinite"/>
+  </g>
+  
+  <g transform="translate(650, 250)">
+    <text x="0" y="0" fill="#10B981" font-family="Arial, sans-serif" font-size="16" font-weight="bold">↗</text>
+    <animateTransform attributeName="transform" type="translate" values="650,250;670,230;650,250" dur="2.5s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Connection Lines -->
+  <g stroke="#60A5FA" stroke-width="1" opacity="0.6">
+    <line x1="400" y1="300" x2="450" y2="320">
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="500" y1="300" x2="550" y2="320">
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.5s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Management Icons -->
+  <g transform="translate(680, 80)">
+    <!-- Settings Gear -->
+    <g fill="#9CA3AF" transform="scale(0.8)">
+      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+      <animateTransform attributeName="transform" type="rotate" values="0 12 12;360 12 12" dur="10s" repeatCount="indefinite"/>
+    </g>
+  </g>
+</svg> 
