@@ -31,7 +31,18 @@
                                             </a>
                                         </h3>
                                         <div class="mt-1 flex items-center space-x-4 text-sm text-gray-400">
-                                            <span>{{ $strategy->timeframe->name }}</span>
+                                            <span class="flex items-center space-x-1">
+                                                @if($strategy->timeframes->count() > 0)
+                                                    @foreach($strategy->timeframes->sortBy('sort_order') as $timeframe)
+                                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium 
+                                                            {{ $timeframe->pivot->is_primary ? 'bg-blue-800 text-blue-200' : 'bg-gray-700 text-gray-300' }}">
+                                                            {{ $timeframe->name }}
+                                                        </span>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-gray-500">No timeframes</span>
+                                                @endif
+                                            </span>
                                             @if($strategy->symbols_traded)
                                                 <span>•</span>
                                                 <span>{{ $strategy->symbols_traded }}</span>

@@ -48,14 +48,50 @@
                             <p class="mt-1 text-xs text-gray-400">Enter symbols separated by commas. Examples: <strong>Forex:</strong> EURUSD, GBPJPY, XAUUSD • <strong>Stocks:</strong> AAPL, TSLA, SPY • <strong>Futures:</strong> ES, NQ, CL, GC</p>
                         </div>
 
-                        <!-- Timeframe -->
+                        <!-- Timeframes -->
                         <div class="mb-4">
-                            <label for="timeframe_id" class="block text-sm font-medium text-gray-300">Timeframe *</label>
-                            <select name="timeframe_id" id="timeframe_id" required
-                                    class="mt-1 block w-full rounded-md bg-gray-900 border-gray-600 text-white shadow-sm focus:border-gray-500 focus:ring-gray-500 @error('timeframe_id') border-red-500 @enderror">
-                                <option value="">Select timeframe...</option>
+                            <label for="timeframe_ids" class="block text-sm font-medium text-gray-300">Timeframes *</label>
+                            <div class="mt-1 space-y-2">
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                    @foreach($timeframes as $timeframe)
+                                        @php
+                                            $isSelected = $strategy->timeframes->contains('id', $timeframe->id) || collect(old('timeframe_ids'))->contains($timeframe->id);
+                                        @endphp
+                                        <label class="flex items-center space-x-2 p-2 border border-gray-600 rounded-md hover:bg-gray-700 cursor-pointer">
+                                            <input type="checkbox" 
+                                                   name="timeframe_ids[]" 
+                                                   value="{{ $timeframe->id }}"
+                                                   {{ $isSelected ? 'checked' : '' }}
+                                                   class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-600 rounded bg-gray-900"
+                                                   onchange="updatePrimaryTimeframeOptions()">
+                                            <span class="text-sm text-white font-medium">{{ $timeframe->name }}</span>
+                                            @if($timeframe->description)
+                                                <span class="text-xs text-gray-400">- {{ $timeframe->description }}</span>
+                                            @endif
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @error('timeframe_ids')
+                                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-1 text-xs text-gray-400">Select all timeframes this strategy will use</p>
+                        </div>
+
+                        <!-- Primary Timeframe -->
+                        <div class="mb-4">
+                            <label for="primary_timeframe_id" class="block text-sm font-medium text-gray-300">Primary Timeframe *</label>
+                            <select name="primary_timeframe_id" id="primary_timeframe_id" required
+                                    class="mt-1 block w-full rounded-md bg-gray-900 border-gray-600 text-white shadow-sm focus:border-gray-500 focus:ring-gray-500 @error('primary_timeframe_id') border-red-500 @enderror">
+                                <option value="">Select primary timeframe...</option>
                                 @foreach($timeframes as $timeframe)
-                                    <option value="{{ $timeframe->id }}" {{ old('timeframe_id', $strategy->timeframe_id) == $timeframe->id ? 'selected' : '' }}>
+                                    @php
+                                        $isPrimary = $strategy->timeframes->where('pivot.is_primary', true)->first()?->id == $timeframe->id;
+                                        $isSelected = old('primary_timeframe_id') == $timeframe->id || ($isPrimary && !old('primary_timeframe_id'));
+                                    @endphp
+                                    <option value="{{ $timeframe->id }}" 
+                                            {{ $isSelected ? 'selected' : '' }}
+                                            data-timeframe-id="{{ $timeframe->id }}">
                                         {{ $timeframe->name }}
                                         @if($timeframe->description)
                                             - {{ $timeframe->description }}
@@ -63,9 +99,10 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('timeframe_id')
+                            @error('primary_timeframe_id')
                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                             @enderror
+                            <p class="mt-1 text-xs text-gray-400">Choose the main timeframe for strategy decisions</p>
                         </div>
 
                         <!-- Group -->
@@ -147,4 +184,45 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function updatePrimaryTimeframeOptions() {
+            const checkboxes = document.querySelectorAll('input[name="timeframe_ids[]"]');
+            const primarySelect = document.getElementById('primary_timeframe_id');
+            const selectedTimeframes = [];
+            
+            // Get all checked timeframes
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedTimeframes.push(checkbox.value);
+                }
+            });
+            
+            // Show/hide options in primary timeframe select
+            const options = primarySelect.querySelectorAll('option[data-timeframe-id]');
+            options.forEach(option => {
+                const timeframeId = option.getAttribute('data-timeframe-id');
+                if (selectedTimeframes.includes(timeframeId)) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                    // Clear selection if this option was selected but is no longer available
+                    if (option.selected) {
+                        option.selected = false;
+                        primarySelect.value = '';
+                    }
+                }
+            });
+            
+            // If only one timeframe is selected, auto-select it as primary
+            if (selectedTimeframes.length === 1) {
+                primarySelect.value = selectedTimeframes[0];
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePrimaryTimeframeOptions();
+        });
+    </script>
 </x-app-layout> 

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Strategy;
 use App\Models\Status;
+use App\Models\StatusHistory;
 use App\Models\Timeframe;
 use App\Models\Group;
-use App\Models\StatusHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,15 +19,11 @@ class StrategyController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $accessibleGroupIds = $user->getAccessibleGroupIds();
         
-        $strategies = Strategy::with(['status', 'timeframe', 'group'])
-            ->where(function ($query) use ($user, $accessibleGroupIds) {
-                $query->where('user_id', $user->id) // Own strategies
-                      ->orWhereIn('group_id', $accessibleGroupIds); // Group strategies
-            })
-            ->orderBy('updated_at', 'desc')
-            ->get();
+        $strategies = Strategy::with(['status', 'timeframes', 'group', 'user'])
+            ->accessibleByUser($user)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('strategies.index', compact('strategies'));
     }
@@ -54,12 +50,19 @@ class StrategyController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'symbols_traded' => 'nullable|string',
-            'timeframe_id' => 'required|exists:timeframes,id',
+            'timeframe_ids' => 'required|array|min:1',
+            'timeframe_ids.*' => 'exists:timeframes,id',
+            'primary_timeframe_id' => 'required|exists:timeframes,id',
             'magic_number' => 'nullable|integer|unique:strategies,magic_number',
             'status_id' => 'required|exists:statuses,id',
             'group_id' => 'nullable|exists:groups,id',
             'description' => 'nullable|string',
         ]);
+
+        // Ensure primary timeframe is in the selected timeframes
+        if (!in_array($validated['primary_timeframe_id'], $validated['timeframe_ids'])) {
+            return back()->withErrors(['primary_timeframe_id' => 'Primary timeframe must be one of the selected timeframes.']);
+        }
 
         // Verify user has write permission in the selected group
         if ($validated['group_id']) {
@@ -72,7 +75,21 @@ class StrategyController extends Controller
         $validated['date_in_status'] = now();
 
         DB::transaction(function () use ($validated) {
-            $strategy = Strategy::create($validated);
+            // Create strategy without timeframe data
+            $strategyData = $validated;
+            unset($strategyData['timeframe_ids'], $strategyData['primary_timeframe_id']);
+            $strategy = Strategy::create($strategyData);
+
+            // Attach timeframes with primary flag
+            $timeframeData = [];
+            foreach ($validated['timeframe_ids'] as $timeframeId) {
+                $timeframeData[$timeframeId] = [
+                    'is_primary' => $timeframeId == $validated['primary_timeframe_id'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+            $strategy->timeframes()->attach($timeframeData);
 
             // Create initial status history entry
             StatusHistory::create([
@@ -99,7 +116,7 @@ class StrategyController extends Controller
             abort(403, 'You do not have permission to view this strategy.');
         }
 
-        $strategy->load(['status', 'timeframe', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser']);
+        $strategy->load(['status', 'timeframes', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser']);
         $statuses = Status::where('is_active', true)->get();
         $canEdit = $strategy->canUserEdit($user);
         
@@ -140,11 +157,18 @@ class StrategyController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'symbols_traded' => 'nullable|string',
-            'timeframe_id' => 'required|exists:timeframes,id',
+            'timeframe_ids' => 'required|array|min:1',
+            'timeframe_ids.*' => 'exists:timeframes,id',
+            'primary_timeframe_id' => 'required|exists:timeframes,id',
             'magic_number' => 'nullable|integer|unique:strategies,magic_number,' . $strategy->id,
             'group_id' => 'nullable|exists:groups,id',
             'description' => 'nullable|string',
         ]);
+
+        // Ensure primary timeframe is in the selected timeframes
+        if (!in_array($validated['primary_timeframe_id'], $validated['timeframe_ids'])) {
+            return back()->withErrors(['primary_timeframe_id' => 'Primary timeframe must be one of the selected timeframes.']);
+        }
 
         // Verify user has write permission in the new group (if changing groups)
         if ($validated['group_id'] && $validated['group_id'] != $strategy->group_id) {
@@ -153,7 +177,22 @@ class StrategyController extends Controller
             }
         }
 
-        $strategy->update($validated);
+        DB::transaction(function () use ($validated, $strategy) {
+            // Update strategy without timeframe data
+            $strategyData = $validated;
+            unset($strategyData['timeframe_ids'], $strategyData['primary_timeframe_id']);
+            $strategy->update($strategyData);
+
+            // Sync timeframes with primary flag
+            $timeframeData = [];
+            foreach ($validated['timeframe_ids'] as $timeframeId) {
+                $timeframeData[$timeframeId] = [
+                    'is_primary' => $timeframeId == $validated['primary_timeframe_id'],
+                    'updated_at' => now(),
+                ];
+            }
+            $strategy->timeframes()->sync($timeframeData);
+        });
 
         return redirect()->route('strategies.show', $strategy)->with('success', 'Strategy updated successfully.');
     }
@@ -228,7 +267,7 @@ class StrategyController extends Controller
             abort(403, 'You do not have permission to view this strategy.');
         }
 
-        $strategy->load(['status', 'timeframe', 'group', 'user']);
+        $strategy->load(['status', 'timeframes', 'group', 'user']);
         $statusHistory = $strategy->statusHistory()
             ->with(['previousStatus', 'newStatus', 'changedByUser'])
             ->orderBy('created_at', 'desc')

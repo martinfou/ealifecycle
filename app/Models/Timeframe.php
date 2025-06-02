@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Timeframe extends Model
 {
@@ -19,11 +19,13 @@ class Timeframe extends Model
     ];
 
     /**
-     * Get the strategies for the timeframe.
+     * Get the strategies that use this timeframe (many-to-many).
      */
-    public function strategies(): HasMany
+    public function strategies(): BelongsToMany
     {
-        return $this->hasMany(Strategy::class);
+        return $this->belongsToMany(Strategy::class, 'strategy_timeframes')
+                    ->withPivot('is_primary')
+                    ->withTimestamps();
     }
 
     /**

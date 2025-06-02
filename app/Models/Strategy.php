@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Strategy extends Model
 {
     protected $fillable = [
         'name',
         'symbols_traded',
-        'timeframe_id',
         'magic_number',
         'status_id',
         'date_in_status',
@@ -49,11 +49,30 @@ class Strategy extends Model
     }
 
     /**
-     * Get the timeframe of the strategy.
+     * Get the timeframes for the strategy (many-to-many).
      */
-    public function timeframe(): BelongsTo
+    public function timeframes(): BelongsToMany
     {
-        return $this->belongsTo(Timeframe::class);
+        return $this->belongsToMany(Timeframe::class, 'strategy_timeframes')
+                    ->withPivot('is_primary')
+                    ->withTimestamps()
+                    ->orderBy('sort_order');
+    }
+
+    /**
+     * Get the primary timeframe for the strategy.
+     */
+    public function primaryTimeframe()
+    {
+        return $this->timeframes()->wherePivot('is_primary', true)->first();
+    }
+
+    /**
+     * Get a display string of all timeframes.
+     */
+    public function getTimeframesDisplayAttribute()
+    {
+        return $this->timeframes->pluck('name')->join(', ');
     }
 
     /**
@@ -86,6 +105,16 @@ class Strategy extends Model
     public function scopeWithStatus($query, $statusId)
     {
         return $query->where('status_id', $statusId);
+    }
+
+    /**
+     * Scope a query to only include strategies with a specific timeframe.
+     */
+    public function scopeWithTimeframe($query, $timeframeId)
+    {
+        return $query->whereHas('timeframes', function ($q) use ($timeframeId) {
+            $q->where('timeframes.id', $timeframeId);
+        });
     }
 
     /**
