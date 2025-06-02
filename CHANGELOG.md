@@ -5,6 +5,29 @@ All notable changes to **EALifeCycle** (Expert Advisor Lifecycle Management) wil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] - 2024-12-28
+
+### Enhanced
+- **Deployment Configuration**: Updated GitHub Actions workflow for Dreamhost subdirectory deployment
+- **Documentation Branding**: Updated DEPLOYMENT.md with EALifeCycle branding throughout
+- **Production Environment**: Enhanced deployment guide with correct APP_URL configuration for subdirectories
+
+### Changed
+- **GitHub Actions Workflow**: Updated deployment paths to support `/ealifecycle` subdirectory structure
+- **Deployment Guide**: Updated DEPLOYMENT.md references from "Trading Strategy Tracker" to "EALifeCycle"
+- **Server Structure**: Improved deployment workflow to handle symlink creation automatically
+- **Rollback Mechanism**: Updated backup and rollback procedures for new directory structure
+
+### Added
+- **Automatic Symlink Creation**: Deployment workflow now creates web-accessible symlinks automatically
+- **Subdirectory Support**: Enhanced deployment configuration for hosting on subdirectory paths
+- **Improved Documentation**: Added detailed folder structure examples for Dreamhost deployment
+
+### Technical
+- **Removed sudo commands**: Updated deployment scripts to work without elevated privileges
+- **Path Configuration**: Streamlined deployment paths for better organization and security
+- **Production Setup**: Enhanced environment configuration guidance for subdirectory deployments
+
 ## [0.3.3] - 2024-12-28
 
 ### Enhanced

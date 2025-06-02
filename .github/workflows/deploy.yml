@@ -66,14 +66,13 @@ jobs:
           cd ${{ secrets.DREAMHOST_PATH }}
           
           # Create backup of current deployment
-          if [ -d "current" ]; then
-            sudo rm -rf backup
-            sudo mv current backup
+          if [ -d "ealifecycle" ]; then
+            rm -rf ealifecycle-backup
+            mv ealifecycle ealifecycle-backup
           fi
           
           # Create new deployment directory
-          mkdir -p current
-          cd current
+          mkdir -p ealifecycle
           
     - name: Upload deployment package
       uses: appleboy/scp-action@v0.1.7
@@ -83,7 +82,7 @@ jobs:
         key: ${{ secrets.DREAMHOST_SSH_KEY }}
         port: 22
         source: "deploy.tar.gz"
-        target: "${{ secrets.DREAMHOST_PATH }}/current/"
+        target: "${{ secrets.DREAMHOST_PATH }}/ealifecycle/"
         
     - name: Extract and configure application
       uses: appleboy/ssh-action@v1.0.3
@@ -93,7 +92,7 @@ jobs:
         key: ${{ secrets.DREAMHOST_SSH_KEY }}
         port: 22
         script: |
-          cd ${{ secrets.DREAMHOST_PATH }}/current
+          cd ${{ secrets.DREAMHOST_PATH }}/ealifecycle
           
           # Extract deployment package
           tar -xzf deploy.tar.gz
@@ -119,8 +118,10 @@ jobs:
           php artisan config:clear
           php artisan cache:clear
           
-          # Set ownership (adjust according to your Dreamhost setup)
-          # chown -R $USER:$USER .
+          # Create symlink to web directory if it doesn't exist
+          if [ ! -L "${{ secrets.DREAMHOST_PATH }}/4xhacker.com/ealifecycle" ]; then
+            ln -s ${{ secrets.DREAMHOST_PATH }}/ealifecycle/public ${{ secrets.DREAMHOST_PATH }}/4xhacker.com/ealifecycle
+          fi
           
           echo "Deployment completed successfully!"
           
@@ -134,9 +135,9 @@ jobs:
         port: 22
         script: |
           cd ${{ secrets.DREAMHOST_PATH }}
-          if [ -d "backup" ]; then
-            sudo rm -rf current
-            sudo mv backup current
+          if [ -d "ealifecycle-backup" ]; then
+            rm -rf ealifecycle
+            mv ealifecycle-backup ealifecycle
             echo "Rollback completed - restored previous version"
           fi
           

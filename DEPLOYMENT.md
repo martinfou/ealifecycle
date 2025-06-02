@@ -4,7 +4,7 @@ This guide explains how to set up automatic deployment to Dreamhost using GitHub
 
 ## 🚀 Quick Setup
 
-The GitHub Actions workflow (`.github/workflows/deploy.yml`) will automatically deploy your Trading Strategy Tracker to Dreamhost when you push to the `master` or `main` branch.
+The GitHub Actions workflow (`.github/workflows/deploy.yml`) will automatically deploy your EALifeCycle to Dreamhost when you push to the `master` or `main` branch.
 
 ## 📋 Prerequisites
 
@@ -70,7 +70,7 @@ nano .env.production
 
 ### Production Environment Template
 ```env
-APP_NAME="Trading Strategy Tracker"
+APP_NAME="EALifeCycle"
 APP_ENV=production
 APP_KEY=base64:your-production-app-key-here
 APP_DEBUG=false
@@ -220,7 +220,7 @@ After deployment, verify:
 - [ ] Website loads correctly
 - [ ] Database migrations completed
 - [ ] User authentication works
-- [ ] Strategy management functions
+- [ ] Expert Advisor management functions
 - [ ] FX Blue import works
 - [ ] Admin interfaces accessible
 
@@ -233,4 +233,4 @@ Once configured, your deployment workflow will:
 - 🛡️ Rollback automatically on failures
 - 📧 Notify you of deployment results
 
-Your Trading Strategy Tracker is now production-ready with professional CI/CD! 🎯 
+Your EALifeCycle is now production-ready with professional CI/CD! 🎯 
