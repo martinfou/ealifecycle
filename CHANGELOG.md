@@ -5,6 +5,33 @@ All notable changes to **EALifeCycle** (Expert Advisor Lifecycle Management) wil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.6] - 2025-06-02
+
+### Added
+- **Professional Trading Dashboard Image**: Created new `trading-dashboard.svg` for hero section
+  - Professional control center interface showing portfolio performance, risk metrics, and EA status
+  - Integrated EA lifecycle concepts (💡 IDEA, 🧪 DEMO, 🚀 PRODUCTION, ⏸️ PAUSED, 📦 RETIRED)
+  - Real-time profit charts with animated data visualization
+  - Control metrics including risk gauges and stability meters
+  - Transparent background for seamless website integration
+  - Represents control, management, stability, and profit themes
+
+### Changed
+- **Hero Section Enhancement**: Replaced lifecycle flow diagram with professional trading dashboard
+- **Image Size Optimization**: Increased EA lifecycle flow image from `max-w-4xl` to `max-w-7xl` (100% bigger)
+- **Content Streamlining**: Removed duplicate lifecycle stage information grid to avoid redundancy
+
+### Fixed
+- **XML Parsing Issues**: Fixed unescaped ampersand in SVG causing XML parsing errors
+- **Background Transparency**: Completely removed all background elements for seamless blending
+- **Cache Management**: Cleared all Laravel caches to ensure updated assets are served
+
+### Technical Details
+- Created transparent SVG with animated elements and gradients
+- Enhanced hero section layout with better visual hierarchy
+- Improved asset caching and delivery
+- Maintained responsive design across all device sizes
+
 ## [0.3.5] - 2025-06-02
 
 ### Added
