@@ -39,8 +39,11 @@ jobs:
       
     - name: Create deployment archive
       run: |
-        # Create a deployment package excluding development files
-        tar -czf deploy.tar.gz \
+        # Create staging directory for deployment
+        mkdir -p deploy-staging
+        
+        # Copy files to staging, excluding development files
+        rsync -av --progress . deploy-staging/ \
           --exclude='.git' \
           --exclude='.github' \
           --exclude='node_modules' \
@@ -62,9 +65,10 @@ jobs:
           --exclude='*.tmp' \
           --exclude='.DS_Store' \
           --exclude='Thumbs.db' \
-          --exclude='deploy.tar.gz' \
-          --warning=no-file-changed \
-          .
+          --exclude='deploy-staging'
+        
+        # Create tar archive from staging directory
+        tar -czf deploy.tar.gz -C deploy-staging .
           
     - name: Deploy to Dreamhost via SSH
       uses: appleboy/ssh-action@v1.0.3
