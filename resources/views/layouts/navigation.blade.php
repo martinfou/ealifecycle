@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ url('/') }}" class="text-white font-bold text-xl hover:text-gray-300 transition-colors">
-                        Trading Strategy Tracker
+                        🤖 EALifecycle
                     </a>
                 </div>
 
@@ -17,7 +17,7 @@
                     </x-nav-link>
                     
                     <x-nav-link :href="route('strategies.index')" :active="request()->routeIs('strategies.*')">
-                        {{ __('Strategies') }}
+                        {{ __('Expert Advisors') }}
                     </x-nav-link>
                     
                     <x-nav-link :href="route('trades.index')" :active="request()->routeIs('trades.*')">
@@ -113,7 +113,7 @@
             </x-responsive-nav-link>
             
             <x-responsive-nav-link :href="route('strategies.index')" :active="request()->routeIs('strategies.*')">
-                {{ __('Strategies') }}
+                {{ __('Expert Advisors') }}
             </x-responsive-nav-link>
             
             <x-responsive-nav-link :href="route('trades.index')" :active="request()->routeIs('trades.*')">

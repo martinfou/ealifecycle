@@ -1,11 +1,11 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "trading-strategy-tracker/app",
+    "name": "ealifecycle/app",
     "type": "project",
-    "description": "Professional Trading Strategy Tracker with FX Blue integration and comprehensive strategy management.",
-    "keywords": ["trading", "strategy", "tracker", "fx-blue", "laravel", "forex"],
+    "description": "EALifecycle - The definitive platform for managing Expert Advisors professionally. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading and trading robot operations.",
+    "keywords": ["expert-advisor", "ea-lifecycle", "algorithmic-trading", "trading-robots", "automated-trading", "lifecycle-management", "devops", "laravel", "forex", "metatrader"],
     "license": "MIT",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
