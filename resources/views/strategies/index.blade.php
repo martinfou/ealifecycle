@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <h2 class="font-semibold text-xl text-white leading-tight">
                 {{ __('My Strategies') }}
             </h2>
-            <a href="{{ route('strategies.create') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+            <a href="{{ route('strategies.create') }}" class="w-full sm:w-auto text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                 Add New Strategy
             </a>
         </div>
@@ -21,16 +21,16 @@
             <div class="bg-gray-800 border border-gray-700 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6">
                     @forelse($strategies as $strategy)
-                        <div class="flex items-center justify-between p-4 border border-gray-700 rounded-lg mb-4 last:mb-0 bg-gray-900 hover:bg-gray-750 hover:border-gray-600 transition-all">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-4">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between p-4 border border-gray-700 rounded-lg mb-4 last:mb-0 bg-gray-900 hover:bg-gray-750 hover:border-gray-600 transition-all">
+                            <div class="flex-1 mb-4 lg:mb-0">
+                                <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-4">
                                     <div class="flex-1">
                                         <h3 class="text-lg font-medium text-white">
                                             <a href="{{ route('strategies.show', $strategy) }}" class="hover:text-gray-300 transition-colors">
                                                 {{ $strategy->name }}
                                             </a>
                                         </h3>
-                                        <div class="mt-1 flex items-center space-x-4 text-sm text-gray-400">
+                                        <div class="mt-1 flex flex-wrap items-center gap-2 text-sm text-gray-400">
                                             <span class="flex items-center space-x-1">
                                                 @if($strategy->timeframes->count() > 0)
                                                     @foreach($strategy->timeframes->sortBy('sort_order') as $timeframe)
@@ -78,7 +78,7 @@
                                             <p class="mt-1 text-sm text-gray-300">{{ Str::limit($strategy->description, 100) }}</p>
                                         @endif
                                     </div>
-                                    <div class="flex items-center space-x-3">
+                                    <div class="flex items-center mt-3 lg:mt-0">
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" 
                                               style="background-color: {{ $strategy->status->color }}20; color: {{ $strategy->status->color }}">
                                             {{ $strategy->status->name }}
@@ -86,7 +86,35 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex items-center space-x-2 ml-4">
+                            
+                            <!-- Mobile Actions (Stacked) -->
+                            <div class="lg:hidden border-t border-gray-700 pt-3 mt-3">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="{{ route('strategies.show', $strategy) }}" 
+                                       class="text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded transition-colors">
+                                        View
+                                    </a>
+                                    <a href="{{ route('strategies.edit', $strategy) }}" 
+                                       class="text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded transition-colors">
+                                        Edit
+                                    </a>
+                                    <a href="{{ route('strategies.history', $strategy) }}" 
+                                       class="text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded transition-colors">
+                                        History
+                                    </a>
+                                    <form method="POST" action="{{ route('strategies.destroy', $strategy) }}" class="inline" 
+                                          onsubmit="return confirm('Are you sure you want to delete this strategy?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded transition-colors">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Desktop Actions (Inline) -->
+                            <div class="hidden lg:flex items-center space-x-2 ml-4">
                                 <a href="{{ route('strategies.show', $strategy) }}" class="text-gray-300 hover:text-white text-sm font-medium transition-colors">
                                     View
                                 </a>

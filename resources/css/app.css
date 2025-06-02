@@ -1,3 +1,81 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Mobile-friendly improvements */
+@layer components {
+    /* Improve touch targets on mobile */
+    @media (max-width: 768px) {
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Better button spacing on mobile */
+        button, .btn, a[class*="bg-"] {
+            @apply py-3 px-4;
+        }
+        
+        /* Improve form inputs on mobile */
+        input, select, textarea {
+            @apply text-base;
+            font-size: 16px !important; /* Prevents zoom on iOS */
+        }
+        
+        /* Better table scrolling */
+        .table-container {
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+    
+    /* Hover states only on non-touch devices */
+    @media (hover: hover) {
+        .hover-only:hover {
+            @apply bg-gray-700;
+        }
+    }
+    
+    /* Loading states for better UX */
+    .loading {
+        @apply opacity-50 pointer-events-none;
+    }
+    
+    /* Custom scrollbar for webkit browsers */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+        @apply bg-gray-800 rounded;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        @apply bg-gray-600 rounded;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        @apply bg-gray-500;
+    }
+    
+    /* Responsive grid improvements */
+    .responsive-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+    }
+    
+    /* Mobile-first card design */
+    .mobile-card {
+        @apply bg-gray-900 border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition-all duration-200;
+    }
+    
+    .mobile-card:active {
+        @apply scale-95;
+    }
+    
+    /* Better mobile navigation */
+    .mobile-nav-item {
+        @apply block px-4 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-colors;
+    }
+}

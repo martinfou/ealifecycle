@@ -35,14 +35,17 @@
                 <div class="bg-gray-800 border border-gray-700 overflow-hidden shadow-lg sm:rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-medium text-white mb-4">Quick Actions</h3>
-                        <div class="flex space-x-4">
-                            <a href="{{ route('strategies.create') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                            <a href="{{ route('strategies.create') }}" 
+                               class="w-full sm:w-auto text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
                                 Add New Strategy
                             </a>
-                            <a href="{{ route('trades.import') }}" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                            <a href="{{ route('trades.import') }}" 
+                               class="w-full sm:w-auto text-center bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition-colors">
                                 Import Trades
                             </a>
-                            <a href="{{ route('strategies.index') }}" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                            <a href="{{ route('strategies.index') }}" 
+                               class="w-full sm:w-auto text-center bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
                                 View All Strategies
                             </a>
                         </div>
