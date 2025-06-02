@@ -38,9 +38,10 @@ php artisan serve
 - **main**: Production-ready code only
 - **feature/**: New features (`feature/add-user-management`)
 - **fix/**: Bug fixes (`fix/database-connection`)
+- **hotfix/**: Emergency production fixes (`hotfix/405-error-fix`)
 - **refactor/**: Code improvements (`refactor/optimize-queries`)
 
-### Development Workflow
+### Standard Development Workflow
 
 #### 1. Create Feature Branch
 ```bash
@@ -80,6 +81,55 @@ git push origin feature/your-feature-name
 - Go to GitHub
 - Create Pull Request from `feature/your-feature-name` to `main`
 - Review changes before merging
+
+## 🚨 Emergency Procedures
+
+### When Direct Push to Main is Acceptable
+
+**Critical Production Issues:**
+- Site is completely down (500, 405, 403 errors)
+- Security vulnerabilities requiring immediate patch
+- Data loss prevention
+- Critical infrastructure failures
+
+### Emergency Hotfix Workflow
+
+#### Option A: Direct Push (Production Down)
+```bash
+# When production is broken and needs immediate fix
+git checkout main
+git pull origin main
+
+# Make emergency fix
+git add .
+git commit -m "hotfix: fix critical production issue - brief description"
+git push origin main
+
+# Document the emergency push in team chat/docs
+```
+
+#### Option B: Fast-Track Hotfix Branch (Preferred)
+```bash
+# Create hotfix branch
+git checkout main
+git checkout -b hotfix/critical-issue-name
+
+# Make fix
+git add .
+git commit -m "hotfix: fix critical production issue"
+git push origin hotfix/critical-issue-name
+
+# Immediately merge to main (skip normal review for emergencies)
+git checkout main
+git merge hotfix/critical-issue-name
+git push origin main
+```
+
+### Post-Emergency Procedures
+1. **Document the issue** in TROUBLESHOOTING.md
+2. **Update monitoring** to prevent recurrence  
+3. **Create follow-up tickets** for proper long-term fixes
+4. **Team notification** about emergency changes
 
 ### 🧪 Local Testing Commands
 
