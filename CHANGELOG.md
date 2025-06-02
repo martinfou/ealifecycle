@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2024-12-28
+
+### Added
+- **Group-based Permission System**: Complete implementation of user groups with read/write permissions
+- **Strategy Group Association**: Strategies can now be assigned to groups for controlled sharing
+- **Permission-based Access Control**: Users can only view/edit strategies based on group membership and permissions
+- **Group Management Interface**: Admin interface for creating and managing groups (controller implementation)
+- **User Group Permissions**: Fine-grained permission system with read/write access levels
+- **Group Indicators**: Visual indicators in strategy listings showing group membership and permissions
+
+### Changed
+- **Strategy Controller**: Updated to filter strategies based on group permissions and ownership
+- **Strategy Models**: Enhanced with group relationships and permission checking methods
+- **User/Group Models**: Added comprehensive permission checking and relationship methods
+- **Strategy Forms**: Added group selection in create/edit forms with permission validation
+- **Database Schema**: Added group_id to strategies table and permissions to user_groups pivot table
+
+### Security
+- **Access Control**: Strategies are now filtered based on user group membership
+- **Permission Validation**: Write operations require appropriate group permissions
+- **Owner Override**: Strategy owners maintain full access regardless of group permissions
+
+### Technical
+- **Database Migrations**: Added group_id foreign key to strategies and permissions column to user_groups
+- **Model Relationships**: Implemented comprehensive group-strategy-user relationships
+- **Route Enhancement**: Added group user management routes for admin operations
+- **Dark Theme**: Updated strategy creation form to match application dark theme
+
 ## [0.1.4] - 2024-12-28
 
 ### Added

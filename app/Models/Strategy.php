@@ -16,6 +16,7 @@ class Strategy extends Model
         'status_id',
         'date_in_status',
         'user_id',
+        'group_id',
         'description',
     ];
 
@@ -29,6 +30,14 @@ class Strategy extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the group that the strategy belongs to.
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
     }
 
     /**
@@ -77,5 +86,51 @@ class Strategy extends Model
     public function scopeWithStatus($query, $statusId)
     {
         return $query->where('status_id', $statusId);
+    }
+
+    /**
+     * Scope a query to only include strategies accessible by a user based on group membership.
+     */
+    public function scopeAccessibleByUser($query, $user)
+    {
+        return $query->whereHas('group.users', function ($q) use ($user) {
+            $q->where('users.id', $user->id);
+        })->orWhere('user_id', $user->id);
+    }
+
+    /**
+     * Check if a user can edit this strategy (has write permission in the group).
+     */
+    public function canUserEdit($user)
+    {
+        // Strategy owner can always edit
+        if ($this->user_id === $user->id) {
+            return true;
+        }
+
+        // Check if user has write permission in the strategy's group
+        if ($this->group) {
+            return $user->hasWritePermissionInGroup($this->group_id);
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if a user can view this strategy (has read or write permission in the group).
+     */
+    public function canUserView($user)
+    {
+        // Strategy owner can always view
+        if ($this->user_id === $user->id) {
+            return true;
+        }
+
+        // Check if user has any permission in the strategy's group
+        if ($this->group) {
+            return $user->hasPermissionInGroup($this->group_id);
+        }
+
+        return false;
     }
 }

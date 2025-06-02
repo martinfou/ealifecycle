@@ -40,6 +40,26 @@
                                                 <span>•</span>
                                                 <span>Magic: {{ $strategy->magic_number }}</span>
                                             @endif
+                                            @if($strategy->group)
+                                                <span>•</span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                                                    </svg>
+                                                    {{ $strategy->group->name }}
+                                                    @if($strategy->user_id !== Auth::id())
+                                                        @php
+                                                            $permission = Auth::user()->getPermissionInGroup($strategy->group_id);
+                                                        @endphp
+                                                        <span class="ml-1 text-xs px-1.5 py-0.5 rounded {{ $permission === 'write' ? 'bg-green-800 text-green-200' : 'bg-gray-700 text-gray-300' }}">
+                                                            {{ $permission }}
+                                                        </span>
+                                                    @endif
+                                                </span>
+                                            @else
+                                                <span>•</span>
+                                                <span class="text-gray-500">Private</span>
+                                            @endif
                                             <span>•</span>
                                             <span>In {{ $strategy->status->name }} since {{ $strategy->date_in_status->format('M j, Y') }}</span>
                                         </div>

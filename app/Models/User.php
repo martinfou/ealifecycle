@@ -53,7 +53,61 @@ class User extends Authenticatable
      */
     public function groups(): BelongsToMany
     {
-        return $this->belongsToMany(Group::class, 'user_groups');
+        return $this->belongsToMany(Group::class, 'user_groups')
+                    ->withPivot('permission')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get groups where user has read permission.
+     */
+    public function readGroups(): BelongsToMany
+    {
+        return $this->groups()->wherePivot('permission', 'read');
+    }
+
+    /**
+     * Get groups where user has write permission.
+     */
+    public function writeGroups(): BelongsToMany
+    {
+        return $this->groups()->wherePivot('permission', 'write');
+    }
+
+    /**
+     * Check if user has any permission in a specific group.
+     */
+    public function hasPermissionInGroup($groupId): bool
+    {
+        return $this->groups()->where('groups.id', $groupId)->exists();
+    }
+
+    /**
+     * Check if user has write permission in a specific group.
+     */
+    public function hasWritePermissionInGroup($groupId): bool
+    {
+        return $this->groups()
+                    ->where('groups.id', $groupId)
+                    ->wherePivot('permission', 'write')
+                    ->exists();
+    }
+
+    /**
+     * Get user's permission level in a specific group.
+     */
+    public function getPermissionInGroup($groupId): ?string
+    {
+        $group = $this->groups()->where('groups.id', $groupId)->first();
+        return $group ? $group->pivot->permission : null;
+    }
+
+    /**
+     * Get all group IDs that the user has access to.
+     */
+    public function getAccessibleGroupIds(): array
+    {
+        return $this->groups()->pluck('groups.id')->toArray();
     }
 
     /**

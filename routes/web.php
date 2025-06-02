@@ -52,6 +52,9 @@ Route::middleware(['auth'])->group(function () {
         
         // Group management
         Route::resource('groups', GroupController::class);
+        Route::post('groups/{group}/add-user', [GroupController::class, 'addUser'])->name('groups.add-user');
+        Route::patch('groups/{group}/users/{user}/permission', [GroupController::class, 'updateUserPermission'])->name('groups.update-user-permission');
+        Route::delete('groups/{group}/users/{user}', [GroupController::class, 'removeUser'])->name('groups.remove-user');
         
         // User management
         Route::resource('users', UserController::class);
