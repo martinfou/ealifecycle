@@ -41,11 +41,11 @@
                             <label for="symbols_traded" class="block text-sm font-medium text-gray-300">Symbols Traded</label>
                             <input type="text" name="symbols_traded" id="symbols_traded" value="{{ old('symbols_traded', $strategy->symbols_traded) }}" 
                                    class="mt-1 block w-full rounded-md bg-gray-900 border-gray-600 text-white shadow-sm focus:border-gray-500 focus:ring-gray-500 @error('symbols_traded') border-red-500 @enderror"
-                                   placeholder="e.g., EURUSD, GBPUSD, USDJPY">
+                                   placeholder="e.g., EURUSD, GBPUSD, AAPL, TSLA, ES, CL">
                             @error('symbols_traded')
                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-xs text-gray-400">Enter the currency pairs or symbols this strategy trades</p>
+                            <p class="mt-1 text-xs text-gray-400">Enter symbols separated by commas. Examples: <strong>Forex:</strong> EURUSD, GBPJPY, XAUUSD • <strong>Stocks:</strong> AAPL, TSLA, SPY • <strong>Futures:</strong> ES, NQ, CL, GC</p>
                         </div>
 
                         <!-- Timeframe -->

@@ -5,7 +5,26 @@ All notable changes to **EALifeCycle** (Expert Advisor Lifecycle Management) wil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.0] - 2024-12-28
+## [0.3.3] - 2024-12-28
+
+### Enhanced
+- **Trading Symbol Examples**: Added comprehensive examples for multiple asset classes in strategy forms
+- **Multi-Asset Support**: Enhanced "Symbols Traded" field with examples across Forex, Stocks, and Futures
+- **User Experience**: Improved form guidance with industry-standard symbol examples
+
+### Added
+- **Forex Examples**: EURUSD, GBPJPY, XAUUSD (major pairs and precious metals)
+- **Stock Examples**: AAPL, TSLA, SPY (individual stocks and ETFs)
+- **Futures Examples**: ES, NQ, CL, GC (index futures, commodities, and precious metals)
+- **Enhanced Placeholders**: Updated form placeholders to show diverse trading instruments
+- **Comprehensive Help Text**: Added detailed examples with asset class categorization
+
+### Changed
+- **Strategy Create Form**: Updated symbols field with multi-asset examples and enhanced help text
+- **Strategy Edit Form**: Consistent symbol examples and improved user guidance
+- **Form Usability**: Better placeholder text showing real-world trading symbols across asset classes
+
+## [0.3.2] - 2024-12-28
 
 ### 🚀 Major Rebranding: EALifeCycle
 
