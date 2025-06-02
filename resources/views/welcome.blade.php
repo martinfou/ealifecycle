@@ -111,6 +111,81 @@
             </div>
         </section>
 
+        <!-- EA Lifecycle Process Section -->
+        <section class="py-20 bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                        Complete Expert Advisor Lifecycle Management
+                    </h2>
+                    <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                        From initial strategy concept through live trading to retirement - track every stage of your EA's journey with complete audit trails and status history.
+                    </p>
+                </div>
+                
+                <div class="flex justify-center mb-12">
+                    <img src="{{ asset('images/algo-trading/ea-lifecycle-flow.svg') }}" alt="Expert Advisor Lifecycle Flow" class="w-full max-w-4xl h-auto"/>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 text-center">
+                    <!-- Idea Stage -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-colors">
+                        <div class="text-3xl mb-3">💡</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Idea</h3>
+                        <p class="text-sm text-gray-400">Strategy concept and initial development phase</p>
+                    </div>
+                    
+                    <!-- Demo Stage -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-blue-500 transition-colors">
+                        <div class="text-3xl mb-3">🧪</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Demo</h3>
+                        <p class="text-sm text-gray-400">Risk-free testing and validation environment</p>
+                    </div>
+                    
+                    <!-- Production Stage -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-green-500 transition-colors">
+                        <div class="text-3xl mb-3">🚀</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Production</h3>
+                        <p class="text-sm text-gray-400">Live trading with real money operations</p>
+                    </div>
+                    
+                    <!-- Pause Stage -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-colors">
+                        <div class="text-3xl mb-3">⏸️</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Pause</h3>
+                        <p class="text-sm text-gray-400">Temporary suspension and monitoring</p>
+                    </div>
+                    
+                    <!-- Retired Stage -->
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-500 transition-colors">
+                        <div class="text-3xl mb-3">📦</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Retired</h3>
+                        <p class="text-sm text-gray-400">Archived for historical analysis</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 max-w-4xl mx-auto">
+                        <h3 class="text-xl font-bold text-white mb-4">DevOps-Inspired EA Management</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                            <div class="text-center">
+                                <div class="text-blue-400 font-semibold mb-2">🔄 Status Transitions</div>
+                                <p class="text-gray-400">Track every status change with timestamps and notes</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-green-400 font-semibold mb-2">📊 Performance Analytics</div>
+                                <p class="text-gray-400">Monitor EA performance across all lifecycle stages</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-purple-400 font-semibold mb-2">🔒 Audit Trail</div>
+                                <p class="text-gray-400">Complete history for compliance and optimization</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Features Section -->
         <section id="features" class="py-20 bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

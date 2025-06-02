@@ -1,0 +1,247 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ideaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D97706;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="demoGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="productionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pauseGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D97706;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="retiredGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6B7280;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4B5563;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F172A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E293B;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrowhead" markerWidth="12" markerHeight="8" 
+            refX="12" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#60A5FA" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bgGradient)"/>
+  
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    Expert Advisor Lifecycle Flow
+  </text>
+  
+  <!-- Flow Arrows -->
+  <g stroke="#60A5FA" stroke-width="3" fill="none" marker-end="url(#arrowhead)" opacity="0.8">
+    <!-- Idea to Demo -->
+    <path d="M 180 200 L 240 200">
+      <animate attributeName="stroke-dasharray" values="0,100;15,85;30,70" dur="2s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Demo to Production -->
+    <path d="M 340 200 L 400 200">
+      <animate attributeName="stroke-dasharray" values="0,100;15,85;30,70" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Production to Pause -->
+    <path d="M 500 200 L 560 200">
+      <animate attributeName="stroke-dasharray" values="0,100;15,85;30,70" dur="1.8s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Pause to Retired -->
+    <path d="M 660 200 L 720 200">
+      <animate attributeName="stroke-dasharray" values="0,100;15,85;30,70" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Return paths (curved) -->
+    <!-- Demo back to Idea -->
+    <path d="M 290 250 Q 235 280 180 250" stroke-dasharray="5,5" opacity="0.4">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Production back to Demo -->
+    <path d="M 450 250 Q 395 280 340 250" stroke-dasharray="5,5" opacity="0.4">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="3.5s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Pause back to Production -->
+    <path d="M 610 250 Q 555 280 500 250" stroke-dasharray="5,5" opacity="0.4">
+      <animate attributeName="stroke-dashoffset" values="0;10" dur="2.8s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Stage 1: Idea -->
+  <g transform="translate(100, 150)">
+    <circle cx="50" cy="50" r="45" fill="url(#ideaGradient)" stroke="#D97706" stroke-width="3" filter="url(#glow)"/>
+    
+    <!-- Lightbulb Icon -->
+    <g transform="translate(35, 35)" fill="#FEF3C7">
+      <circle cx="15" cy="12" r="8" fill="none" stroke="#FEF3C7" stroke-width="2"/>
+      <path d="M15 20 L15 24 M11 22 L19 22" stroke="#FEF3C7" stroke-width="2" stroke-linecap="round"/>
+      <path d="M15 4 L15 2 M7 7 L5.5 5.5 M23 7 L24.5 5.5 M4 15 L2 15 M28 15 L26 15" 
+            stroke="#FEF3C7" stroke-width="1.5" stroke-linecap="round" transform="scale(0.6) translate(10, 5)"/>
+    </g>
+    
+    <text x="50" y="115" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      💡 IDEA
+    </text>
+    <text x="50" y="130" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Strategy Concept
+    </text>
+    <text x="50" y="142" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Development
+    </text>
+  </g>
+  
+  <!-- Stage 2: Demo -->
+  <g transform="translate(260, 150)">
+    <circle cx="50" cy="50" r="45" fill="url(#demoGradient)" stroke="#1E40AF" stroke-width="3" filter="url(#glow)"/>
+    
+    <!-- Testing Icon -->
+    <g transform="translate(35, 35)" fill="#DBEAFE">
+      <rect x="8" y="8" width="14" height="14" rx="2" fill="none" stroke="#DBEAFE" stroke-width="2"/>
+      <path d="M12 12 L16 16 L20 10" stroke="#DBEAFE" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    
+    <text x="50" y="115" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      🧪 DEMO
+    </text>
+    <text x="50" y="130" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Paper Trading
+    </text>
+    <text x="50" y="142" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Testing & Validation
+    </text>
+  </g>
+  
+  <!-- Stage 3: Production -->
+  <g transform="translate(420, 150)">
+    <circle cx="50" cy="50" r="45" fill="url(#productionGradient)" stroke="#059669" stroke-width="3" filter="url(#glow)"/>
+    
+    <!-- Live Trading Icon -->
+    <g transform="translate(35, 35)" fill="#D1FAE5">
+      <circle cx="15" cy="15" r="10" fill="none" stroke="#D1FAE5" stroke-width="2"/>
+      <circle cx="15" cy="15" r="3" fill="#D1FAE5">
+        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <path d="M15 5 L15 25 M5 15 L25 15" stroke="#D1FAE5" stroke-width="1" opacity="0.6"/>
+    </g>
+    
+    <text x="50" y="115" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      🚀 PRODUCTION
+    </text>
+    <text x="50" y="130" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Live Trading
+    </text>
+    <text x="50" y="142" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Real Money
+    </text>
+  </g>
+  
+  <!-- Stage 4: Pause/On Hold -->
+  <g transform="translate(580, 150)">
+    <circle cx="50" cy="50" r="45" fill="url(#pauseGradient)" stroke="#D97706" stroke-width="3" filter="url(#glow)"/>
+    
+    <!-- Pause Icon -->
+    <g transform="translate(35, 35)" fill="#FEF3C7">
+      <rect x="10" y="8" width="4" height="14" rx="1" fill="#FEF3C7"/>
+      <rect x="16" y="8" width="4" height="14" rx="1" fill="#FEF3C7"/>
+    </g>
+    
+    <text x="50" y="115" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      ⏸️ PAUSE
+    </text>
+    <text x="50" y="130" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      On Hold
+    </text>
+    <text x="50" y="142" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Temporary Stop
+    </text>
+  </g>
+  
+  <!-- Stage 5: Retired -->
+  <g transform="translate(740, 150)">
+    <circle cx="50" cy="50" r="45" fill="url(#retiredGradient)" stroke="#4B5563" stroke-width="3" filter="url(#glow)"/>
+    
+    <!-- Archive Icon -->
+    <g transform="translate(35, 35)" fill="#D1D5DB">
+      <rect x="8" y="10" width="14" height="12" rx="1" fill="none" stroke="#D1D5DB" stroke-width="2"/>
+      <path d="M11 14 L19 14" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round"/>
+      <path d="M12 10 L12 6 L18 6 L18 10" stroke="#D1D5DB" stroke-width="2" fill="none"/>
+    </g>
+    
+    <text x="50" y="115" text-anchor="middle" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      📦 RETIRED
+    </text>
+    <text x="50" y="130" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      Archived
+    </text>
+    <text x="50" y="142" text-anchor="middle" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="10">
+      End of Life
+    </text>
+  </g>
+  
+  <!-- Stage Labels -->
+  <g fill="#9CA3AF" font-family="Arial, sans-serif" font-size="10">
+    <text x="130" y="320" text-anchor="middle">Development &amp; Strategy Creation</text>
+    <text x="290" y="320" text-anchor="middle">Risk-Free Testing Environment</text>
+    <text x="450" y="320" text-anchor="middle">Active Live Trading Operations</text>
+    <text x="610" y="320" text-anchor="middle">Temporary Suspension</text>
+    <text x="770" y="320" text-anchor="middle">Historical Archive</text>
+  </g>
+  
+  <!-- Flow Direction Labels -->
+  <g fill="#60A5FA" font-family="Arial, sans-serif" font-size="9" text-anchor="middle">
+    <text x="210" y="195">Deploy</text>
+    <text x="370" y="195">Go Live</text>
+    <text x="530" y="195">Suspend</text>
+    <text x="690" y="195">Archive</text>
+  </g>
+  
+  <!-- Return Flow Labels -->
+  <g fill="#9CA3AF" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" opacity="0.7">
+    <text x="235" y="295">Revise</text>
+    <text x="395" y="295">Retest</text>
+    <text x="555" y="295">Resume</text>
+  </g>
+  
+  <!-- Lifecycle Stats -->
+  <rect x="250" y="360" width="300" height="30" rx="15" fill="#1F2937" stroke="#374151" stroke-width="1"/>
+  <g fill="#F9FAFB" font-family="Arial, sans-serif" font-size="10">
+    <text x="260" y="375">Lifecycle Management:</text>
+    <text x="360" y="375" fill="#10B981">Complete Audit Trail</text>
+    <text x="470" y="375">•</text>
+    <text x="480" y="375" fill="#3B82F6">Status History</text>
+  </g>
+  
+  <!-- Data Flow Indicators -->
+  <g fill="#60A5FA" opacity="0.6">
+    <!-- Moving dots along forward paths -->
+    <circle cx="200" cy="200" r="2">
+      <animate attributeName="cx" values="200;220;200" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="360" cy="200" r="2">
+      <animate attributeName="cx" values="360;380;360" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="520" cy="200" r="2">
+      <animate attributeName="cx" values="520;540;520" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="680" cy="200" r="2">
+      <animate attributeName="cx" values="680;700;680" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg> 
