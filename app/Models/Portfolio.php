@@ -59,10 +59,12 @@ class Portfolio extends Model
     /**
      * Get the history entries for this portfolio.
      */
+    /*
     public function history(): HasMany
     {
         return $this->hasMany(PortfolioHistory::class)->orderBy('created_at', 'desc');
     }
+    */
 
     /**
      * Scope a query to only include active portfolios.
