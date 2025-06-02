@@ -56,13 +56,29 @@
                             </div>
                         </div>
 
-                        <!-- Timeframe -->
+                        <!-- Timeframes -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Timeframe</label>
-                            <div class="text-sm text-white bg-gray-900 px-3 py-2 rounded-md border border-gray-600">
-                                {{ $strategy->timeframe->name }}
-                                @if($strategy->timeframe->description)
-                                    <span class="text-gray-400">({{ $strategy->timeframe->description }})</span>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Timeframes</label>
+                            <div class="text-sm bg-gray-900 px-3 py-2 rounded-md border border-gray-600">
+                                @if($strategy->timeframes->count() > 0)
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach($strategy->timeframes->sortBy('sort_order') as $timeframe)
+                                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium 
+                                                {{ $timeframe->pivot->is_primary ? 'bg-blue-900 text-blue-200 border border-blue-600' : 'bg-gray-700 text-gray-300 border border-gray-600' }}">
+                                                {{ $timeframe->name }}
+                                                @if($timeframe->pivot->is_primary)
+                                                    <span class="ml-1 text-blue-300">•</span>
+                                                @endif
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                    @if($strategy->timeframes->where('pivot.is_primary', true)->first())
+                                        <p class="text-xs text-gray-400 mt-1">
+                                            Primary: {{ $strategy->timeframes->where('pivot.is_primary', true)->first()->name }}
+                                        </p>
+                                    @endif
+                                @else
+                                    <span class="text-gray-400">No timeframes assigned</span>
                                 @endif
                             </div>
                         </div>
