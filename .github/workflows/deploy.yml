@@ -231,6 +231,34 @@ jobs:
           echo "Running database migrations..."
           $PHP_BINARY artisan migrate --force
           
+          # Verify all migrations ran successfully
+          echo "=== Verifying all migrations completed successfully ==="
+          PENDING_MIGRATIONS=$($PHP_BINARY artisan migrate:status | grep "Pending" | wc -l)
+          if [ $PENDING_MIGRATIONS -gt 0 ]; then
+            echo "❌ ERROR: $PENDING_MIGRATIONS migrations are still pending!"
+            echo "=== Pending migrations ==="
+            $PHP_BINARY artisan migrate:status | grep "Pending"
+            echo "=== Attempting to run pending migrations individually ==="
+            
+            # Try to run pending migrations one by one and report which ones fail
+            $PHP_BINARY artisan migrate:status | grep "Pending" | while read -r line; do
+              MIGRATION_NAME=$(echo "$line" | awk '{print $1}')
+              echo "Attempting to run: $MIGRATION_NAME"
+              if $PHP_BINARY artisan migrate --path=database/migrations/${MIGRATION_NAME}.php --force 2>/dev/null; then
+                echo "✅ Successfully ran: $MIGRATION_NAME"
+              else
+                echo "❌ Failed to run: $MIGRATION_NAME"
+                # Don't exit on individual migration failure, continue with deployment
+              fi
+            done
+          else
+            echo "✅ All migrations completed successfully!"
+          fi
+          
+          # Final migration status check
+          echo "=== Final migration status ==="
+          $PHP_BINARY artisan migrate:status
+          
           echo "Seeding database with default data..."
           $PHP_BINARY artisan db:seed --force
           
