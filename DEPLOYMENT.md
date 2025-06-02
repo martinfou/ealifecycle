@@ -245,4 +245,45 @@ curl -I https://4xhacker.com/ealifecycle/
 ls -la /home/dh_4xhacker/ealifecycle/public/index.php
 ```
 
+**405 Method Not Allowed Error:**
+```bash
+# Check if .htaccess file exists in Laravel public directory
+ls -la /home/dh_4xhacker/ealifecycle/public/.htaccess
+
+# If missing, create it:
+cat > /home/dh_4xhacker/ealifecycle/public/.htaccess << 'EOF'
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+EOF
+
+# Check Laravel route cache (clear if needed)
+cd /home/dh_4xhacker/ealifecycle
+php artisan route:clear
+php artisan config:clear
+php artisan cache:clear
+
+# Check APP_URL in .env file
+grep APP_URL .env
+# Should show: APP_URL=https://4xhacker.com/ealifecycle
+```
+
 ### Logs and Debugging

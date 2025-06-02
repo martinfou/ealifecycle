@@ -135,6 +135,32 @@ jobs:
           # Set up environment file
           cp .env.production .env
           
+          # Ensure .htaccess file exists in public directory for Laravel routing
+          if [ ! -f "public/.htaccess" ]; then
+            echo "Creating .htaccess file for Laravel routing"
+            echo "<IfModule mod_rewrite.c>" > public/.htaccess
+            echo "    <IfModule mod_negotiation.c>" >> public/.htaccess
+            echo "        Options -MultiViews -Indexes" >> public/.htaccess
+            echo "    </IfModule>" >> public/.htaccess
+            echo "" >> public/.htaccess
+            echo "    RewriteEngine On" >> public/.htaccess
+            echo "" >> public/.htaccess
+            echo "    # Handle Authorization Header" >> public/.htaccess
+            echo "    RewriteCond %{HTTP:Authorization} ." >> public/.htaccess
+            echo "    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]" >> public/.htaccess
+            echo "" >> public/.htaccess
+            echo "    # Redirect Trailing Slashes If Not A Folder..." >> public/.htaccess
+            echo "    RewriteCond %{REQUEST_FILENAME} !-d" >> public/.htaccess
+            echo "    RewriteCond %{REQUEST_URI} (.+)/$" >> public/.htaccess
+            echo "    RewriteRule ^ %1 [L,R=301]" >> public/.htaccess
+            echo "" >> public/.htaccess
+            echo "    # Send Requests To Front Controller..." >> public/.htaccess
+            echo "    RewriteCond %{REQUEST_FILENAME} !-d" >> public/.htaccess
+            echo "    RewriteCond %{REQUEST_FILENAME} !-f" >> public/.htaccess
+            echo "    RewriteRule ^ index.php [L]" >> public/.htaccess
+            echo "</IfModule>" >> public/.htaccess
+          fi
+          
           # Set proper permissions
           chmod -R 755 storage bootstrap/cache
           chmod -R 777 storage/logs storage/framework/cache storage/framework/sessions storage/framework/views
