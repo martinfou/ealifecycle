@@ -135,9 +135,15 @@ class PortfolioController extends Controller
             abort(403, 'You do not have permission to edit this portfolio.');
         }
 
-        // Get strategies user can access that are not already in this portfolio
+        // Get IDs of strategies that are currently active or paused in this portfolio
+        $activePortfolioStrategyIds = $portfolio->strategies()
+                                                ->whereIn('portfolio_strategies.status', ['active', 'paused'])
+                                                ->pluck('strategies.id')
+                                                ->toArray();
+
+        // Get strategies user can access that are not currently active/paused in this portfolio
         $availableStrategies = Auth::user()->strategies()
-                                          ->whereNotIn('id', $portfolio->strategies()->pluck('strategies.id'))
+                                          ->whereNotIn('id', $activePortfolioStrategyIds)
                                           ->with(['status', 'timeframes'])
                                           ->orderBy('name')
                                           ->get();
@@ -165,13 +171,33 @@ class PortfolioController extends Controller
 
         DB::transaction(function () use ($validated, $portfolio) {
             foreach ($validated['strategies'] as $strategyData) {
-                $portfolio->strategies()->attach($strategyData['strategy_id'], [
-                    'allocation_amount' => $strategyData['allocation_amount'] ?? 0,
-                    'allocation_percent' => $strategyData['allocation_percent'] ?? 0,
-                    'status' => 'active',
-                    'date_added' => now()->toDateString(),
-                    'notes' => $strategyData['notes'],
-                ]);
+                $strategyId = $strategyData['strategy_id'];
+                
+                // Check if this strategy was previously in the portfolio
+                $existingRelation = $portfolio->strategies()
+                    ->wherePivot('strategy_id', $strategyId)
+                    ->first();
+                
+                if ($existingRelation) {
+                    // Update existing relationship (re-activate removed strategy)
+                    $portfolio->strategies()->updateExistingPivot($strategyId, [
+                        'allocation_amount' => $strategyData['allocation_amount'] ?? 0,
+                        'allocation_percent' => $strategyData['allocation_percent'] ?? 0,
+                        'status' => 'active',
+                        'date_added' => now()->toDateString(),
+                        'date_removed' => null,
+                        'notes' => $strategyData['notes'],
+                    ]);
+                } else {
+                    // Create new relationship
+                    $portfolio->strategies()->attach($strategyId, [
+                        'allocation_amount' => $strategyData['allocation_amount'] ?? 0,
+                        'allocation_percent' => $strategyData['allocation_percent'] ?? 0,
+                        'status' => 'active',
+                        'date_added' => now()->toDateString(),
+                        'notes' => $strategyData['notes'],
+                    ]);
+                }
             }
         });
 
