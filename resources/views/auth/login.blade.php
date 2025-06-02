@@ -49,7 +49,7 @@
     <div class="mt-6 text-center">
         <span class="text-sm text-gray-400">Don't have an account?</span>
         <a href="{{ route('register') }}" class="ml-1 text-sm text-blue-400 hover:text-blue-300 underline">
-            Sign up for Trading Strategy Tracker
+            Sign up for EALifecycle
         </a>
     </div>
 </x-guest-layout>

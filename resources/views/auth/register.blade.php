@@ -1,9 +1,9 @@
 <x-guest-layout>
     <!-- Welcome Message -->
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">Join Trading Strategy Tracker</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Join EALifecycle</h2>
         <p class="text-sm text-gray-600">
-            Create your account to start tracking and analyzing your trading strategies
+            Create your account to start managing your Expert Advisor lifecycle professionally
         </p>
     </div>
 
@@ -54,11 +54,11 @@
         <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
             <h4 class="text-sm font-medium text-blue-900 mb-2">What you'll get:</h4>
             <ul class="text-xs text-blue-700 space-y-1">
-                <li>• Track unlimited trading strategies</li>
-                <li>• Import trade history from FX Blue</li>
-                <li>• Monitor strategy performance and status</li>
-                <li>• Organize trades by timeframes and symbols</li>
-                <li>• Secure, private data storage</li>
+                <li>• Complete EA lifecycle management</li>
+                <li>• DevOps-inspired workflows for trading robots</li>
+                <li>• Monitor EA performance and deployment status</li>
+                <li>• Organize EAs by strategies and environments</li>
+                <li>• Professional algorithmic trading operations</li>
             </ul>
         </div>
 
@@ -76,8 +76,8 @@
     <!-- Privacy Note -->
     <div class="mt-6 text-center">
         <p class="text-xs text-gray-500">
-            By creating an account, you agree to keep your trading data secure and private. 
-            We don't share your trading information with third parties.
+            By creating an account, you agree to keep your EA data secure and private. 
+            We don't share your algorithmic trading information with third parties.
         </p>
     </div>
 </x-guest-layout>
