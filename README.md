@@ -372,3 +372,4 @@ For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
 ---
 
 **🚀 Ready to manage your Expert Advisors professionally? Start with the Quick Start guide above!** 
+# Force deploy trigger
