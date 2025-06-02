@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="faviconShadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Shield Background -->
+  <path d="M 16 8 L 48 8 Q 52 8 52 12 L 52 32 Q 52 40 46 44 L 34 50 Q 32 51 30 50 L 18 44 Q 12 40 12 32 L 12 12 Q 12 8 16 8 Z" 
+        fill="url(#shieldGrad)" filter="url(#faviconShadow)"/>
+  
+  <!-- EA Text in Shield -->
+  <text x="32" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">EA</text>
+  <text x="32" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-size="4" font-weight="normal" fill="white">LIFECYCLE</text>
+</svg> 

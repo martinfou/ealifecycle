@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Circuit Board Background -->
+  <rect width="200" height="80" fill="#0F172A" rx="8"/>
+  
+  <!-- Circuit Lines -->
+  <line x1="20" y1="20" x2="180" y2="20" stroke="url(#grad2)" stroke-width="2"/>
+  <line x1="20" y1="40" x2="180" y2="40" stroke="url(#grad2)" stroke-width="2"/>
+  <line x1="20" y1="60" x2="180" y2="60" stroke="url(#grad2)" stroke-width="2"/>
+  
+  <!-- Circuit Nodes -->
+  <circle cx="30" cy="20" r="3" fill="url(#grad2)"/>
+  <circle cx="70" cy="40" r="3" fill="url(#grad2)"/>
+  <circle cx="130" cy="20" r="3" fill="url(#grad2)"/>
+  <circle cx="170" cy="60" r="3" fill="url(#grad2)"/>
+  
+  <!-- EA Text -->
+  <text x="100" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">EA</text>
+  <text x="100" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="normal" fill="url(#grad2)">LIFECYCLE</text>
+</svg> 

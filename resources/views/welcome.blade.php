@@ -11,7 +11,8 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
         
         <!-- Favicon -->
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/algo-trading/ea-lifecycle-favicon-simple.svg') }}">
+        <link rel="alternate icon" href="/favicon.ico">
         
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -22,9 +23,10 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 flex items-center space-x-3">
+                            <img src="{{ asset('images/algo-trading/ea-lifecycle-main-logo.svg') }}" alt="EA Lifecycle Logo" class="h-10 w-auto">
                             <h1 class="text-2xl font-bold text-white">
-                                🤖 EALifeCycle
+                                EALifeCycle
                             </h1>
                         </div>
                     </div>

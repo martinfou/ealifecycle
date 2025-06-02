@@ -206,6 +206,9 @@ jobs:
           echo "Running database migrations..."
           $PHP_BINARY artisan migrate --force
           
+          echo "Seeding database with default data..."
+          $PHP_BINARY artisan db:seed --force
+          
           echo "Optimizing Laravel for production..."
           $PHP_BINARY artisan config:cache
           $PHP_BINARY artisan route:cache
