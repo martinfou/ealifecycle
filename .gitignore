@@ -86,7 +86,6 @@ storage/debugbar/*
 
 # Package managers
 composer.phar
-package-lock.json
 yarn.lock
 
 # Testing
