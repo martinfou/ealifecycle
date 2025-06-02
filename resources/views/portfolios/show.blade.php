@@ -19,6 +19,9 @@
                 <a href="{{ route('portfolios.add-strategies', $portfolio) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Add Strategies
                 </a>
+                <a href="{{ route('portfolios.history', $portfolio) }}" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    View History
+                </a>
                 <a href="{{ route('portfolios.edit', $portfolio) }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Edit Portfolio
                 </a>

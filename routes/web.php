@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Portfolio management
     Route::resource('portfolios', PortfolioController::class);
+    Route::get('portfolios/{portfolio}/history', [PortfolioController::class, 'history'])->name('portfolios.history');
     Route::get('portfolios/{portfolio}/add-strategies', [PortfolioController::class, 'addStrategies'])->name('portfolios.add-strategies');
     Route::post('portfolios/{portfolio}/add-strategies', [PortfolioController::class, 'storeStrategies'])->name('portfolios.store-strategies');
     Route::patch('portfolios/{portfolio}/strategies/{strategy}', [PortfolioController::class, 'updateStrategyAllocation'])->name('portfolios.update-strategy-allocation');

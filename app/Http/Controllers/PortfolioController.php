@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Portfolio;
 use App\Models\Strategy;
+use App\Models\PortfolioHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +49,18 @@ class PortfolioController extends Controller
         $validated['user_id'] = Auth::id();
 
         $portfolio = Portfolio::create($validated);
+
+        // Log portfolio creation
+        PortfolioHistory::logActivity(
+            portfolioId: $portfolio->id,
+            actionType: 'created',
+            userId: Auth::id(),
+            newValues: [
+                'name' => $portfolio->name,
+                'initial_capital' => $portfolio->initial_capital,
+                'status' => $portfolio->status,
+            ]
+        );
 
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Portfolio created successfully!');
@@ -103,7 +116,35 @@ class PortfolioController extends Controller
             'status' => 'required|in:active,paused,archived',
         ]);
 
+        // Store old values for history
+        $oldValues = [
+            'name' => $portfolio->name,
+            'description' => $portfolio->description,
+            'initial_capital' => $portfolio->initial_capital,
+            'status' => $portfolio->status,
+        ];
+
         $portfolio->update($validated);
+
+        // Log portfolio update
+        $changedFields = [];
+        foreach ($validated as $key => $value) {
+            if ($oldValues[$key] !== $value) {
+                $changedFields[$key] = $value;
+            }
+        }
+
+        if (!empty($changedFields)) {
+            $actionType = isset($changedFields['status']) ? 'status_changed' : 'updated';
+            
+            PortfolioHistory::logActivity(
+                portfolioId: $portfolio->id,
+                actionType: $actionType,
+                userId: Auth::id(),
+                oldValues: $oldValues,
+                newValues: $validated
+            );
+        }
 
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Portfolio updated successfully!');
@@ -178,25 +219,40 @@ class PortfolioController extends Controller
                     ->wherePivot('strategy_id', $strategyId)
                     ->first();
                 
+                $allocationData = [
+                    'allocation_amount' => $strategyData['allocation_amount'] ?? 0,
+                    'allocation_percent' => $strategyData['allocation_percent'] ?? 0,
+                    'status' => 'active',
+                    'date_added' => now()->toDateString(),
+                    'notes' => $strategyData['notes'],
+                ];
+                
                 if ($existingRelation) {
                     // Update existing relationship (re-activate removed strategy)
-                    $portfolio->strategies()->updateExistingPivot($strategyId, [
-                        'allocation_amount' => $strategyData['allocation_amount'] ?? 0,
-                        'allocation_percent' => $strategyData['allocation_percent'] ?? 0,
-                        'status' => 'active',
-                        'date_added' => now()->toDateString(),
+                    $portfolio->strategies()->updateExistingPivot($strategyId, array_merge($allocationData, [
                         'date_removed' => null,
-                        'notes' => $strategyData['notes'],
-                    ]);
+                    ]));
+                    
+                    // Log strategy re-activation
+                    PortfolioHistory::logActivity(
+                        portfolioId: $portfolio->id,
+                        actionType: 'strategy_activated',
+                        userId: Auth::id(),
+                        strategyId: $strategyId,
+                        newValues: $allocationData
+                    );
                 } else {
                     // Create new relationship
-                    $portfolio->strategies()->attach($strategyId, [
-                        'allocation_amount' => $strategyData['allocation_amount'] ?? 0,
-                        'allocation_percent' => $strategyData['allocation_percent'] ?? 0,
-                        'status' => 'active',
-                        'date_added' => now()->toDateString(),
-                        'notes' => $strategyData['notes'],
-                    ]);
+                    $portfolio->strategies()->attach($strategyId, $allocationData);
+                    
+                    // Log strategy addition
+                    PortfolioHistory::logActivity(
+                        portfolioId: $portfolio->id,
+                        actionType: 'strategy_added',
+                        userId: Auth::id(),
+                        strategyId: $strategyId,
+                        newValues: $allocationData
+                    );
                 }
             }
         });
@@ -222,7 +278,30 @@ class PortfolioController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        // Get current values for history
+        $currentRelation = $portfolio->strategies()->where('strategies.id', $strategy->id)->first();
+        $oldValues = [
+            'allocation_amount' => $currentRelation->pivot->allocation_amount,
+            'allocation_percent' => $currentRelation->pivot->allocation_percent,
+            'status' => $currentRelation->pivot->status,
+            'notes' => $currentRelation->pivot->notes,
+        ];
+
         $portfolio->strategies()->updateExistingPivot($strategy->id, $validated);
+
+        // Log the change
+        $actionType = $oldValues['status'] !== $validated['status'] 
+            ? ($validated['status'] === 'paused' ? 'strategy_paused' : 'strategy_activated')
+            : 'strategy_updated';
+
+        PortfolioHistory::logActivity(
+            portfolioId: $portfolio->id,
+            actionType: $actionType,
+            userId: Auth::id(),
+            strategyId: $strategy->id,
+            oldValues: $oldValues,
+            newValues: $validated
+        );
 
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Strategy allocation updated successfully!');
@@ -238,12 +317,48 @@ class PortfolioController extends Controller
             abort(403, 'You do not have permission to edit this portfolio.');
         }
 
+        // Get current values for history
+        $currentRelation = $portfolio->strategies()->where('strategies.id', $strategy->id)->first();
+        $oldValues = [
+            'allocation_amount' => $currentRelation->pivot->allocation_amount,
+            'allocation_percent' => $currentRelation->pivot->allocation_percent,
+            'status' => $currentRelation->pivot->status,
+            'notes' => $currentRelation->pivot->notes,
+        ];
+
         $portfolio->strategies()->updateExistingPivot($strategy->id, [
             'status' => 'removed',
             'date_removed' => now()->toDateString(),
         ]);
 
+        // Log strategy removal
+        PortfolioHistory::logActivity(
+            portfolioId: $portfolio->id,
+            actionType: 'strategy_removed',
+            userId: Auth::id(),
+            strategyId: $strategy->id,
+            oldValues: $oldValues,
+            newValues: ['status' => 'removed', 'date_removed' => now()->toDateString()]
+        );
+
         return redirect()->route('portfolios.show', $portfolio)
                         ->with('success', 'Strategy removed from portfolio successfully!');
+    }
+
+    /**
+     * Show the portfolio history.
+     */
+    public function history(Portfolio $portfolio)
+    {
+        // Check if user can view this portfolio
+        if (!$portfolio->canUserView(Auth::user())) {
+            abort(403, 'You do not have permission to view this portfolio.');
+        }
+
+        $history = $portfolio->history()
+                            ->with(['strategy', 'user'])
+                            ->paginate(20);
+
+        return view('portfolios.history', compact('portfolio', 'history'));
     }
 }

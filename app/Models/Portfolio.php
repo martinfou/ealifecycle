@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Portfolio extends Model
 {
@@ -53,6 +54,14 @@ class Portfolio extends Model
     public function pausedStrategies(): BelongsToMany
     {
         return $this->strategies()->wherePivot('status', 'paused');
+    }
+
+    /**
+     * Get the history entries for this portfolio.
+     */
+    public function history(): HasMany
+    {
+        return $this->hasMany(PortfolioHistory::class)->orderBy('created_at', 'desc');
     }
 
     /**
