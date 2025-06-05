@@ -45,7 +45,7 @@
                                 Import Trades
                             </a>
                             <a href="{{ route('strategies.index') }}" 
-                               class="w-full sm:w-auto text-center bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                               class="w-full sm:w-auto text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                                 View All Strategies
                             </a>
                         </div>
