@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <div>
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
+            <div class="flex-1 min-w-0">
                 <h2 class="font-semibold text-xl text-white leading-tight">
                     {{ __('Portfolio History: ') . $portfolio->name }}
                 </h2>
-                <div class="flex items-center space-x-4 mt-1 text-sm text-gray-400">
+                <div class="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-400">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                         {{ $portfolio->status === 'active' ? 'bg-green-800 text-green-200' : 
                            ($portfolio->status === 'paused' ? 'bg-yellow-800 text-yellow-200' : 'bg-gray-700 text-gray-300') }}">
@@ -14,11 +14,11 @@
                     <span>${{ number_format($portfolio->initial_capital, 2) }} initial capital</span>
                 </div>
             </div>
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('portfolios.show', $portfolio) }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 flex-shrink-0">
+                <a href="{{ route('portfolios.show', $portfolio) }}" class="w-full sm:w-auto text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Back to Portfolio
                 </a>
-                <a href="{{ route('portfolios.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                <a href="{{ route('portfolios.index') }}" class="w-full sm:w-auto text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     All Portfolios
                 </a>
             </div>

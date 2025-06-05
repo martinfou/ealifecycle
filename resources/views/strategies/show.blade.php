@@ -1,14 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-white leading-tight">
-                {{ $strategy->name }}
-            </h2>
-            <div class="space-x-2">
-                <a href="{{ route('strategies.edit', $strategy) }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-3 sm:space-y-0">
+            <div class="flex-1 min-w-0">
+                <h2 class="font-semibold text-xl text-white leading-tight">
+                    {{ $strategy->name }}
+                </h2>
+            </div>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 flex-shrink-0">
+                <a href="{{ route('strategies.edit', $strategy) }}" class="w-full sm:w-auto text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Edit Strategy
                 </a>
-                <a href="{{ route('strategies.index') }}" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                <a href="{{ route('strategies.index') }}" class="w-full sm:w-auto text-center bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Back to Strategies
                 </a>
             </div>

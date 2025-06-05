@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <div>
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
+            <div class="flex-1 min-w-0">
                 <h2 class="font-semibold text-xl text-white leading-tight">
                     {{ $portfolio->name }}
                 </h2>
-                <div class="flex items-center space-x-4 mt-1 text-sm text-gray-400">
+                <div class="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-400">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                         {{ $portfolio->status === 'active' ? 'bg-green-800 text-green-200' : 
                            ($portfolio->status === 'paused' ? 'bg-yellow-800 text-yellow-200' : 'bg-gray-700 text-gray-300') }}">
@@ -15,17 +15,17 @@
                     <span>Created {{ $portfolio->created_at->format('M j, Y') }}</span>
                 </div>
             </div>
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('portfolios.add-strategies', $portfolio) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap lg:flex-nowrap gap-2 sm:gap-3 flex-shrink-0">
+                <a href="{{ route('portfolios.add-strategies', $portfolio) }}" class="text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Add Strategies
                 </a>
-                <a href="{{ route('portfolios.history', $portfolio) }}" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                <a href="{{ route('portfolios.history', $portfolio) }}" class="text-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     View History
                 </a>
-                <a href="{{ route('portfolios.edit', $portfolio) }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                <a href="{{ route('portfolios.edit', $portfolio) }}" class="text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Edit Portfolio
                 </a>
-                <a href="{{ route('portfolios.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                <a href="{{ route('portfolios.index') }}" class="text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     Back to Portfolios
                 </a>
             </div>
