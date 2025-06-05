@@ -234,7 +234,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+                                    class="w-full sm:w-auto text-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
                                     onclick="return confirm('Are you sure you want to delete this strategy? This action cannot be undone and will also delete all associated status history.')">
                                 Delete Strategy
                             </button>

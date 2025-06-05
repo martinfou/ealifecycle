@@ -106,7 +106,7 @@
                                           onsubmit="return confirm('Are you sure you want to delete this strategy?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded transition-colors">
+                                        <button type="submit" class="w-full text-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">
                                             Delete
                                         </button>
                                     </form>
