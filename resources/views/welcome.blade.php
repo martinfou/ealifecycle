@@ -21,26 +21,25 @@
         <!-- Navigation -->
         <nav class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50 backdrop-blur-sm bg-gray-900/90">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center">
+                <div class="flex flex-col xs:flex-row xs:items-center py-4 xs:py-0 xs:h-16">
+                    <div class="flex items-center justify-between w-full xs:w-auto">
                         <div class="flex-shrink-0 flex items-center space-x-3">
-                            <img src="{{ asset('images/algo-trading/ea-lifecycle-main-logo.svg') }}" alt="EA Lifecycle Logo" class="h-10 w-auto">
-                            <h1 class="text-2xl font-bold text-white">
+                            <img src="{{ asset('images/algo-trading/ea-lifecycle-main-logo.svg') }}" alt="EA Lifecycle Logo" class="h-8 xs:h-10 w-auto">
+                            <h1 class="text-xl xs:text-2xl font-bold text-white">
                                 EALifeCycle
                             </h1>
                         </div>
+                        <div class="flex xs:hidden">
+                            <!-- Mobile menu button - if you need one -->
+                        </div>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                                Dashboard
-                            </a>
-                        @else
-                            <a href="{{ route('login') }}" class="text-gray-300 hover:text-white font-medium transition-colors">Login</a>
-                            <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                                Get Started
-                            </a>
-                        @endauth
+                    <div class="flex flex-col xs:flex-row xs:ml-auto gap-2 xs:gap-4 mt-4 xs:mt-0">
+                        <a href="{{ route('login') }}" class="w-full xs:w-auto text-center text-gray-300 hover:text-white font-medium transition-colors py-2 xs:py-3 px-4 rounded-lg">
+                            Login
+                        </a>
+                        <a href="{{ route('register') }}" class="w-full xs:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 xs:py-3 rounded-lg font-medium transition-colors">
+                            Get Started
+                        </a>
                     </div>
                 </div>
             </div>
