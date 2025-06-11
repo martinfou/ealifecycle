@@ -18,6 +18,58 @@ EALifeCycle helps algorithmic traders manage their Expert Advisors (trading robo
 - 📊 **Performance Monitoring**: Track EA performance and status history
 - 📥 **Trade Import**: FX Blue CSV integration with automatic EA matching
 
+## Features
+
+- Strategy Management
+  - Create, read, update, and delete trading strategies
+  - Upload and download strategy source code files
+  - Track strategy status and history
+  - Manage strategy timeframes and symbols
+
+- Portfolio Management
+  - Create and manage trading portfolios
+  - Add/remove strategies to/from portfolios
+  - Track portfolio performance
+  - Manage portfolio allocations
+
+- REST API
+  - Secure API endpoints using Laravel Sanctum
+  - Token-based authentication
+  - Strategy and portfolio management
+  - Secure file upload/download
+  - OpenAPI/Swagger documentation
+  - Proper file handling with download headers
+
+- User Management
+  - Role-based access control
+  - Group-based permissions
+  - API token management interface
+  - Secure authentication
+
+## API Documentation
+
+The REST API documentation is available in OpenAPI/Swagger format. Key endpoints include:
+
+### Strategies
+- `GET /api/v1/strategies` - List strategies
+- `POST /api/v1/strategies` - Create strategy
+- `GET /api/v1/strategies/{id}` - Get strategy details
+- `PUT /api/v1/strategies/{id}` - Update strategy
+- `DELETE /api/v1/strategies/{id}` - Delete strategy
+- `POST /api/v1/strategies/{id}/source-code` - Upload source code
+- `GET /api/v1/strategies/{id}/source-code` - Download source code
+
+### Portfolios
+- `GET /api/v1/portfolios` - List portfolios
+- `POST /api/v1/portfolios` - Create portfolio
+- `GET /api/v1/portfolios/{id}` - Get portfolio details
+- `PUT /api/v1/portfolios/{id}` - Update portfolio
+- `DELETE /api/v1/portfolios/{id}` - Delete portfolio
+
+### Authentication
+- Generate API tokens through the `/tokens` web interface
+- Use tokens in the `Authorization: Bearer {token}` header
+
 ---
 
 ## 🚀 Quick Start Guide
@@ -362,10 +414,9 @@ php artisan serve
 
 ## 📋 Version Information
 
-**Current Version**: 0.3.0  
-**Laravel Version**: 12.16.0  
-**PHP Requirement**: 8.4+  
-**Node.js Requirement**: 18+  
+**Last Updated**: June 2, 2025  
+**Current Version**: v0.3.6  
+**Next Milestone**: v1.1.0 (Groups & Users Admin) 
 
 For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
 

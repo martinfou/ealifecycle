@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\TimeframeController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\TokenController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +32,11 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // API Token management
+    Route::get('/tokens', [TokenController::class, 'index'])->name('tokens.index');
+    Route::post('/tokens', [TokenController::class, 'store'])->name('tokens.store');
+    Route::delete('/tokens/{token}', [TokenController::class, 'destroy'])->name('tokens.destroy');
     
     // Strategy management
     Route::resource('strategies', StrategyController::class);
