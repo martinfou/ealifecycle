@@ -16,8 +16,12 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     
+                    <x-nav-link :href="route('tokens.index')" :active="request()->routeIs('tokens.*')">
+                        {{ __('API Tokens') }}
+                    </x-nav-link>
+                    
                     <x-nav-link :href="route('strategies.index')" :active="request()->routeIs('strategies.*')">
-                        {{ __('Expert Advisors') }}
+                        {{ __('Strategies') }}
                     </x-nav-link>
                     
                     <x-nav-link :href="route('portfolios.index')" :active="request()->routeIs('portfolios.*')">
@@ -116,8 +120,12 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             
+            <x-responsive-nav-link :href="route('tokens.index')" :active="request()->routeIs('tokens.*')">
+                {{ __('API Tokens') }}
+            </x-responsive-nav-link>
+            
             <x-responsive-nav-link :href="route('strategies.index')" :active="request()->routeIs('strategies.*')">
-                {{ __('Expert Advisors') }}
+                {{ __('Strategies') }}
             </x-responsive-nav-link>
             
             <x-responsive-nav-link :href="route('portfolios.index')" :active="request()->routeIs('portfolios.*')">
