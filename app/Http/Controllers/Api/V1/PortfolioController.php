@@ -11,10 +11,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Strategy;
 
+/**
+ * @OA\Tag(
+ *     name="Portfolios",
+ *     description="API Endpoints for Managing Portfolios"
+ * )
+ */
 class PortfolioController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/v1/portfolios",
+     *     summary="Get list of portfolios",
+     *     tags={"Portfolios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="List of portfolios")
+     * )
      */
     public function index()
     {
@@ -31,7 +43,24 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/v1/portfolios",
+     *     summary="Create a new portfolio",
+     *     tags={"Portfolios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="group_id", type="integer"),
+     *             @OA\Property(property="strategy_ids", type="array", @OA\Items(type="integer"))
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Portfolio created"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function store(Request $request)
     {
@@ -86,7 +115,15 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/v1/portfolios/{id}",
+     *     summary="Get a specific portfolio",
+     *     tags={"Portfolios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Portfolio details"),
+     *     @OA\Response(response=403, description="Unauthorized")
+     * )
      */
     public function show(Portfolio $portfolio)
     {
@@ -100,7 +137,26 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/v1/portfolios/{id}",
+     *     summary="Update a portfolio",
+     *     tags={"Portfolios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="group_id", type="integer"),
+     *             @OA\Property(property="strategy_ids", type="array", @OA\Items(type="integer"))
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Portfolio updated"),
+     *     @OA\Response(response=403, description="Unauthorized"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function update(Request $request, Portfolio $portfolio)
     {
@@ -154,7 +210,15 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/v1/portfolios/{id}",
+     *     summary="Delete a portfolio",
+     *     tags={"Portfolios"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=204, description="Deleted successfully"),
+     *     @OA\Response(response=403, description="Unauthorized")
+     * )
      */
     public function destroy(Portfolio $portfolio)
     {

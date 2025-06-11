@@ -5,6 +5,16 @@ All notable changes to **EALifeCycle** (Expert Advisor Lifecycle Management) wil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Implemented Swagger UI for API documentation, accessible at `/api/documentation`.
+- Added an "API" dropdown menu with links to "API Tokens" and "API Docs".
+
+### Fixed
+- Corrected vertical alignment for dropdown menus in the main navigation bar.
+- Fixed `RouteNotFoundException` for admin links in the navigation.
+
 ## [0.4.0] - 2025-06-11
 
 ### Added
@@ -203,26 +213,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SQLite database for development (MySQL for production)
 - Comprehensive testing environment
 - Git-based version control with semantic versioning
-
-## [Unreleased]
-
-### Added
-- REST API for managing strategies and portfolios
-- API token management interface
-- Secure file upload/download for strategy source code
-- Proper file download headers in REST API for better browser handling
-- Swagger/OpenAPI documentation for the REST API
-
-### Changed
-- Improved file download handling in REST API to force download instead of display
-- Enhanced security headers for file downloads
-
-### Fixed
-- File download endpoint now properly sends files as attachments
-- Added proper MIME type detection for downloaded files
-- Fixed caching headers for file downloads
-
----
 
 ## Version Numbering Scheme
 
