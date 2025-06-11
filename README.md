@@ -362,10 +362,9 @@ php artisan serve
 
 ## 📋 Version Information
 
-**Current Version**: 0.3.0  
-**Laravel Version**: 12.16.0  
-**PHP Requirement**: 8.4+  
-**Node.js Requirement**: 18+  
+**Last Updated**: June 2, 2025  
+**Current Version**: v0.3.6  
+**Next Milestone**: v1.1.0 (Groups & Users Admin) 
 
 For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
 
