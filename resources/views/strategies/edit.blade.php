@@ -21,7 +21,7 @@
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-white mb-6">Edit Strategy: {{ $strategy->name }}</h3>
                     
-                    <form method="POST" action="{{ route('strategies.update', $strategy) }}">
+                    <form method="POST" action="{{ route('strategies.update', $strategy) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -142,6 +142,37 @@
                                       class="mt-1 block w-full rounded-md bg-gray-900 border-gray-600 text-white shadow-sm focus:border-gray-500 focus:ring-gray-500 @error('description') border-red-500 @enderror"
                                       placeholder="Describe your trading strategy, entry/exit rules, etc.">{{ old('description', $strategy->description) }}</textarea>
                             @error('description')
+                                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Source Code File -->
+                        <div class="mb-6">
+                            <label for="source_code_file" class="block text-sm font-medium text-gray-300">Source Code (Optional)</label>
+                            
+                            @if ($strategy->source_code_path)
+                                <div class="mt-2 text-sm text-gray-300">
+                                    <p>Current file: 
+                                        <a href="{{ Storage::url($strategy->source_code_path) }}" 
+                                           class="text-blue-400 hover:text-blue-300" 
+                                           target="_blank">
+                                           {{ basename($strategy->source_code_path) }}
+                                        </a>
+                                    </p>
+                                    <p class="text-xs text-gray-500">Uploading a new file will replace the current one.</p>
+                                </div>
+                            @endif
+
+                            <input type="file" name="source_code_file" id="source_code_file"
+                                   class="mt-2 block w-full text-sm text-gray-400
+                                          file:mr-4 file:py-2 file:px-4
+                                          file:rounded-md file:border-0
+                                          file:text-sm file:font-semibold
+                                          file:bg-gray-700 file:text-white
+                                          hover:file:bg-gray-600
+                                          @error('source_code_file') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-400">Upload a new MT4/MT5 source file (.mq4, .mq5, .ex4, .ex5).</p>
+                            @error('source_code_file')
                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                             @enderror
                         </div>

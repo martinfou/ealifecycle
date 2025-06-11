@@ -9,7 +9,7 @@
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-gray-800 border border-gray-700 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6">
-                    <form method="POST" action="{{ route('strategies.store') }}">
+                    <form method="POST" action="{{ route('strategies.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Strategy Name -->
@@ -140,6 +140,23 @@
                                       placeholder="Optional description of your strategy..."
                                       class="mt-1 block w-full rounded-md bg-gray-900 border-gray-600 text-white shadow-sm focus:border-gray-500 focus:ring-gray-500 @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
                             @error('description')
+                                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Source Code File -->
+                        <div class="mb-6">
+                            <label for="source_code_file" class="block text-sm font-medium text-gray-300">Source Code (Optional)</label>
+                            <input type="file" name="source_code_file" id="source_code_file"
+                                   class="mt-1 block w-full text-sm text-gray-400
+                                          file:mr-4 file:py-2 file:px-4
+                                          file:rounded-md file:border-0
+                                          file:text-sm file:font-semibold
+                                          file:bg-gray-700 file:text-white
+                                          hover:file:bg-gray-600
+                                          @error('source_code_file') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-400">Upload the MT4/MT5 source file (.mq4, .mq5, .ex4, .ex5).</p>
+                            @error('source_code_file')
                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                             @enderror
                         </div>

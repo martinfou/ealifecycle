@@ -18,6 +18,8 @@ class Strategy extends Model
         'user_id',
         'group_id',
         'description',
+        'source_code_path',
+        'source_code_original_filename',
     ];
 
     protected $casts = [
