@@ -204,6 +204,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive testing environment
 - Git-based version control with semantic versioning
 
+## [Unreleased]
+
+### Added
+- REST API for managing strategies and portfolios
+- API token management interface
+- Secure file upload/download for strategy source code
+- Proper file download headers in REST API for better browser handling
+- Swagger/OpenAPI documentation for the REST API
+
+### Changed
+- Improved file download handling in REST API to force download instead of display
+- Enhanced security headers for file downloads
+
+### Fixed
+- File download endpoint now properly sends files as attachments
+- Added proper MIME type detection for downloaded files
+- Fixed caching headers for file downloads
+
 ---
 
 ## Version Numbering Scheme

@@ -242,8 +242,18 @@ class StrategyController extends Controller
         }
 
         $path = Storage::disk('public')->path($strategy->source_code_path);
-        $filename = $strategy->source_code_original_filename;
+        $filename = $strategy->source_code_original_filename ?? basename($strategy->source_code_path);
+        $mimeType = Storage::disk('public')->mimeType($strategy->source_code_path);
 
-        return response()->download($path, $filename);
+        return response()->download(
+            $path, 
+            $filename, 
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache'
+            ]
+        );
     }
 }
