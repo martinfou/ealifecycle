@@ -101,6 +101,19 @@
                             </div>
                         </div>
 
+                        <!-- Source Code -->
+                        @if($strategy->source_code_path)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Source Code</label>
+                                <div class="text-sm bg-gray-900 px-3 py-2 rounded-md border border-gray-600">
+                                    <a href="{{ route('strategies.downloadSourceCode', $strategy) }}" 
+                                       class="text-blue-400 hover:text-blue-300 font-medium">
+                                       Download {{ $strategy->source_code_original_filename ?? 'source file' }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Created Date -->
                         <div>
                             <label class="block text-sm font-medium text-gray-300 mb-2">Created</label>

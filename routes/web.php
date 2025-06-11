@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Strategy management
     Route::resource('strategies', StrategyController::class);
+    Route::get('strategies/{strategy}/download', [StrategyController::class, 'downloadSourceCode'])->name('strategies.downloadSourceCode');
     Route::post('strategies/{strategy}/change-status', [StrategyController::class, 'changeStatus'])->name('strategies.change-status');
     Route::get('strategies/{strategy}/history', [StrategyController::class, 'history'])->name('strategies.history');
     

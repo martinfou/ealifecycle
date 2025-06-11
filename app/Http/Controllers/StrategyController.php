@@ -10,6 +10,7 @@ use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class StrategyController extends Controller
 {
@@ -57,7 +58,22 @@ class StrategyController extends Controller
             'status_id' => 'required|exists:statuses,id',
             'group_id' => 'nullable|exists:groups,id',
             'description' => 'nullable|string',
+            'source_code_file' => 'nullable|file|max:2048',
         ]);
+
+        // Custom validation for file extension
+        if ($request->hasFile('source_code_file')) {
+            $file = $request->file('source_code_file');
+            $extension = strtolower($file->getClientOriginalExtension());
+            $allowedExtensions = ['mq4', 'mq5', 'ex4', 'ex5'];
+            if (!in_array($extension, $allowedExtensions)) {
+                return back()->withErrors(['source_code_file' => 'The source code file must be a file of type: mq4, mq5, ex4, ex5.'])->withInput();
+            }
+
+            $path = $file->store('strategy_source_codes', 'public');
+            $validated['source_code_path'] = $path;
+            $validated['source_code_original_filename'] = $file->getClientOriginalName();
+        }
 
         // Ensure primary timeframe is in the selected timeframes
         if (!in_array($validated['primary_timeframe_id'], $validated['timeframe_ids'])) {
@@ -163,7 +179,26 @@ class StrategyController extends Controller
             'magic_number' => 'nullable|integer|unique:strategies,magic_number,' . $strategy->id,
             'group_id' => 'nullable|exists:groups,id',
             'description' => 'nullable|string',
+            'source_code_file' => 'nullable|file|max:2048',
         ]);
+
+        // Custom validation for file extension
+        if ($request->hasFile('source_code_file')) {
+            $file = $request->file('source_code_file');
+            $extension = strtolower($file->getClientOriginalExtension());
+            $allowedExtensions = ['mq4', 'mq5', 'ex4', 'ex5'];
+            if (!in_array($extension, $allowedExtensions)) {
+                return back()->withErrors(['source_code_file' => 'The source code file must be a file of type: mq4, mq5, ex4, ex5.'])->withInput();
+            }
+            
+            // Delete the old file if it exists
+            if ($strategy->source_code_path) {
+                Storage::disk('public')->delete($strategy->source_code_path);
+            }
+            $path = $file->store('strategy_source_codes', 'public');
+            $validated['source_code_path'] = $path;
+            $validated['source_code_original_filename'] = $file->getClientOriginalName();
+        }
 
         // Ensure primary timeframe is in the selected timeframes
         if (!in_array($validated['primary_timeframe_id'], $validated['timeframe_ids'])) {
@@ -274,5 +309,28 @@ class StrategyController extends Controller
             ->paginate(20);
 
         return view('strategies.history', compact('strategy', 'statusHistory'));
+    }
+
+    /**
+     * Download the source code file for the specified strategy.
+     */
+    public function downloadSourceCode(Strategy $strategy)
+    {
+        $user = Auth::user();
+
+        // Check if user can view this strategy
+        if (!$strategy->canUserView($user)) {
+            abort(403, 'You do not have permission to download this file.');
+        }
+
+        // Check if the file exists
+        if (!$strategy->source_code_path || !Storage::disk('public')->exists($strategy->source_code_path)) {
+            abort(404, 'File not found.');
+        }
+
+        $path = Storage::disk('public')->path($strategy->source_code_path);
+        $filename = $strategy->source_code_original_filename ?? basename($strategy->source_code_path);
+
+        return response()->download($path, $filename);
     }
 }

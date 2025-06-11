@@ -5,6 +5,13 @@ All notable changes to **EALifeCycle** (Expert Advisor Lifecycle Management) wil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-06-11
+
+### Added
+- Feature: Users can now upload, download, and update MT4/MT5 source code files (.mq4, .mq5, .ex4, .ex5) for each strategy.
+- The original filename is preserved for downloads.
+- A dedicated, secure route now handles file downloads.
+
 ## [0.3.6] - 2025-06-02
 
 ### Added
