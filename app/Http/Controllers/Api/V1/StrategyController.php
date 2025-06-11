@@ -12,10 +12,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Strategies",
+ *     description="API Endpoints for Managing Strategies"
+ * )
+ */
 class StrategyController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/v1/strategies",
+     *     summary="Get list of strategies",
+     *     tags={"Strategies"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="List of strategies")
+     * )
      */
     public function index()
     {
@@ -32,7 +44,28 @@ class StrategyController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/v1/strategies",
+     *     summary="Create a new strategy",
+     *     tags={"Strategies"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","timeframe_ids","primary_timeframe_id","status_id"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="symbols_traded", type="string"),
+     *             @OA\Property(property="magic_number", type="integer"),
+     *             @OA\Property(property="timeframe_ids", type="array", @OA\Items(type="integer")),
+     *             @OA\Property(property="primary_timeframe_id", type="integer"),
+     *             @OA\Property(property="group_id", type="integer"),
+     *             @OA\Property(property="status_id", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Strategy created"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function store(Request $request)
     {
@@ -89,7 +122,15 @@ class StrategyController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/v1/strategies/{id}",
+     *     summary="Get a specific strategy",
+     *     tags={"Strategies"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Strategy details"),
+     *     @OA\Response(response=403, description="Unauthorized")
+     * )
      */
     public function show(Strategy $strategy)
     {
@@ -103,7 +144,30 @@ class StrategyController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/v1/strategies/{id}",
+     *     summary="Update a strategy",
+     *     tags={"Strategies"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","timeframe_ids","primary_timeframe_id","status_id"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="symbols_traded", type="string"),
+     *             @OA\Property(property="magic_number", type="integer"),
+     *             @OA\Property(property="timeframe_ids", type="array", @OA\Items(type="integer")),
+     *             @OA\Property(property="primary_timeframe_id", type="integer"),
+     *             @OA\Property(property="group_id", type="integer"),
+     *             @OA\Property(property="status_id", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Strategy updated"),
+     *     @OA\Response(response=403, description="Unauthorized"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function update(Request $request, Strategy $strategy)
     {
@@ -161,7 +225,15 @@ class StrategyController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/v1/strategies/{id}",
+     *     summary="Delete a strategy",
+     *     tags={"Strategies"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=204, description="Deleted successfully"),
+     *     @OA\Response(response=403, description="Unauthorized")
+     * )
      */
     public function destroy(Strategy $strategy)
     {
@@ -191,7 +263,25 @@ class StrategyController extends Controller
     }
 
     /**
-     * Upload a source code file for the specified strategy.
+     * @OA\Post(
+     *     path="/api/v1/strategies/{id}/source-code",
+     *     summary="Upload source code for a strategy",
+     *     tags={"Strategies"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="source_code_file", type="string", format="binary")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="File uploaded"),
+     *     @OA\Response(response=403, description="Unauthorized"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function uploadSourceCode(Request $request, Strategy $strategy)
     {
@@ -227,7 +317,16 @@ class StrategyController extends Controller
     }
 
     /**
-     * Download the source code file for the specified strategy.
+     * @OA\Get(
+     *     path="/api/v1/strategies/{id}/source-code",
+     *     summary="Download source code for a strategy",
+     *     tags={"Strategies"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="File download"),
+     *     @OA\Response(response=403, description="Unauthorized"),
+     *     @OA\Response(response=404, description="File not found")
+     * )
      */
     public function downloadSourceCode(Strategy $strategy)
     {

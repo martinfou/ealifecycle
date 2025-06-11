@@ -1,0 +1,522 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "EALifecycle API",
+        "description": "API documentation for EALifecycle",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/portfolios": {
+            "get": {
+                "tags": [
+                    "Portfolios"
+                ],
+                "summary": "Get list of portfolios",
+                "operationId": "fecb3366147bbc9da48af03db756f340",
+                "responses": {
+                    "200": {
+                        "description": "List of portfolios"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Portfolios"
+                ],
+                "summary": "Create a new portfolio",
+                "operationId": "b785e229770a8f14a04ac1ce8a1b2a0c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "group_id": {
+                                        "type": "integer"
+                                    },
+                                    "strategy_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Portfolio created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/portfolios/{id}": {
+            "get": {
+                "tags": [
+                    "Portfolios"
+                ],
+                "summary": "Get a specific portfolio",
+                "operationId": "ed9f7b2d7c0239dadacc11ede321f9ba",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Portfolio details"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Portfolios"
+                ],
+                "summary": "Update a portfolio",
+                "operationId": "737889930932af68af36d115941cbf03",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "group_id": {
+                                        "type": "integer"
+                                    },
+                                    "strategy_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Portfolio updated"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Portfolios"
+                ],
+                "summary": "Delete a portfolio",
+                "operationId": "62d25e9fc72ffeb90f406a9899bd1dc1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted successfully"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/strategies": {
+            "get": {
+                "tags": [
+                    "Strategies"
+                ],
+                "summary": "Get list of strategies",
+                "operationId": "d116f14007fc505acd6b968c3b6648af",
+                "responses": {
+                    "200": {
+                        "description": "List of strategies"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Strategies"
+                ],
+                "summary": "Create a new strategy",
+                "operationId": "dd512a03b511d1976f017ff8a7302f23",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "timeframe_ids",
+                                    "primary_timeframe_id",
+                                    "status_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "symbols_traded": {
+                                        "type": "string"
+                                    },
+                                    "magic_number": {
+                                        "type": "integer"
+                                    },
+                                    "timeframe_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "primary_timeframe_id": {
+                                        "type": "integer"
+                                    },
+                                    "group_id": {
+                                        "type": "integer"
+                                    },
+                                    "status_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Strategy created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/strategies/{id}": {
+            "get": {
+                "tags": [
+                    "Strategies"
+                ],
+                "summary": "Get a specific strategy",
+                "operationId": "833865a097211671974f77fc55d682fb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Strategy details"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Strategies"
+                ],
+                "summary": "Update a strategy",
+                "operationId": "5448f1a30f62d74930a296c2ec2034c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "timeframe_ids",
+                                    "primary_timeframe_id",
+                                    "status_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "symbols_traded": {
+                                        "type": "string"
+                                    },
+                                    "magic_number": {
+                                        "type": "integer"
+                                    },
+                                    "timeframe_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "primary_timeframe_id": {
+                                        "type": "integer"
+                                    },
+                                    "group_id": {
+                                        "type": "integer"
+                                    },
+                                    "status_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Strategy updated"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Strategies"
+                ],
+                "summary": "Delete a strategy",
+                "operationId": "a556d384d629386e1b65616c0315c181",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted successfully"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/strategies/{id}/source-code": {
+            "get": {
+                "tags": [
+                    "Strategies"
+                ],
+                "summary": "Download source code for a strategy",
+                "operationId": "3f47565a1e7a06f2ad7c27cbdfb1c16a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "File download"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "File not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Strategies"
+                ],
+                "summary": "Upload source code for a strategy",
+                "operationId": "313188d7dc5741f5d3e5084550926fa3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "source_code_file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File uploaded"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Portfolios",
+            "description": "API Endpoints for Managing Portfolios"
+        },
+        {
+            "name": "Strategies",
+            "description": "API Endpoints for Managing Strategies"
+        }
+    ]
+}
