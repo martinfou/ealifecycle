@@ -177,6 +177,23 @@
                             @enderror
                         </div>
 
+                        <!-- Backtest Report PDF (Optional) -->
+                        <div class="mb-6">
+                            <label for="report_pdf" class="block text-sm font-medium text-gray-300">Backtest Report (PDF, Optional)</label>
+                            <input type="file" name="report_pdf" id="report_pdf" accept="application/pdf"
+                                   class="mt-1 block w-full text-sm text-gray-400
+                                          file:mr-4 file:py-2 file:px-4
+                                          file:rounded-md file:border-0
+                                          file:text-sm file:font-semibold
+                                          file:bg-gray-700 file:text-white
+                                          hover:file:bg-gray-600
+                                          @error('report_pdf') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-400">Upload a PDF report about the backtesting of this strategy. Uploading a new PDF will add another report entry.</p>
+                            @error('report_pdf')
+                                <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Current Status Info -->
                         <div class="mb-6 p-4 bg-gray-900 border border-gray-600 rounded-md">
                             <h4 class="text-sm font-medium text-blue-400 mb-2">Current Status</h4>

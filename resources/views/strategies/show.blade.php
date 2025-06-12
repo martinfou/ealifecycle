@@ -114,6 +114,32 @@
                             </div>
                         @endif
 
+                        <!-- Backtest Reports (PDF) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Backtest Reports (PDF)</label>
+                            <div class="text-sm bg-gray-900 px-3 py-2 rounded-md border border-gray-600">
+                                @if($strategy->reports->count() > 0)
+                                    <ul class="divide-y divide-gray-700">
+                                        @foreach($strategy->reports as $report)
+                                            <li class="py-1 flex items-center justify-between">
+                                                <div>
+                                                    <a href="#" class="text-blue-400 hover:text-blue-300 font-medium view-pdf-link" 
+                                                       data-pdf-url="{{ route('strategies.viewReport', [$strategy, $report]) }}"
+                                                       data-download-url="{{ route('strategies.downloadReport', [$strategy, $report]) }}"
+                                                       data-filename="{{ $report->original_filename }}">
+                                                        {{ $report->original_filename }}
+                                                    </a>
+                                                    <span class="text-xs text-gray-400 ml-2">uploaded by {{ $report->uploader->name ?? 'Unknown' }} on {{ $report->created_at->format('M j, Y g:i A') }}</span>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <div class="text-gray-400 text-sm">No reports uploaded yet.</div>
+                                @endif
+                            </div>
+                        </div>
+
                         <!-- Created Date -->
                         <div>
                             <label class="block text-sm font-medium text-gray-300 mb-2">Created</label>
@@ -257,4 +283,49 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for PDF viewing -->
+    <div id="pdfModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden">
+        <div class="bg-gray-900 rounded-lg shadow-lg max-w-full w-[98vw] h-[90vh] relative flex flex-col">
+            <button id="closePdfModal" class="absolute top-2 right-2 text-gray-400 hover:text-white text-3xl font-bold focus:outline-none">&times;</button>
+            <div class="p-4 pb-0 flex justify-between items-center">
+                <span id="pdfModalFilename" class="text-white font-medium"></span>
+                <a id="pdfModalDownload" href="#" download class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">Download</a>
+            </div>
+            <div class="p-4 pt-2 flex-1 flex flex-col">
+                <iframe id="pdfModalIframe" src="" width="100%" height="100%" class="rounded border border-gray-700 bg-white flex-1" style="min-height:70vh;width:100%;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('pdfModal');
+            const closeModal = document.getElementById('closePdfModal');
+            const iframe = document.getElementById('pdfModalIframe');
+            const downloadBtn = document.getElementById('pdfModalDownload');
+            const filenameSpan = document.getElementById('pdfModalFilename');
+            document.querySelectorAll('.view-pdf-link').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    iframe.src = this.dataset.pdfUrl;
+                    downloadBtn.href = this.dataset.downloadUrl;
+                    downloadBtn.setAttribute('download', this.dataset.filename);
+                    filenameSpan.textContent = this.dataset.filename;
+                    modal.classList.remove('hidden');
+                });
+            });
+            closeModal.addEventListener('click', function () {
+                modal.classList.add('hidden');
+                iframe.src = '';
+            });
+            // Close modal when clicking outside the modal content
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    iframe.src = '';
+                }
+            });
+        });
+    </script>
 </x-app-layout> 

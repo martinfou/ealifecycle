@@ -7,10 +7,12 @@ use App\Models\Status;
 use App\Models\StatusHistory;
 use App\Models\Timeframe;
 use App\Models\Group;
+use App\Models\StrategyReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class StrategyController extends Controller
 {
@@ -59,6 +61,7 @@ class StrategyController extends Controller
             'group_id' => 'nullable|exists:groups,id',
             'description' => 'nullable|string',
             'source_code_file' => 'nullable|file|max:2048',
+            'report_pdf' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         // Custom validation for file extension
@@ -90,7 +93,7 @@ class StrategyController extends Controller
         $validated['user_id'] = $user->id;
         $validated['date_in_status'] = now();
 
-        DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($validated, $request, $user) {
             // Create strategy without timeframe data
             $strategyData = $validated;
             unset($strategyData['timeframe_ids'], $strategyData['primary_timeframe_id']);
@@ -115,6 +118,19 @@ class StrategyController extends Controller
                 'changed_by_user_id' => $strategy->user_id,
                 'notes' => 'Strategy created',
             ]);
+
+            // Handle PDF upload
+            if ($request->hasFile('report_pdf')) {
+                $file = $request->file('report_pdf');
+                $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('reports', $filename, 'public'); // store in storage/app/public/reports
+                StrategyReport::create([
+                    'strategy_id' => $strategy->id,
+                    'file_path' => $path,
+                    'original_filename' => $file->getClientOriginalName(),
+                    'uploaded_by' => $user->id,
+                ]);
+            }
         });
 
         return redirect()->route('strategies.index')->with('success', 'Strategy created successfully.');
@@ -132,7 +148,7 @@ class StrategyController extends Controller
             abort(403, 'You do not have permission to view this strategy.');
         }
 
-        $strategy->load(['status', 'timeframes', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser']);
+        $strategy->load(['status', 'timeframes', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser', 'reports.uploader']);
         $statuses = Status::where('is_active', true)->get();
         $canEdit = $strategy->canUserEdit($user);
         
@@ -180,6 +196,7 @@ class StrategyController extends Controller
             'group_id' => 'nullable|exists:groups,id',
             'description' => 'nullable|string',
             'source_code_file' => 'nullable|file|max:2048',
+            'report_pdf' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         // Custom validation for file extension
@@ -212,7 +229,7 @@ class StrategyController extends Controller
             }
         }
 
-        DB::transaction(function () use ($validated, $strategy) {
+        DB::transaction(function () use ($validated, $request, $strategy, $user) {
             // Update strategy without timeframe data
             $strategyData = $validated;
             unset($strategyData['timeframe_ids'], $strategyData['primary_timeframe_id']);
@@ -227,6 +244,19 @@ class StrategyController extends Controller
                 ];
             }
             $strategy->timeframes()->sync($timeframeData);
+
+            // Handle PDF upload
+            if ($request->hasFile('report_pdf')) {
+                $file = $request->file('report_pdf');
+                $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('reports', $filename, 'public'); // store in storage/app/public/reports
+                StrategyReport::create([
+                    'strategy_id' => $strategy->id,
+                    'file_path' => $path,
+                    'original_filename' => $file->getClientOriginalName(),
+                    'uploaded_by' => $user->id,
+                ]);
+            }
         });
 
         return redirect()->route('strategies.show', $strategy)->with('success', 'Strategy updated successfully.');
@@ -332,5 +362,48 @@ class StrategyController extends Controller
         $filename = $strategy->source_code_original_filename ?? basename($strategy->source_code_path);
 
         return response()->download($path, $filename);
+    }
+
+    public function uploadReport(Request $request, Strategy $strategy)
+    {
+        $user = Auth::user();
+        if (!$strategy->canUserView($user)) {
+            abort(403, 'You do not have permission to upload a report for this strategy.');
+        }
+        $validated = $request->validate([
+            'report_pdf' => 'required|file|mimes:pdf|max:10240', // 10MB max
+        ]);
+        $file = $request->file('report_pdf');
+        $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('reports', $filename, 'public'); // store in storage/app/public/reports
+        StrategyReport::create([
+            'strategy_id' => $strategy->id,
+            'file_path' => $path,
+            'original_filename' => $file->getClientOriginalName(),
+            'uploaded_by' => $user->id,
+        ]);
+        return redirect()->route('strategies.show', $strategy)->with('success', 'Report uploaded successfully.');
+    }
+
+    public function downloadReport(Strategy $strategy, StrategyReport $report)
+    {
+        $user = Auth::user();
+        if (!$strategy->canUserView($user) || $report->strategy_id !== $strategy->id) {
+            abort(403, 'You do not have permission to download this report.');
+        }
+        return Storage::disk('public')->download($report->file_path, $report->original_filename);
+    }
+
+    public function viewReport(Strategy $strategy, StrategyReport $report)
+    {
+        $user = Auth::user();
+        if (!$strategy->canUserView($user) || $report->strategy_id !== $strategy->id) {
+            abort(403, 'You do not have permission to view this report.');
+        }
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $report->original_filename . '"',
+        ];
+        return response()->file(storage_path('app/public/' . $report->file_path), $headers);
     }
 }
