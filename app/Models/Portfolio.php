@@ -2,19 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\User;
+use App\Models\Group;
 
 class Portfolio extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'description',
         'initial_capital',
         'status',
         'user_id',
+        'group_id',
     ];
 
     protected $casts = [
@@ -30,14 +36,21 @@ class Portfolio extends Model
     }
 
     /**
-     * Get the strategies in this portfolio.
+     * Get the group that owns the portfolio.
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    /**
+     * The strategies that belong to the portfolio.
      */
     public function strategies(): BelongsToMany
     {
         return $this->belongsToMany(Strategy::class, 'portfolio_strategies')
-                    ->withPivot('allocation_amount', 'allocation_percent', 'status', 'date_added', 'date_removed', 'notes')
-                    ->withTimestamps()
-                    ->orderBy('date_added');
+                    ->withPivot(['allocation_amount', 'allocation_percent', 'status', 'last_rebalanced_at'])
+                    ->withTimestamps();
     }
 
     /**
