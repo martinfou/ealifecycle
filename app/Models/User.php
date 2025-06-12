@@ -142,4 +142,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(StatusHistory::class, 'changed_by_user_id');
     }
+
+    /**
+     * Check if the user is an administrator.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->groups()->where('name', 'Administrators')->exists();
+    }
 }
