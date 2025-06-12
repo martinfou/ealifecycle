@@ -10,10 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Implemented Swagger UI for API documentation, accessible at `/api/documentation`.
 - Added an "API" dropdown menu with links to "API Tokens" and "API Docs".
+- Added Symbol Management feature with CSV data import support.
+- Integrated Symbol Management into the Admin interface.
+
+### Enhanced
+- **Symbol Management UI**: Improved table design and user experience
+  - Professional dark theme styling consistent with timeframes
+  - Enhanced table layout with proper spacing and typography
+  - Improved action buttons and hover states
+  - Added informative documentation box
+  - Responsive design for all device sizes
 
 ### Fixed
 - Corrected vertical alignment for dropdown menus in the main navigation bar.
 - Fixed `RouteNotFoundException` for admin links in the navigation.
+- Resolved duplicate admin menu items by consolidating navigation structure.
 
 ## [0.4.0] - 2025-06-11
 
