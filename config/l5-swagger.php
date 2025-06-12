@@ -66,15 +66,15 @@ return [
              */
             'middleware' => [
                 'api' => [
-                    'auth:sanctum',
+                    'web',
                     \App\Http\Middleware\CheckIfAdmin::class,
                 ],
                 'asset' => [
-                    'auth:sanctum',
+                    'web',
                     \App\Http\Middleware\CheckIfAdmin::class,
                 ],
                 'docs' => [
-                    'auth:sanctum',
+                    'web',
                     \App\Http\Middleware\CheckIfAdmin::class,
                 ],
                 'oauth2_callback' => [],

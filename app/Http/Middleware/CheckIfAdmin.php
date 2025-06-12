@@ -15,7 +15,7 @@ class CheckIfAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user() || !$request->user()->is_admin) {
+        if (!$request->user() || !$request->user()->isAdmin()) {
             abort(403, 'Access to API documentation is restricted to administrators.');
         }
 
