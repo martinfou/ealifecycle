@@ -255,8 +255,8 @@
     <!-- Modal for PDF viewing -->
     <div id="pdfModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden">
         <div id="pdfModalContent" class="bg-gray-900 rounded-lg shadow-lg w-full relative resize overflow-auto" style="min-width:350px; min-height:300px; width:700px; height:550px; max-width:98vw;">
-            <button id="closePdfModal" class="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none">&times;</button>
-            <div class="p-4 pb-0 flex justify-between items-center">
+            <button id="closePdfModal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none p-2">&times;</button>
+            <div class="p-4 pb-0 flex justify-between items-center pr-12">
                 <span id="pdfModalFilename" class="text-white font-medium"></span>
                 <a id="pdfModalDownload" href="#" download class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">Download</a>
             </div>
@@ -275,8 +275,8 @@
     <!-- Modal for Source Code viewing -->
     <div id="sourceModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden">
         <div id="sourceModalContent" class="bg-gray-900 rounded-lg shadow-lg w-full relative resize overflow-auto" style="min-width:350px; min-height:300px; width:700px; height:550px; max-width:98vw;">
-            <button id="closeSourceModal" class="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none">&times;</button>
-            <div class="p-4 pb-0 flex justify-between items-center">
+            <button id="closeSourceModal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none p-2">&times;</button>
+            <div class="p-4 pb-0 flex justify-between items-center pr-12">
                 <span id="sourceModalFilename" class="text-white font-medium"></span>
                 <a id="sourceModalDownload" href="#" download class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">Download</a>
             </div>
@@ -480,7 +480,7 @@
             .then(res => res.json())
             .then(data => {
                 // Find and remove the current file display div (the one with file info and delete button)
-                const parent = btn.closest('.mt-2.text-sm.text-gray-300.flex.items-center.space-x-4');
+                const parent = btn.closest('.mt-2.text-sm.text-gray.300.flex.items-center.space-x-4');
                 if (parent) parent.remove();
                 // Optionally, show a toast
                 showToast('Source code file deleted successfully.');
@@ -504,7 +504,7 @@
             .then(res => res.json())
             .then(data => {
                 // Find and remove the current file display div (the one with file info and delete button)
-                const parent = btn.closest('.mt-2.text-sm.text-gray-300.flex.items-center.space-x-4');
+                const parent = btn.closest('.mt-2.text-sm.text-gray.300.flex.items-center.space-x-4');
                 if (parent) parent.remove();
                 // Optionally, show a toast
                 showToast('Backtest report deleted successfully.');

@@ -244,6 +244,15 @@ jobs:
           echo "=== Extracting deployment package ==="
           tar -xzf deploy.tar.gz
           rm deploy.tar.gz
+
+          # Remove any old built assets to prevent cache issues
+          rm -rf public/build public/dist
+
+          # Install Node dependencies and rebuild assets on the server
+          if command -v npm &> /dev/null; then
+            npm ci
+            npm run build
+          fi
           
           # Verify extraction worked correctly
           echo "=== Verifying extracted files ==="
