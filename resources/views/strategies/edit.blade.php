@@ -149,18 +149,22 @@
                         <!-- Source Code File -->
                         <div class="mb-6">
                             <label for="source_code_file" class="block text-sm font-medium text-gray-300">Source Code (Optional)</label>
-                            
                             @if ($strategy->source_code_path)
-                                <div class="mt-2 text-sm text-gray-300">
-                                    <p>Current file: 
-                                        <a href="{{ Storage::url($strategy->source_code_path) }}" 
-                                           class="text-blue-400 hover:text-blue-300" 
-                                           target="_blank">
-                                           {{ basename($strategy->source_code_path) }}
-                                        </a>
-                                    </p>
-                                    <p class="text-xs text-gray-500">Uploading a new file will replace the current one.</p>
+                                <div class="mt-2 text-sm text-gray-300 flex items-center space-x-4">
+                                    <span>Current file:</span>
+                                    <a href="#" class="text-green-400 hover:text-green-300 font-medium view-source-link"
+                                       data-source-url="{{ route('strategies.downloadSourceCode', $strategy) }}"
+                                       data-filename="{{ $strategy->source_code_original_filename ?? basename($strategy->source_code_path) }}">
+                                        View
+                                    </a>
+                                    <form method="POST" action="{{ route('strategies.update', $strategy) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete the source code file?');">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="delete_source_code" value="1">
+                                        <button type="submit" class="text-red-400 hover:text-red-600 font-medium ml-2">Delete</button>
+                                    </form>
                                 </div>
+                                <p class="text-xs text-gray-500">Uploading a new file will replace the current one.</p>
                             @endif
 
                             <input type="file" name="source_code_file" id="source_code_file"
@@ -180,6 +184,24 @@
                         <!-- Backtest Report PDF (Optional) -->
                         <div class="mb-6">
                             <label for="report_pdf" class="block text-sm font-medium text-gray-300">Backtest Report (PDF, Optional)</label>
+                            @php $report = $strategy->report; @endphp
+                            @if ($report)
+                                <div class="mt-2 text-sm text-gray-300 flex items-center space-x-4">
+                                    <span>Current file:</span>
+                                    <a href="#" class="text-green-400 hover:text-green-300 font-medium view-pdf-link"
+                                       data-pdf-url="{{ route('strategies.viewReport', [$strategy, $report]) }}"
+                                       data-download-url="{{ route('strategies.downloadReport', [$strategy, $report]) }}"
+                                       data-filename="{{ $report->original_filename }}">
+                                        View
+                                    </a>
+                                    <form method="POST" action="{{ route('strategies.deleteReport', [$strategy, $report]) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this report?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-400 hover:text-red-600 font-medium ml-2">Delete</button>
+                                    </form>
+                                </div>
+                                <p class="text-xs text-gray-500">Uploading a new file will replace the current one.</p>
+                            @endif
                             <input type="file" name="report_pdf" id="report_pdf" accept="application/pdf"
                                    class="mt-1 block w-full text-sm text-gray-400
                                           file:mr-4 file:py-2 file:px-4
@@ -188,7 +210,7 @@
                                           file:bg-gray-700 file:text-white
                                           hover:file:bg-gray-600
                                           @error('report_pdf') border-red-500 @enderror">
-                            <p class="mt-1 text-xs text-gray-400">Upload a PDF report about the backtesting of this strategy. Uploading a new PDF will add another report entry.</p>
+                            <p class="mt-1 text-xs text-gray-400">Upload a PDF report about the backtesting of this strategy. Uploading a new PDF will replace the current one.</p>
                             @error('report_pdf')
                                 <p class="mt-1 text-sm text-red-400">{{ $message }}</p>
                             @enderror

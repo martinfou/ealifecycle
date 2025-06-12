@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/strategies/{strategy}/reports', [\App\Http\Controllers\StrategyController::class, 'uploadReport'])->name('strategies.uploadReport');
     Route::get('/strategies/{strategy}/reports/{report}', [\App\Http\Controllers\StrategyController::class, 'downloadReport'])->name('strategies.downloadReport');
     Route::get('/strategies/{strategy}/reports/{report}/view', [\App\Http\Controllers\StrategyController::class, 'viewReport'])->name('strategies.viewReport');
+    Route::delete('/strategies/{strategy}/reports/{report}', [\App\Http\Controllers\StrategyController::class, 'deleteReport'])->name('strategies.deleteReport');
     
     // Portfolio management
     Route::resource('portfolios', PortfolioController::class);

@@ -148,7 +148,7 @@ class StrategyController extends Controller
             abort(403, 'You do not have permission to view this strategy.');
         }
 
-        $strategy->load(['status', 'timeframes', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser', 'reports.uploader']);
+        $strategy->load(['status', 'timeframes', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser', 'report.uploader']);
         $statuses = Status::where('is_active', true)->get();
         $canEdit = $strategy->canUserEdit($user);
         
@@ -247,6 +247,12 @@ class StrategyController extends Controller
 
             // Handle PDF upload
             if ($request->hasFile('report_pdf')) {
+                // Delete old report if it exists
+                $oldReport = $strategy->report;
+                if ($oldReport) {
+                    \Storage::disk('public')->delete($oldReport->file_path);
+                    $oldReport->delete();
+                }
                 $file = $request->file('report_pdf');
                 $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
                 $path = $file->storeAs('reports', $filename, 'public'); // store in storage/app/public/reports
@@ -373,16 +379,48 @@ class StrategyController extends Controller
         $validated = $request->validate([
             'report_pdf' => 'required|file|mimes:pdf|max:10240', // 10MB max
         ]);
+        // Delete old report if it exists
+        $oldReport = $strategy->report;
+        if ($oldReport) {
+            \Storage::disk('public')->delete($oldReport->file_path);
+            $oldReport->delete();
+        }
         $file = $request->file('report_pdf');
-        $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('reports', $filename, 'public'); // store in storage/app/public/reports
-        StrategyReport::create([
+        $filename = \Str::random(20) . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('reports', $filename, 'public');
+        $newReport = \App\Models\StrategyReport::create([
             'strategy_id' => $strategy->id,
             'file_path' => $path,
             'original_filename' => $file->getClientOriginalName(),
             'uploaded_by' => $user->id,
         ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'filename' => $newReport->original_filename,
+                'download_url' => route('strategies.downloadReport', [$strategy, $newReport]),
+                'view_url' => route('strategies.viewReport', [$strategy, $newReport]),
+                'delete_url' => route('strategies.deleteReport', [$strategy, $newReport]),
+                'uploaded_by' => $user->name,
+                'created_at' => $newReport->created_at->format('M j, Y g:i A'),
+                'can_edit' => $strategy->canUserEdit($user),
+            ]);
+        }
         return redirect()->route('strategies.show', $strategy)->with('success', 'Report uploaded successfully.');
+    }
+
+    public function deleteReport(Strategy $strategy, \App\Models\StrategyReport $report)
+    {
+        $user = \Auth::user();
+        if (!$strategy->canUserEdit($user) || $report->strategy_id !== $strategy->id) {
+            abort(403, 'You do not have permission to delete this report.');
+        }
+        \Storage::disk('public')->delete($report->file_path);
+        $report->delete();
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
+        return redirect()->route('strategies.show', $strategy)->with('success', 'Report deleted successfully.');
     }
 
     public function downloadReport(Strategy $strategy, StrategyReport $report)

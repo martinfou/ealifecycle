@@ -113,11 +113,11 @@ class Strategy extends Model
     }
 
     /**
-     * Get the reports for the strategy.
+     * Get the report for the strategy.
      */
-    public function reports(): HasMany
+    public function report()
     {
-        return $this->hasMany(StrategyReport::class);
+        return $this->hasOne(StrategyReport::class);
     }
 
     /**

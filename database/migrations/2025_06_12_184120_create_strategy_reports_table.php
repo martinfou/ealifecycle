@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('strategy_reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('strategy_id');
+            $table->unsignedBigInteger('strategy_id')->unique();
             $table->string('file_path');
             $table->string('original_filename');
             $table->unsignedBigInteger('uploaded_by')->nullable();
