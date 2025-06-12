@@ -5,7 +5,6 @@
     "description": "EALifeCycle - The definitive platform for managing Expert Advisors professionally. Complete EA lifecycle management with DevOps-inspired workflows for algorithmic trading and trading robot operations.",
     "keywords": ["expert-advisor", "ea-lifecycle", "algorithmic-trading", "trading-robots", "automated-trading", "lifecycle-management", "devops", "laravel", "forex", "metatrader"],
     "license": "MIT",
-    "version": "0.3.0",
     "require": {
         "php": "^8.2",
         "darkaonline/l5-swagger": "^9.0",
