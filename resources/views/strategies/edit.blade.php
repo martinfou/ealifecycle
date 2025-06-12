@@ -147,7 +147,7 @@
                         </div>
 
                         <!-- Source Code File -->
-                        <div class="mb-6">
+                        <div class="mb-6" id="source-file">
                             <label for="source_code_file" class="block text-sm font-medium text-gray-300">Source Code (Optional)</label>
                             @if ($strategy->source_code_path)
                                 <div class="mt-2 text-sm text-gray-300 flex items-center space-x-4">
@@ -160,12 +160,7 @@
                                        data-filename="{{ $strategy->source_code_original_filename ?? basename($strategy->source_code_path) }}">
                                         View
                                     </a>
-                                    <form method="POST" action="{{ route('strategies.update', $strategy) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete the source code file?');">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="delete_source_code" value="1">
-                                        <button type="submit" class="text-red-400 hover:text-red-600 font-medium ml-2">Delete</button>
-                                    </form>
+                                    <button type="button" class="text-red-400 hover:text-red-600 font-medium ml-2 delete-source-btn" data-url="{{ route('strategies.update', $strategy) }}" data-token="{{ csrf_token() }}">Delete</button>
                                 </div>
                                 <p class="text-xs text-gray-500">Uploading a new file will replace the current one.</p>
                             @endif
@@ -185,7 +180,7 @@
                         </div>
 
                         <!-- Backtest Report PDF (Optional) -->
-                        <div class="mb-6">
+                        <div class="mb-6" id="report-file">
                             <label for="report_pdf" class="block text-sm font-medium text-gray-300">Backtest Report (PDF, Optional)</label>
                             @php $report = $strategy->report; @endphp
                             @if ($report)
@@ -200,11 +195,7 @@
                                        data-filename="{{ $report->original_filename }}">
                                         View
                                     </a>
-                                    <form method="POST" action="{{ route('strategies.deleteReport', [$strategy, $report]) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this report?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-400 hover:text-red-600 font-medium ml-2">Delete</button>
-                                    </form>
+                                    <button type="button" class="text-red-400 hover:text-red-600 font-medium ml-2 delete-report-btn" data-url="{{ route('strategies.update', $strategy) }}" data-token="{{ csrf_token() }}">Delete</button>
                                 </div>
                                 <p class="text-xs text-gray-500">Uploading a new file will replace the current one.</p>
                             @endif
@@ -450,6 +441,75 @@
                 isResizingSource = false;
                 document.body.style.userSelect = '';
             }
+        });
+    });
+
+    // Scroll to section after redirect if ?scroll=source-file or ?scroll=report-file is present
+    window.addEventListener('DOMContentLoaded', function() {
+        const params = new URLSearchParams(window.location.search);
+        const scrollTarget = params.get('scroll');
+        if (scrollTarget) {
+            const el = document.getElementById(scrollTarget);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    });
+
+    // AJAX delete for source code and report
+    function showToast(message) {
+        let toast = document.createElement('div');
+        toast.textContent = message;
+        toast.className = 'fixed top-4 right-4 bg-green-700 text-white px-4 py-2 rounded shadow-lg z-50';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
+    }
+
+    document.querySelectorAll('.delete-source-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove only the current file display, not the whole upload section
+            fetch(this.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': this.dataset.token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ _method: 'PUT', delete_source_code: 1 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                // Find and remove the current file display div (the one with file info and delete button)
+                const parent = btn.closest('.mt-2.text-sm.text-gray-300.flex.items-center.space-x-4');
+                if (parent) parent.remove();
+                // Optionally, show a toast
+                showToast('Source code file deleted successfully.');
+            })
+            .catch(() => alert('Failed to delete source code file.'));
+        });
+    });
+
+    document.querySelectorAll('.delete-report-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove only the current file display, not the whole upload section
+            fetch(this.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': this.dataset.token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ _method: 'PUT', delete_report: 1 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                // Find and remove the current file display div (the one with file info and delete button)
+                const parent = btn.closest('.mt-2.text-sm.text-gray-300.flex.items-center.space-x-4');
+                if (parent) parent.remove();
+                // Optionally, show a toast
+                showToast('Backtest report deleted successfully.');
+            })
+            .catch(() => alert('Failed to delete backtest report.'));
         });
     });
     </script>
