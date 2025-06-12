@@ -459,3 +459,40 @@ npm run build
 ```
 
 The GitHub Actions workflow now automatically installs Node.js dependencies and builds assets before running PHPUnit tests, so this error should not occur in CI/CD.
+
+# Trading Strategy Tracker
+
+## Features
+
+- **Strategy Management**: Create, edit, and view trading strategies with fields for name, symbols, timeframes, magic number, group, and description.
+- **Source Code Upload**: Upload a single source code file per strategy. Download and view the file in a modal with syntax highlighting. Delete or replace the file from the edit page.
+- **Backtest Report Upload**: Upload a single PDF backtest report per strategy. Download the report or view it in a modal. Replace or delete the report from the edit page.
+- **File Management UX**:
+  - On the **show page**: Both source code and backtest report fields display the filename as a blue download link, with a green "View" link for modal viewing. Only one file of each type is allowed per strategy.
+  - On the **edit page**: Both fields show the current file (if any) with green "View" and red "Delete" links. Uploading a new file replaces the old one. Deleting removes the file from the strategy.
+- **Permissions**: Only users with access to a strategy can upload, view, or delete files.
+- **CI/CD**: Asset build and cache clear steps are required for tests and deployment. See below.
+
+## Setup & Development
+
+- Run `php artisan migrate` to set up the database.
+- Run `php artisan storage:link` to enable public file access.
+- Build frontend assets with `npm install && npm run build` before running tests or deploying.
+- Clear caches with `php artisan optimize:clear && php artisan cache:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear` after code or view changes.
+
+## File Storage
+
+- Source code files are stored in `storage/app/public/strategy_source_codes`.
+- Backtest reports are stored in `storage/app/public/reports`.
+- Only one file of each type is allowed per strategy. Uploading a new file replaces the old one.
+
+## UI/UX
+
+- **Show Page**: Download and view links for both files. No delete option for backtest report.
+- **Edit Page**: Download, view, and delete links for both files. Uploading a new file replaces the old one.
+- **Modals**: In-page modal viewers for both PDF and source code files, with resizable and fullscreen options.
+
+## Contribution
+
+- Please use feature branches and submit pull requests for review.
+- Keep documentation and UI consistent with the latest features.

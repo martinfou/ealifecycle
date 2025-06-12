@@ -44,6 +44,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('strategies/{strategy}/download', [StrategyController::class, 'downloadSourceCode'])->name('strategies.downloadSourceCode');
     Route::post('strategies/{strategy}/change-status', [StrategyController::class, 'changeStatus'])->name('strategies.change-status');
     Route::get('strategies/{strategy}/history', [StrategyController::class, 'history'])->name('strategies.history');
+    Route::post('/strategies/{strategy}/reports', [\App\Http\Controllers\StrategyController::class, 'uploadReport'])->name('strategies.uploadReport');
+    Route::get('/strategies/{strategy}/reports/{report}', [\App\Http\Controllers\StrategyController::class, 'downloadReport'])->name('strategies.downloadReport');
+    Route::get('/strategies/{strategy}/reports/{report}/view', [\App\Http\Controllers\StrategyController::class, 'viewReport'])->name('strategies.viewReport');
+    Route::delete('/strategies/{strategy}/reports/{report}', [\App\Http\Controllers\StrategyController::class, 'deleteReport'])->name('strategies.deleteReport');
     
     // Portfolio management
     Route::resource('portfolios', PortfolioController::class);

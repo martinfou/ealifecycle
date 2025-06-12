@@ -113,6 +113,14 @@ class Strategy extends Model
     }
 
     /**
+     * Get the report for the strategy.
+     */
+    public function report()
+    {
+        return $this->hasOne(StrategyReport::class);
+    }
+
+    /**
      * Scope a query to only include strategies for a specific user.
      */
     public function scopeForUser($query, $userId)
