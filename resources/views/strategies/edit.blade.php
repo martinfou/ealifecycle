@@ -152,7 +152,10 @@
                             @if ($strategy->source_code_path)
                                 <div class="mt-2 text-sm text-gray-300 flex items-center space-x-4">
                                     <span>Current file:</span>
-                                    <a href="#" class="text-green-400 hover:text-green-300 font-medium view-source-link"
+                                    <a href="{{ route('strategies.downloadSourceCode', $strategy) }}" class="text-blue-400 hover:text-blue-300 font-medium" download>
+                                        {{ $strategy->source_code_original_filename ?? basename($strategy->source_code_path) }}
+                                    </a>
+                                    <a href="javascript:void(0)" class="text-green-400 hover:text-green-300 font-medium view-source-link"
                                        data-source-url="{{ route('strategies.downloadSourceCode', $strategy) }}"
                                        data-filename="{{ $strategy->source_code_original_filename ?? basename($strategy->source_code_path) }}">
                                         View
@@ -188,7 +191,10 @@
                             @if ($report)
                                 <div class="mt-2 text-sm text-gray-300 flex items-center space-x-4">
                                     <span>Current file:</span>
-                                    <a href="#" class="text-green-400 hover:text-green-300 font-medium view-pdf-link"
+                                    <a href="{{ route('strategies.downloadReport', [$strategy, $report]) }}" class="text-blue-400 hover:text-blue-300 font-medium" download>
+                                        {{ $report->original_filename }}
+                                    </a>
+                                    <a href="javascript:void(0)" class="text-green-400 hover:text-green-300 font-medium view-pdf-link"
                                        data-pdf-url="{{ route('strategies.viewReport', [$strategy, $report]) }}"
                                        data-download-url="{{ route('strategies.downloadReport', [$strategy, $report]) }}"
                                        data-filename="{{ $report->original_filename }}">
@@ -255,44 +261,196 @@
         </div>
     </div>
 
+    <!-- Modal for PDF viewing -->
+    <div id="pdfModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden">
+        <div id="pdfModalContent" class="bg-gray-900 rounded-lg shadow-lg w-full relative resize overflow-auto" style="min-width:350px; min-height:300px; width:700px; height:550px; max-width:98vw;">
+            <button id="closePdfModal" class="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none">&times;</button>
+            <div class="p-4 pb-0 flex justify-between items-center">
+                <span id="pdfModalFilename" class="text-white font-medium"></span>
+                <a id="pdfModalDownload" href="#" download class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">Download</a>
+            </div>
+            <div class="p-4 pt-2" style="height:calc(100% - 80px);">
+                <iframe id="pdfModalIframe" src="" width="100%" height="100%" class="rounded border border-gray-700 bg-white" style="min-height:200px;"></iframe>
+            </div>
+            <div id="resizeHandle" class="absolute bottom-0 right-0 w-6 h-6 z-20 flex items-end justify-end" style="cursor: se-resize;">
+                <svg width="24" height="24" class="pointer-events-none select-none" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="0,24 24,24 24,0" fill="#374151" />
+                    <polygon points="6,24 24,24 24,6" fill="#4B5563" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Source Code viewing -->
+    <div id="sourceModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden">
+        <div id="sourceModalContent" class="bg-gray-900 rounded-lg shadow-lg w-full relative resize overflow-auto" style="min-width:350px; min-height:300px; width:700px; height:550px; max-width:98vw;">
+            <button id="closeSourceModal" class="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none">&times;</button>
+            <div class="p-4 pb-0 flex justify-between items-center">
+                <span id="sourceModalFilename" class="text-white font-medium"></span>
+                <a id="sourceModalDownload" href="#" download class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">Download</a>
+            </div>
+            <div class="p-4 pt-2" style="height:calc(100% - 80px); overflow:auto;">
+                <pre id="sourceModalPre" class="rounded border border-gray-700 bg-gray-950 text-xs text-white p-3 overflow-auto" style="min-height:200px; max-height:400px;"><code id="sourceModalCode"></code></pre>
+            </div>
+            <div id="resizeSourceHandle" class="absolute bottom-0 right-0 w-6 h-6 z-20 flex items-end justify-end" style="cursor: se-resize;">
+                <svg width="24" height="24" class="pointer-events-none select-none" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="0,24 24,24 24,0" fill="#374151" />
+                    <polygon points="6,24 24,24 24,6" fill="#4B5563" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
     <script>
-        function updatePrimaryTimeframeOptions() {
-            const checkboxes = document.querySelectorAll('input[name="timeframe_ids[]"]');
-            const primarySelect = document.getElementById('primary_timeframe_id');
-            const selectedTimeframes = [];
-            
-            // Get all checked timeframes
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    selectedTimeframes.push(checkbox.value);
-                }
+    document.addEventListener('DOMContentLoaded', function () {
+        // PDF Modal logic
+        const pdfLinks = document.querySelectorAll('.view-pdf-link');
+        const pdfModal = document.getElementById('pdfModal');
+        const pdfModalContent = document.getElementById('pdfModalContent');
+        const pdfModalIframe = document.getElementById('pdfModalIframe');
+        const pdfModalFilename = document.getElementById('pdfModalFilename');
+        const pdfModalDownload = document.getElementById('pdfModalDownload');
+        const closePdfModal = document.getElementById('closePdfModal');
+        const resizeHandle = document.getElementById('resizeHandle');
+
+        pdfLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const pdfUrl = this.getAttribute('data-pdf-url');
+                const downloadUrl = this.getAttribute('data-download-url');
+                const filename = this.getAttribute('data-filename');
+                pdfModalIframe.src = pdfUrl;
+                pdfModalFilename.textContent = filename;
+                pdfModalDownload.href = downloadUrl;
+                pdfModalDownload.setAttribute('download', filename);
+                pdfModal.classList.remove('hidden');
             });
-            
-            // Show/hide options in primary timeframe select
-            const options = primarySelect.querySelectorAll('option[data-timeframe-id]');
-            options.forEach(option => {
-                const timeframeId = option.getAttribute('data-timeframe-id');
-                if (selectedTimeframes.includes(timeframeId)) {
-                    option.style.display = '';
-                } else {
-                    option.style.display = 'none';
-                    // Clear selection if this option was selected but is no longer available
-                    if (option.selected) {
-                        option.selected = false;
-                        primarySelect.value = '';
-                    }
-                }
-            });
-            
-            // If only one timeframe is selected, auto-select it as primary
-            if (selectedTimeframes.length === 1) {
-                primarySelect.value = selectedTimeframes[0];
-            }
-        }
-        
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updatePrimaryTimeframeOptions();
         });
+
+        closePdfModal.addEventListener('click', function () {
+            pdfModal.classList.add('hidden');
+            pdfModalIframe.src = '';
+        });
+
+        // Allow closing modal by clicking outside content
+        pdfModal.addEventListener('click', function (e) {
+            if (e.target === pdfModal) {
+                pdfModal.classList.add('hidden');
+                pdfModalIframe.src = '';
+            }
+        });
+
+        // Resizing logic
+        let isResizing = false;
+        let lastDownX = 0;
+        let lastDownY = 0;
+        let startWidth = 0;
+        let startHeight = 0;
+
+        resizeHandle.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            isResizing = true;
+            lastDownX = e.clientX;
+            lastDownY = e.clientY;
+            startWidth = pdfModalContent.offsetWidth;
+            startHeight = pdfModalContent.offsetHeight;
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isResizing) return;
+            const dx = e.clientX - lastDownX;
+            const dy = e.clientY - lastDownY;
+            pdfModalContent.style.width = (startWidth + dx) + 'px';
+            pdfModalContent.style.height = (startHeight + dy) + 'px';
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.userSelect = '';
+            }
+        });
+
+        // Source Code Modal logic
+        const sourceLinks = document.querySelectorAll('.view-source-link');
+        const sourceModal = document.getElementById('sourceModal');
+        const sourceModalContent = document.getElementById('sourceModalContent');
+        const sourceModalPre = document.getElementById('sourceModalPre');
+        const sourceModalCode = document.getElementById('sourceModalCode');
+        const sourceModalFilename = document.getElementById('sourceModalFilename');
+        const sourceModalDownload = document.getElementById('sourceModalDownload');
+        const closeSourceModal = document.getElementById('closeSourceModal');
+        const resizeSourceHandle = document.getElementById('resizeSourceHandle');
+
+        sourceLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const sourceUrl = this.getAttribute('data-source-url');
+                const filename = this.getAttribute('data-filename');
+                sourceModalFilename.textContent = filename;
+                sourceModalDownload.href = sourceUrl;
+                sourceModalDownload.setAttribute('download', filename);
+                sourceModal.classList.remove('hidden');
+                sourceModalCode.textContent = 'Loading...';
+                fetch(sourceUrl)
+                    .then(response => response.text())
+                    .then(text => {
+                        sourceModalCode.textContent = text;
+                        hljs.highlightElement(sourceModalCode);
+                    })
+                    .catch(() => {
+                        sourceModalCode.textContent = 'Failed to load source code.';
+                    });
+            });
+        });
+
+        closeSourceModal.addEventListener('click', function () {
+            sourceModal.classList.add('hidden');
+            sourceModalCode.textContent = '';
+        });
+
+        // Allow closing modal by clicking outside content
+        sourceModal.addEventListener('click', function (e) {
+            if (e.target === sourceModal) {
+                sourceModal.classList.add('hidden');
+                sourceModalCode.textContent = '';
+            }
+        });
+
+        // Resizing logic for source modal
+        let isResizingSource = false;
+        let lastDownXSource = 0;
+        let lastDownYSource = 0;
+        let startWidthSource = 0;
+        let startHeightSource = 0;
+
+        resizeSourceHandle.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            isResizingSource = true;
+            lastDownXSource = e.clientX;
+            lastDownYSource = e.clientY;
+            startWidthSource = sourceModalContent.offsetWidth;
+            startHeightSource = sourceModalContent.offsetHeight;
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isResizingSource) return;
+            const dx = e.clientX - lastDownXSource;
+            const dy = e.clientY - lastDownYSource;
+            sourceModalContent.style.width = (startWidthSource + dx) + 'px';
+            sourceModalContent.style.height = (startHeightSource + dy) + 'px';
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (isResizingSource) {
+                isResizingSource = false;
+                document.body.style.userSelect = '';
+            }
+        });
+    });
     </script>
 </x-app-layout> 
