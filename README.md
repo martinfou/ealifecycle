@@ -512,3 +512,15 @@ The GitHub Actions workflow now automatically installs Node.js dependencies and 
   - The file is deleted from both the database and the file system.
 - On the **show strategy** page, you can view and download files, but not delete them.
 - All modals for viewing files are resizable and modern.
+
+## CI/CD Deployment: Vendor Directory Included
+
+- The GitHub Actions deployment workflow now always includes the `vendor` directory in the deployment package sent to production.
+- **Composer is NOT required on the production server.** All PHP dependencies are installed in CI and shipped with the code.
+- This prevents 500 errors due to missing dependencies (such as `Command 'composer' not found` or missing Laravel classes).
+- The `rsync` step in the workflow does NOT exclude `vendor`, and the SSH deployment step does NOT run `composer install`.
+- This is especially important for shared hosting or environments where you cannot install Composer.
+- **Troubleshooting:**
+  - If you see a 500 error after deployment, check that the `vendor` directory exists and is complete on the server.
+  - You can always re-trigger the GitHub Actions deploy workflow to rebuild and redeploy all dependencies.
+- For more details, see `.github/workflows/deploy.yml` and the comments in the workflow file.
