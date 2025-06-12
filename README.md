@@ -198,8 +198,11 @@ npm run dev
 # Run migrations when database changes
 php artisan migrate
 
-# Clear cache when needed
-php artisan cache:clear
+# Build assets before running tests
+npm run build
+
+# Run tests
+vendor/bin/phpunit
 ```
 
 **📊 Working with Data**
@@ -445,3 +448,14 @@ For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
 ## Security Vulnerabilities
 
 Please review our [security policy](../../security/policy) on how to report security vulnerabilities.
+
+## 🧪 Running Tests
+
+Before running tests locally, make sure you have built the frontend assets so that the Vite manifest exists:
+
+```bash
+npm install
+npm run build
+```
+
+The GitHub Actions workflow now automatically installs Node.js dependencies and builds assets before running PHPUnit tests, so this error should not occur in CI/CD.
