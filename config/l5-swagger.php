@@ -65,9 +65,18 @@ return [
              * Middleware allows to prevent unexpected access to API documentation
              */
             'middleware' => [
-                'api' => [],
-                'asset' => [],
-                'docs' => [],
+                'api' => [
+                    'auth:sanctum',
+                    \App\Http\Middleware\CheckIfAdmin::class,
+                ],
+                'asset' => [
+                    'auth:sanctum',
+                    \App\Http\Middleware\CheckIfAdmin::class,
+                ],
+                'docs' => [
+                    'auth:sanctum',
+                    \App\Http\Middleware\CheckIfAdmin::class,
+                ],
                 'oauth2_callback' => [],
             ],
 
