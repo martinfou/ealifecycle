@@ -389,7 +389,13 @@ jobs:
           $PHP_BINARY artisan config:clear
           $PHP_BINARY artisan route:clear
           # Keep view and config caches cleared to prevent 405 issues
-          
+
+          # Check for SQL/database errors in the Laravel log after seeding
+          if grep -i 'SQL error' storage/logs/laravel.log; then
+            echo '❌ Database seeding or migration error detected in laravel.log! Failing deployment.'
+            exit 1
+          fi
+
           echo "Setting final permissions..."
           chmod -R 755 public/
           chmod 644 public/index.php
