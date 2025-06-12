@@ -159,6 +159,7 @@ jobs:
           --exclude='.DS_Store' \
           --exclude='Thumbs.db' \
           --exclude='deploy-staging'
+          # DO NOT exclude vendor directory so production always has dependencies
         
         # List contents to verify everything is there
         echo "=== Contents of deploy-staging ==="
@@ -338,7 +339,7 @@ jobs:
           chmod -R 777 storage/logs storage/framework/cache storage/framework/sessions storage/framework/views
           
           # Install/update Composer dependencies with specific PHP version
-          $PHP_BINARY $(which composer) install --optimize-autoloader --no-dev --no-interaction --ignore-platform-req=php
+          # Composer install is not needed on production because vendor is deployed from CI
           
           # Laravel deployment commands with specific PHP version
           echo "Clearing all Laravel caches before deployment..."
