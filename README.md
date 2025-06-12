@@ -492,6 +492,10 @@ The GitHub Actions workflow now automatically installs Node.js dependencies and 
 - **Edit Page**: Download, view, and delete links for both files. Uploading a new file replaces the old one.
 - **Modals**: In-page modal viewers for both PDF and source code files, with resizable and fullscreen options.
 
+## UI/UX Improvements
+
+- The close (X) button in all file view modals (PDF and source code) now has extra padding and is positioned further from the top and right borders. This ensures the button is not too close to the edge, providing a more polished and accessible appearance on all devices.
+
 ## Contribution
 
 - Please use feature branches and submit pull requests for review.
