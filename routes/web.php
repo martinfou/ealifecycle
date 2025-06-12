@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\TimeframeController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\TokenController;
+use App\Http\Controllers\SymbolController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -77,3 +78,5 @@ Route::middleware(['auth'])->group(function () {
         Route::post('users/{user}/assign-groups', [UserController::class, 'assignGroups'])->name('users.assign-groups');
     });
 });
+
+Route::resource('symbols', SymbolController::class);
