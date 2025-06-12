@@ -8,6 +8,46 @@ on:
   workflow_dispatch: # Allow manual deployment
 
 jobs:
+  run-tests:
+    name: Run PHPUnit Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        coverage: none
+
+    - name: Get Composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache Composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Setup test database
+      run: |
+        touch database/database.sqlite
+        cp .env.example .env
+        php artisan key:generate
+        php artisan migrate --force
+
+    - name: Run tests
+      run: vendor/bin/phpunit
+
   validate-composer:
     name: Validate composer.lock
     runs-on: ubuntu-latest
@@ -46,7 +86,8 @@ jobs:
   deploy:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: [run-tests]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     environment: prod  # Use the prod environment to access secrets
     
     steps:
