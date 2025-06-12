@@ -524,3 +524,5 @@ The GitHub Actions workflow now automatically installs Node.js dependencies and 
   - If you see a 500 error after deployment, check that the `vendor` directory exists and is complete on the server.
   - You can always re-trigger the GitHub Actions deploy workflow to rebuild and redeploy all dependencies.
 - For more details, see `.github/workflows/deploy.yml` and the comments in the workflow file.
+
+- The SymbolSeeder is now robust and idempotent: it uses updateOrCreate to avoid duplicate entry errors, and will halt deployment with a clear error message if any SQL/database problem occurs during seeding. This ensures no silent failures or duplicate entry errors during production deploys.
