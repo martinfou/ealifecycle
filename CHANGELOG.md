@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- Restricted API documentation access to authenticated administrators only
+- Disabled runtime Swagger documentation generation in production
+- Added middleware protection for all Swagger-related routes
+
 ### Added
+- New `CheckIfAdmin` middleware for protecting administrative routes
+- Environment-specific Swagger generation configuration
 - Implemented Swagger UI for API documentation, accessible at `/api/documentation`.
 - Added an "API" dropdown menu with links to "API Tokens" and "API Docs".
 - Added Symbol Management feature with CSV data import support.
 - Integrated Symbol Management into the Admin interface.
 
-### Enhanced
+### Changed
+- Moved Swagger package from dev dependencies to main requirements
+- Updated Swagger configuration for better security practices
 - **Symbol Management UI**: Improved table design and user experience
   - Professional dark theme styling consistent with timeframes
   - Enhanced table layout with proper spacing and typography
