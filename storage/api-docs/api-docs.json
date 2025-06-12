@@ -1,10 +1,23 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "EALifecycle API",
-        "description": "API documentation for EALifecycle",
+        "title": "EALifecycle API Documentation",
+        "description": "API documentation for EALifecycle - The definitive platform for managing Expert Advisors professionally",
+        "contact": {
+            "email": "support@ealifecycle.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Local Environment"
+        }
+    ],
     "paths": {
         "/api/v1/portfolios": {
             "get": {
@@ -506,6 +519,14 @@
                         "sanctum": []
                     }
                 ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "scheme": "bearer"
             }
         }
     },
