@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             GroupSeeder::class,
             StatusSeeder::class,
             TimeframeSeeder::class,
+            SymbolSeeder::class,
         ]);
 
         // Create an admin user

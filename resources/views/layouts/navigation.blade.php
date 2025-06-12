@@ -92,6 +92,9 @@
                                 <x-dropdown-link :href="route('admin.timeframes.index')">
                                     {{ __('Timeframes') }}
                                 </x-dropdown-link>
+                                <x-dropdown-link :href="route('symbols.index')">
+                                    {{ __('Symbols') }}
+                                </x-dropdown-link>
                             </div>
                         </div>
                     </div>
@@ -102,7 +105,7 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-300 bg-gray-800 hover:text-white hover:bg-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-400 bg-gray-900 hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
@@ -180,6 +183,9 @@
                         </x-responsive-nav-link>
                         <x-responsive-nav-link :href="route('admin.timeframes.index')" :active="request()->routeIs('admin.timeframes.*')">
                             {{ __('Timeframes') }}
+                        </x-responsive-nav-link>
+                        <x-responsive-nav-link :href="route('symbols.index')" :active="request()->routeIs('symbols.*')">
+                            {{ __('Symbols') }}
                         </x-responsive-nav-link>
                     </div>
                 </div>
