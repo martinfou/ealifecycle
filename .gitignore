@@ -104,3 +104,6 @@ yarn.lock
 !/storage/app/imports/.gitkeep
 /storage/app/exports/*
 !/storage/app/exports/.gitkeep
+
+# API Documentation
+/storage/api-docs/
