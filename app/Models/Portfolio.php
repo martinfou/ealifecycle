@@ -49,7 +49,7 @@ class Portfolio extends Model
     public function strategies(): BelongsToMany
     {
         return $this->belongsToMany(Strategy::class, 'portfolio_strategies')
-                    ->withPivot(['allocation_amount', 'allocation_percent', 'status', 'last_rebalanced_at'])
+                    ->withPivot(['allocation_amount', 'allocation_percent', 'status', 'date_added', 'date_removed', 'notes'])
                     ->withTimestamps();
     }
 
