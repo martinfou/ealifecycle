@@ -286,14 +286,20 @@
 
     <!-- Modal for PDF viewing -->
     <div id="pdfModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden">
-        <div class="bg-gray-900 rounded-lg shadow-lg max-w-full w-[98vw] h-[90vh] relative flex flex-col">
-            <button id="closePdfModal" class="absolute top-2 right-2 text-gray-400 hover:text-white text-3xl font-bold focus:outline-none">&times;</button>
+        <div id="pdfModalContent" class="bg-gray-900 rounded-lg shadow-lg w-full relative resize overflow-auto" style="min-width:350px; min-height:300px; width:700px; height:550px; max-width:98vw;">
+            <button id="closePdfModal" class="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none">&times;</button>
             <div class="p-4 pb-0 flex justify-between items-center">
                 <span id="pdfModalFilename" class="text-white font-medium"></span>
                 <a id="pdfModalDownload" href="#" download class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-colors">Download</a>
             </div>
-            <div class="p-4 pt-2 flex-1 flex flex-col">
-                <iframe id="pdfModalIframe" src="" width="100%" height="100%" class="rounded border border-gray-700 bg-white flex-1" style="min-height:70vh;width:100%;"></iframe>
+            <div class="p-4 pt-2" style="height:calc(100% - 80px);">
+                <iframe id="pdfModalIframe" src="" width="100%" height="100%" class="rounded border border-gray-700 bg-white" style="min-height:200px;"></iframe>
+            </div>
+            <div id="resizeHandle" class="absolute bottom-0 right-0 w-6 h-6 z-20 flex items-end justify-end" style="cursor: se-resize;">
+                <svg width="24" height="24" class="pointer-events-none select-none" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="0,24 24,24 24,0" fill="#374151" />
+                    <polygon points="6,24 24,24 24,6" fill="#4B5563" />
+                </svg>
             </div>
         </div>
     </div>
@@ -325,6 +331,33 @@
                     modal.classList.add('hidden');
                     iframe.src = '';
                 }
+            });
+            // Resizable modal logic
+            const modalContent = document.getElementById('pdfModalContent');
+            const resizeHandle = document.getElementById('resizeHandle');
+            let isResizing = false;
+            let lastDownX = 0;
+            let lastDownY = 0;
+            resizeHandle.addEventListener('mousedown', function(e) {
+                e.stopPropagation(); // Prevent modal close
+                isResizing = true;
+                lastDownX = e.clientX;
+                lastDownY = e.clientY;
+                document.body.style.userSelect = 'none';
+            });
+            document.addEventListener('mousemove', function(e) {
+                if (!isResizing) return;
+                const dx = e.clientX - lastDownX;
+                const dy = e.clientY - lastDownY;
+                const rect = modalContent.getBoundingClientRect();
+                modalContent.style.width = Math.max(350, rect.width + dx) + 'px';
+                modalContent.style.height = Math.max(300, rect.height + dy) + 'px';
+                lastDownX = e.clientX;
+                lastDownY = e.clientY;
+            });
+            document.addEventListener('mouseup', function() {
+                isResizing = false;
+                document.body.style.userSelect = '';
             });
         });
     </script>
