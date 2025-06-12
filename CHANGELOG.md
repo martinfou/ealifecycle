@@ -251,4 +251,7 @@ This project follows a modified semantic versioning approach:
 - **Fixed** for any bug fixes
 - **Security** for vulnerability fixes
 - **Enhanced** for improvements to existing features
-- **Technical** for development/infrastructure changes 
+- **Technical** for development/infrastructure changes
+
+### CI/CD
+- Added a validation step to the GitHub Actions workflow to ensure `composer.lock` is up-to-date on all pull requests. 

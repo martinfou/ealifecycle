@@ -238,7 +238,22 @@ if ($user->canEdit($strategy)) {
 $strategies = $user->accessibleStrategies();
 ```
 
----
+### Development Setup
+
+To get started with development, follow these steps after cloning the repository:
+
+1.  **Install Dependencies**:
+    ```bash
+    composer install
+    npm install
+    ```
+
+2.  **Activate Git Hooks**:
+    To ensure code quality and prevent common errors, we use shared Git hooks. Activate them by running:
+    ```bash
+    git config core.hooksPath .githooks
+    ```
+    This will enable automated checks before you commit.
 
 ## 🧪 Testing Your Installation
 
@@ -369,6 +384,8 @@ DB_DATABASE=/absolute/path/to/database/database.sqlite
 
 ## 🤝 Contributing
 
+Thank you for considering contributing to EALifeCycle! Please see `CONTRIBUTING.md` for details.
+
 ### Getting Started
 1. **Fork the repository** on GitHub
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
@@ -424,3 +441,7 @@ For detailed changelog, see [CHANGELOG.md](CHANGELOG.md).
 
 **🚀 Ready to manage your Expert Advisors professionally? Start with the Quick Start guide above!** 
 # Force deploy trigger
+
+## Security Vulnerabilities
+
+Please review our [security policy](../../security/policy) on how to report security vulnerabilities.

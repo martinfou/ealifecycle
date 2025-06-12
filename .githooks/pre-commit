@@ -1,0 +1,25 @@
+#!/bin/sh
+
+echo "Running pre-commit validation..."
+
+# Check if composer.lock is staged for commit. If not, check for changes.
+if ! git diff --cached --name-only | grep -q "composer.lock"; then
+  # If composer.json changed, the lock file MUST change too.
+  if git diff --cached --name-only | grep -q "composer.json"; then
+    echo "Error: composer.json is staged, but composer.lock is not."
+    echo "Please run 'composer update --lock' and stage the updated composer.lock file."
+    exit 1
+  fi
+fi
+
+# Run composer validation
+composer validate --no-check-all --strict
+VALIDATION_RESULT=$?
+
+if [ $VALIDATION_RESULT -ne 0 ]; then
+  echo "Composer validation failed. Please fix the issues before committing."
+  exit 1
+fi
+
+echo "Validation successful."
+exit 0 
