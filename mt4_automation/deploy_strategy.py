@@ -17,7 +17,7 @@ API_AUTH_TOKEN = os.getenv("STRATEGY_API_TOKEN", "your_default_api_token")
 # This is the path to the MT4 data folder, not the program installation folder.
 # On Windows: C:/Users/<YourUser>/AppData/Roaming/MetaQuotes/Terminal/<32-char-hash>/
 # On macOS with Wine: /Users/<YourUser>/.wine/drive_c/users/<YourUser>/Application Data/MetaQuotes/Terminal/<32-char-hash>/
-MT4_DATA_PATH = None 
+MT4_DATA_PATH = "C:/Users/Administrator/Desktop/STAGING - OANDA - MetaTrader 4" 
 
 # The directory where Expert Advisors (.ex4 files) are stored.
 EXPERTS_DIR_NAME = "MQL4/Experts"
@@ -148,16 +148,29 @@ def main():
     """
     print("--- Starting Strategy Deployment for MT4 ---")
     
-    # 1. Find MT4 Path
+    # 1. Find or set MT4 Path
     global MT4_DATA_PATH
-    if not MT4_DATA_PATH:
-        MT4_DATA_PATH = find_mt4_data_path()
+    
+    # The user can set the path as a string, so we ensure it's a Path object
+    mt4_path_obj = None
+    if MT4_DATA_PATH:
+        mt4_path_obj = Path(MT4_DATA_PATH)
+    else:
+        # If path is not set manually, try to find it automatically
+        mt4_path_obj = find_mt4_data_path()
 
-    if not MT4_DATA_PATH or not MT4_DATA_PATH.exists():
-        print("Could not determine MetaTrader 4 data path. Please set it manually in the script.")
+    # More robust check for the MT4 data path
+    if not mt4_path_obj:
+        print("\nERROR: Could not automatically determine the MetaTrader 4 data path.")
+        print("Please set the 'MT4_DATA_PATH' variable manually in the script and re-run.")
         return
 
-    mt4_experts_path = MT4_DATA_PATH / EXPERTS_DIR_NAME
+    if not mt4_path_obj.exists():
+        print(f"\nERROR: The specified MT4 data path does not exist: {mt4_path_obj}")
+        print("Please check the path and set it manually in the script if needed.")
+        return
+
+    mt4_experts_path = mt4_path_obj / EXPERTS_DIR_NAME
     
     # Create a temporary directory for downloads
     download_dir = Path("./strategy_downloads")
