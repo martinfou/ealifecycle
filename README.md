@@ -496,3 +496,15 @@ The GitHub Actions workflow now automatically installs Node.js dependencies and 
 
 - Please use feature branches and submit pull requests for review.
 - Keep documentation and UI consistent with the latest features.
+
+## Strategy File Management (Source Code & Backtest Reports)
+
+- On the **edit strategy** page, you can upload, view, download, or delete both the source code file and the backtest report (PDF).
+- If a file is present, its info, download, and view links are shown, along with a red delete button.
+- **Deleting a file** (source code or report):
+  - Works instantly via AJAX—no confirmation popup.
+  - Only the file info and delete button are removed from the page; the upload field remains visible so you can immediately upload a new file.
+  - A green toast notification confirms successful deletion.
+  - The file is deleted from both the database and the file system.
+- On the **show strategy** page, you can view and download files, but not delete them.
+- All modals for viewing files are resizable and modern.

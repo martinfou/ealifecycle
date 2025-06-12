@@ -181,9 +181,27 @@ class StrategyController extends Controller
     {
         $user = Auth::user();
         
-        // Check if user can edit this strategy
-        if (!$strategy->canUserEdit($user)) {
-            abort(403, 'You do not have permission to edit this strategy.');
+        // Handle source code file deletion BEFORE validation
+        if ($request->has('delete_source_code') && $strategy->source_code_path) {
+            Storage::disk('public')->delete($strategy->source_code_path);
+            $strategy->source_code_path = null;
+            $strategy->source_code_original_filename = null;
+            $strategy->save();
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Source code file deleted successfully.']);
+            }
+            return redirect()->route('strategies.edit', $strategy)->with('success', 'Source code file deleted successfully.');
+        }
+
+        // Handle backtest report deletion BEFORE validation
+        if ($request->has('delete_report') && $strategy->report) {
+            $report = $strategy->report;
+            \Storage::disk('public')->delete($report->file_path);
+            $report->delete();
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Backtest report deleted successfully.']);
+            }
+            return redirect()->route('strategies.edit', $strategy)->with('success', 'Backtest report deleted successfully.');
         }
 
         $validated = $request->validate([
