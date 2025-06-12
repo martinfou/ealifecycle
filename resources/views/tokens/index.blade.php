@@ -77,15 +77,17 @@
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                     {{ $token->last_used_at ? $token->last_used_at->diffForHumans() : 'Never' }}
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <form method="POST" action="{{ route('tokens.destroy', $token->id) }}" class="inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="text-red-500 hover:text-red-400 transition-colors"
-                                                            onclick="return confirm('Are you sure you want to delete this token? This action cannot be undone.')">
-                                                            Delete
-                                                        </button>
-                                                    </form>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <div class="flex items-center justify-end">
+                                                        <form method="POST" action="{{ route('tokens.destroy', $token->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="text-red-500 hover:text-red-400 transition-colors"
+                                                                onclick="return confirm('Are you sure you want to delete this token? This action cannot be undone.')">
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
