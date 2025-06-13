@@ -202,10 +202,14 @@ jobs:
             cp ealifecycle/.env /tmp/env-backup
           fi
           
-          # Create backup of current deployment
+          # Create backup of current deployment with timestamp
           echo "Creating backup of current deployment..."
           if [ -d "ealifecycle" ]; then
-            tar -czf ealifecycle-backup-$(date +%Y%m%d-%H%M%S).tar.gz ealifecycle
+            BACKUP_NAME="ealifecycle-backup-$(date +%Y%m%d-%H%M%S)"
+            tar -czf "${BACKUP_NAME}.tar.gz" ealifecycle
+            
+            # Keep only the last 5 backups
+            ls -t ealifecycle-backup-*.tar.gz | tail -n +6 | xargs -r rm
           fi
           
           # Extract new deployment
@@ -218,11 +222,13 @@ jobs:
           if [ -f "/tmp/env-production-backup" ]; then
             echo "Restoring .env.production"
             cp /tmp/env-production-backup ealifecycle/.env.production
+            rm /tmp/env-production-backup
           fi
           
           if [ -f "/tmp/env-backup" ]; then
             echo "Restoring .env"
             cp /tmp/env-backup ealifecycle/.env
+            rm /tmp/env-backup
           fi
           
           # Set proper permissions
