@@ -148,7 +148,7 @@ class StrategyController extends Controller
             abort(403, 'You do not have permission to view this strategy.');
         }
 
-        $strategy->load(['status', 'timeframes', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser', 'report.uploader']);
+        $strategy->load(['status', 'timeframes', 'group', 'user', 'statusHistory.previousStatus', 'statusHistory.newStatus', 'statusHistory.changedByUser', 'report.uploadedBy']);
         $statuses = Status::where('is_active', true)->get();
         $canEdit = $strategy->canUserEdit($user);
         
