@@ -198,6 +198,7 @@ class StrategyReportTest extends TestCase
         $response = $this->actingAs($this->user)
             ->getJson("/api/v1/strategies/{$otherStrategy->id}/reports");
 
-        $response->assertStatus(404);
+        $response->assertStatus(403)
+            ->assertJson(['message' => 'Unauthorized']);
     }
 } 
