@@ -203,6 +203,46 @@ jobs:
           # Create new deployment directory
           mkdir -p ealifecycle
           
+          # Extract new deployment
+          tar -xzf deploy.tar.gz -C ealifecycle
+          
+          # Restore environment files
+          if [ -f "/tmp/env-production-backup" ]; then
+            cp /tmp/env-production-backup ealifecycle/.env.production
+          fi
+          
+          if [ -f "/tmp/env-backup" ]; then
+            cp /tmp/env-backup ealifecycle/.env
+          fi
+          
+          # Set proper permissions
+          cd ealifecycle
+          chmod -R 775 storage bootstrap/cache
+          chown -R ${{ secrets.DREAMHOST_USERNAME }}:${{ secrets.DREAMHOST_USERNAME }} .
+          
+          # Install dependencies and build assets
+          composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist
+          npm ci
+          npm run build
+          
+          # Clear all caches
+          php artisan optimize:clear
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan route:clear
+          php artisan view:clear
+          
+          # Optimize for production
+          php artisan optimize
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          
+          # Restart PHP-FPM if needed
+          if command -v systemctl &> /dev/null; then
+            sudo systemctl restart php8.4-fpm
+          fi
+          
     - name: Upload deployment package
       uses: appleboy/scp-action@v0.1.7
       with:
