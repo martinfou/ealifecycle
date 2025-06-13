@@ -203,57 +203,56 @@ jobs:
           fi
           
           # Create backup of current deployment
+          echo "Creating backup of current deployment..."
           if [ -d "ealifecycle" ]; then
-            rm -rf ealifecycle-backup
-            mv ealifecycle ealifecycle-backup
+            tar -czf ealifecycle-backup-$(date +%Y%m%d-%H%M%S).tar.gz ealifecycle
           fi
-          
-          # Create new deployment directory
-          mkdir -p ealifecycle
           
           # Extract new deployment
-          echo "Extracting deployment package..."
+          echo "Extracting new deployment..."
+          rm -rf ealifecycle
+          mkdir -p ealifecycle
           tar -xzf deploy.tar.gz -C ealifecycle
-          
-          # Verify extraction
-          if [ ! -d "ealifecycle/storage" ]; then
-            echo "Error: Extraction failed - storage directory not found!"
-            exit 1
-          fi
           
           # Restore environment files
           if [ -f "/tmp/env-production-backup" ]; then
+            echo "Restoring .env.production"
             cp /tmp/env-production-backup ealifecycle/.env.production
           fi
           
           if [ -f "/tmp/env-backup" ]; then
+            echo "Restoring .env"
             cp /tmp/env-backup ealifecycle/.env
           fi
           
-          # Install dependencies and build assets
-          cd ealifecycle
-          echo "Installing dependencies..."
-          /usr/local/bin/composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist
-          /usr/local/bin/npm ci
-          /usr/local/bin/npm run build
+          # Set proper permissions
+          echo "Setting permissions..."
+          chmod -R 775 ealifecycle/storage
+          chmod -R 775 ealifecycle/bootstrap/cache
           
-          # Clear all caches
-          echo "Clearing caches..."
+          # Update APP_URL in .env
+          echo "Updating APP_URL..."
+          sed -i 's|APP_URL=.*|APP_URL=https://4xhacker.com/ealifecycle|' ealifecycle/.env
+          
+          # Clear Laravel caches
+          echo "Clearing Laravel caches..."
+          cd ealifecycle
           php artisan optimize:clear
-          php artisan cache:clear
           php artisan config:clear
           php artisan route:clear
           php artisan view:clear
+          php artisan cache:clear
           
-          # Optimize for production
-          echo "Optimizing for production..."
-          php artisan optimize
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
+          # Verify deployment
+          echo "Verifying deployment..."
+          if [ ! -f "public/index.php" ]; then
+            echo "Error: public/index.php not found after deployment!"
+            exit 1
+          fi
           
-          # Cleanup
+          # Clean up
           echo "Cleaning up..."
+          cd ..
           rm -f deploy.tar.gz
           
           echo "Deployment completed successfully!" 
