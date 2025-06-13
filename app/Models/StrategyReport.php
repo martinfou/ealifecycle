@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StrategyReport extends Model
 {
@@ -13,16 +14,22 @@ class StrategyReport extends Model
         'strategy_id',
         'file_path',
         'original_filename',
-        'uploaded_by',
+        'uploaded_by'
     ];
 
-    public function strategy()
+    /**
+     * Get the strategy that owns the report.
+     */
+    public function strategy(): BelongsTo
     {
         return $this->belongsTo(Strategy::class);
     }
 
-    public function uploader()
+    /**
+     * Get the user who uploaded the report.
+     */
+    public function uploadedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }
-}
+} 

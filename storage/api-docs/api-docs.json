@@ -521,6 +521,146 @@
                 ]
             }
         },
+        "/api/v1/strategies/{strategy}/reports": {
+            "get": {
+                "tags": [
+                    "Strategy Reports"
+                ],
+                "summary": "Download the strategy's report",
+                "description": "Download a specific report",
+                "operationId": "36771693644fe071943f14c0fcf9858f",
+                "parameters": [
+                    {
+                        "name": "strategy",
+                        "in": "path",
+                        "description": "Strategy ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "PDF file download",
+                        "content": {
+                            "application/pdf": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Report not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Strategy Reports"
+                ],
+                "summary": "Upload a new PDF report",
+                "description": "Upload a new PDF report for a strategy",
+                "operationId": "189cac67740201956cb4cd3650000e12",
+                "parameters": [
+                    {
+                        "name": "strategy",
+                        "in": "path",
+                        "description": "Strategy ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "report": {
+                                        "description": "PDF report file (max 10MB)",
+                                        "type": "file",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Report uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Report uploaded successfully"
+                                        },
+                                        "filename": {
+                                            "type": "string"
+                                        },
+                                        "original_filename": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Strategy Reports"
+                ],
+                "summary": "Delete the strategy's report",
+                "description": "Delete a report",
+                "operationId": "ec4baf21d345711184792481c1a06c42",
+                "parameters": [
+                    {
+                        "name": "strategy",
+                        "in": "path",
+                        "description": "Strategy ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Report deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Report not found"
+                    }
+                }
+            }
+        },
         "/api/v1/symbols": {
             "get": {
                 "tags": [
@@ -789,6 +929,10 @@
         {
             "name": "Strategies",
             "description": "API Endpoints for Managing Strategies"
+        },
+        {
+            "name": "Strategy Reports",
+            "description": "API Endpoints for managing strategy PDF reports"
         },
         {
             "name": "Symbols",

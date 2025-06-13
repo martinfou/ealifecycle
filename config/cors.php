@@ -1,11 +1,15 @@
 <?php
 
 return [
-    'paths' => ['*', 'api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        env('FRONTEND_URL', 'http://localhost:3000'),
+        'https://4xhacker.com/ealifecycle',
+        'https://www.4xhacker.com/ealifecycle'
+    ],
 
     'allowed_origins_patterns' => [],
 
