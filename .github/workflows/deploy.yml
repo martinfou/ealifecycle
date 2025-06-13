@@ -100,7 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [run-tests]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-    environment: prod  # Use the prod environment to access secrets
+    environment: prod
     
     steps:
     - name: Checkout code
@@ -159,18 +159,9 @@ jobs:
           --exclude='.DS_Store' \
           --exclude='Thumbs.db' \
           --exclude='deploy-staging'
-          # DO NOT exclude public/build so Vite manifest is deployed
-        
-        # List contents to verify everything is there
-        echo "=== Contents of deploy-staging ==="
-        ls -la deploy-staging/
         
         # Create tar archive from staging directory  
         tar -czf deploy.tar.gz -C deploy-staging .
-        
-        # Verify tar contents
-        echo "=== Contents of deploy.tar.gz ==="
-        tar -tzf deploy.tar.gz | head -20
           
     - name: Upload deployment package
       uses: appleboy/scp-action@v0.1.7
@@ -242,10 +233,6 @@ jobs:
           # Install dependencies and build assets
           cd ealifecycle
           echo "Installing dependencies..."
-          which composer || echo "Composer not found in PATH"
-          which npm || echo "NPM not found in PATH"
-          
-          # Use full paths for commands
           /usr/local/bin/composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist
           /usr/local/bin/npm ci
           /usr/local/bin/npm run build
@@ -269,44 +256,4 @@ jobs:
           echo "Cleaning up..."
           rm -f deploy.tar.gz
           
-          echo "Deployment completed successfully!"
-          
-    - name: Rollback on failure
-      if: failure()
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.DREAMHOST_HOST }}
-        username: ${{ secrets.DREAMHOST_USERNAME }}
-        key: ${{ secrets.DREAMHOST_SSH_KEY }}
-        port: 22
-        script: |
-          cd ${{ secrets.DREAMHOST_PATH }}
-          
-          # Restore environment files from backup if they exist
-          if [ -f "/tmp/env-production-backup" ]; then
-            echo "Restoring .env.production from backup during rollback"
-            cp /tmp/env-production-backup ealifecycle/.env.production 2>/dev/null || true
-            rm /tmp/env-production-backup
-          fi
-          
-          if [ -f "/tmp/env-backup" ]; then
-            echo "Restoring .env from backup during rollback"
-            cp /tmp/env-backup ealifecycle/.env 2>/dev/null || true
-            rm /tmp/env-backup
-          fi
-          
-          # Perform rollback to previous version
-          if [ -d "ealifecycle-backup" ]; then
-            rm -rf ealifecycle
-            mv ealifecycle-backup ealifecycle
-            echo "Rollback completed - restored previous version"
-          fi
-          
-    - name: Notify deployment status
-      if: always()
-      run: |
-        if [ "${{ job.status }}" == "success" ]; then
-          echo "✅ Deployment to Dreamhost completed successfully!"
-        else
-          echo "❌ Deployment failed - check logs and rollback if necessary"
-        fi 
+          echo "Deployment completed successfully!" 
