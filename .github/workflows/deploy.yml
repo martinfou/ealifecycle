@@ -172,6 +172,17 @@ jobs:
         echo "=== Contents of deploy.tar.gz ==="
         tar -tzf deploy.tar.gz | head -20
           
+    - name: Upload deployment package
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.DREAMHOST_HOST }}
+        username: ${{ secrets.DREAMHOST_USERNAME }}
+        key: ${{ secrets.DREAMHOST_SSH_KEY }}
+        port: 22
+        source: "deploy.tar.gz"
+        target: "${{ secrets.DREAMHOST_PATH }}"
+        strip_components: 0
+
     - name: Deploy to Dreamhost via SSH
       uses: appleboy/ssh-action@v1.0.3
       with:
@@ -182,6 +193,12 @@ jobs:
         script: |
           # Navigate to your domain directory
           cd ${{ secrets.DREAMHOST_PATH }}
+          
+          # Verify deployment package exists
+          if [ ! -f "deploy.tar.gz" ]; then
+            echo "Error: deploy.tar.gz not found!"
+            exit 1
+          fi
           
           # Backup environment files before deployment
           if [ -f "ealifecycle/.env.production" ]; then
@@ -204,7 +221,14 @@ jobs:
           mkdir -p ealifecycle
           
           # Extract new deployment
+          echo "Extracting deployment package..."
           tar -xzf deploy.tar.gz -C ealifecycle
+          
+          # Verify extraction
+          if [ ! -d "ealifecycle/storage" ]; then
+            echo "Error: Extraction failed - storage directory not found!"
+            exit 1
+          fi
           
           # Restore environment files
           if [ -f "/tmp/env-production-backup" ]; then
@@ -217,15 +241,22 @@ jobs:
           
           # Set proper permissions
           cd ealifecycle
+          echo "Setting permissions..."
           chmod -R 775 storage bootstrap/cache
           chown -R ${{ secrets.DREAMHOST_USERNAME }}:www-data .
           
           # Install dependencies and build assets
+          echo "Installing dependencies..."
+          which composer || echo "Composer not found in PATH"
+          which npm || echo "NPM not found in PATH"
+          
+          # Use full paths for commands
           /usr/local/bin/composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist
           /usr/local/bin/npm ci
           /usr/local/bin/npm run build
           
           # Clear all caches
+          echo "Clearing caches..."
           php artisan optimize:clear
           php artisan cache:clear
           php artisan config:clear
@@ -233,6 +264,7 @@ jobs:
           php artisan view:clear
           
           # Optimize for production
+          echo "Optimizing for production..."
           php artisan optimize
           php artisan config:cache
           php artisan route:cache
@@ -240,217 +272,13 @@ jobs:
           
           # Restart PHP-FPM if needed
           if command -v systemctl &> /dev/null; then
-            sudo -S systemctl restart php8.4-fpm <<< "${{ secrets.SUDO_PASSWORD }}"
+            echo "Restarting PHP-FPM..."
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S systemctl restart php8.4-fpm
           fi
           
-    - name: Upload deployment package
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.DREAMHOST_HOST }}
-        username: ${{ secrets.DREAMHOST_USERNAME }}
-        key: ${{ secrets.DREAMHOST_SSH_KEY }}
-        port: 22
-        source: "deploy.tar.gz"
-        target: "${{ secrets.DREAMHOST_PATH }}"
-        strip_components: 0
-        
-    - name: Extract and configure application
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.DREAMHOST_HOST }}
-        username: ${{ secrets.DREAMHOST_USERNAME }}
-        key: ${{ secrets.DREAMHOST_SSH_KEY }}
-        port: 22
-        script: |
-          cd ${{ secrets.DREAMHOST_PATH }}/ealifecycle
-          
-          # Check and use PHP 8.4 if available on Dreamhost
-          if command -v php8.4 &> /dev/null; then
-            export PHP_BINARY=php8.4
-            echo "Using PHP 8.4"
-          elif command -v php8.3 &> /dev/null; then
-            export PHP_BINARY=php8.3
-            echo "Using PHP 8.3"
-          elif command -v php8.2 &> /dev/null; then
-            export PHP_BINARY=php8.2
-            echo "Using PHP 8.2"
-          else
-            export PHP_BINARY=php
-            echo "Using default PHP version"
-          fi
-          
-          # Check PHP version meets requirements
-          $PHP_BINARY -v
-          
-          # Extract deployment package
-          echo "=== Extracting deployment package ==="
-          tar -xzf deploy.tar.gz
-          rm deploy.tar.gz
-
-          # Remove any old built assets to prevent cache issues
-          rm -rf public/build public/dist
-
-          # Install Node dependencies and rebuild assets on the server
-          if command -v npm &> /dev/null; then
-            npm ci
-            npm run build
-          fi
-          
-          # Verify extraction worked correctly
-          echo "=== Verifying extracted files ==="
-          ls -la
-          echo "=== Checking for Laravel directories ==="
-          ls -la app/ config/ database/ 2>/dev/null || echo "ERROR: Laravel directories not found!"
-          
-          # Ensure we have a proper Laravel application structure
-          if [ ! -d "app" ] || [ ! -d "config" ] || [ ! -d "database" ] || [ ! -f "artisan" ]; then
-            echo "ERROR: Laravel application structure not found. Deployment failed!"
-            echo "Current directory contents:"
-            ls -la
-            exit 1
-          fi
-          
-          echo "✅ Laravel application structure verified successfully"
-          
-          # Restore environment files from backup
-          if [ -f "/tmp/env-production-backup" ]; then
-            echo "Restoring .env.production from backup"
-            cp /tmp/env-production-backup .env.production
-            rm /tmp/env-production-backup
-          fi
-          
-          if [ -f "/tmp/env-backup" ]; then
-            echo "Restoring .env from backup"
-            cp /tmp/env-backup .env
-            rm /tmp/env-backup
-          else
-            # Only create .env from .env.production if no existing .env was backed up
-            if [ -f ".env.production" ]; then
-              echo "Creating .env from .env.production"
-              cp .env.production .env
-            else
-              echo "WARNING: No .env.production file found for environment setup"
-            fi
-          fi
-          
-          # Update Sanctum and CORS configuration in .env
-          echo "Updating Sanctum and CORS configuration..."
-          if [ -f ".env" ]; then
-            # Remove existing Sanctum and CORS settings if they exist
-            sed -i '/^SANCTUM_STATEFUL_DOMAINS=/d' .env
-            sed -i '/^SESSION_DOMAIN=/d' .env
-            sed -i '/^CORS_ALLOWED_ORIGINS=/d' .env
-            
-            # Add new Sanctum and CORS settings
-            echo "" >> .env
-            echo "# Sanctum and CORS Configuration" >> .env
-            echo "SANCTUM_STATEFUL_DOMAINS=localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1,4xhacker.com,ealifecycle.4xhacker.com" >> .env
-            echo "SESSION_DOMAIN=.4xhacker.com" >> .env
-            echo "CORS_ALLOWED_ORIGINS=https://4xhacker.com,https://ealifecycle.4xhacker.com" >> .env
-          fi
-          
-          # Ensure .htaccess file exists in public directory for Laravel routing
-          if [ ! -f "public/.htaccess" ]; then
-            echo "Creating .htaccess file for Laravel routing"
-            echo "<IfModule mod_rewrite.c>" > public/.htaccess
-            echo "    <IfModule mod_negotiation.c>" >> public/.htaccess
-            echo "        Options -MultiViews -Indexes" >> public/.htaccess
-            echo "    </IfModule>" >> public/.htaccess
-            echo "" >> public/.htaccess
-            echo "    RewriteEngine On" >> public/.htaccess
-            echo "" >> public/.htaccess
-            echo "    # Handle Authorization Header" >> public/.htaccess
-            echo "    RewriteCond %{HTTP:Authorization} ." >> public/.htaccess
-            echo "    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]" >> public/.htaccess
-            echo "" >> public/.htaccess
-            echo "    # Redirect Trailing Slashes If Not A Folder..." >> public/.htaccess
-            echo "    RewriteCond %{REQUEST_FILENAME} !-d" >> public/.htaccess
-            echo "    RewriteCond %{REQUEST_URI} (.+)/$" >> public/.htaccess
-            echo "    RewriteRule ^ %1 [L,R=301]" >> public/.htaccess
-            echo "" >> public/.htaccess
-            echo "    # Send Requests To Front Controller..." >> public/.htaccess
-            echo "    RewriteCond %{REQUEST_FILENAME} !-d" >> public/.htaccess
-            echo "    RewriteCond %{REQUEST_FILENAME} !-f" >> public/.htaccess
-            echo "    RewriteRule ^ index.php [L]" >> public/.htaccess
-            echo "</IfModule>" >> public/.htaccess
-          fi
-          
-          # Set proper permissions
-          chmod -R 755 storage bootstrap/cache
-          chmod -R 777 storage/logs storage/framework/cache storage/framework/sessions storage/framework/views
-          
-          # Install/update Composer dependencies with specific PHP version
-          # Composer install is not needed on production because vendor is deployed from CI
-          
-          # Laravel deployment commands with specific PHP version
-          echo "Clearing all Laravel caches before deployment..."
-          $PHP_BINARY artisan optimize:clear || true # Clear all caches first
-
-          echo "Caching configuration, routes, and views for production..."
-          $PHP_BINARY artisan config:cache
-          $PHP_BINARY artisan route:cache
-          $PHP_BINARY artisan view:cache
-          
-          echo "Running database migrations..."
-          $PHP_BINARY artisan migrate --force
-          
-          # Verify all migrations ran successfully
-          echo "=== Verifying all migrations completed successfully ==="
-          PENDING_MIGRATIONS=$($PHP_BINARY artisan migrate:status | grep "Pending" | wc -l)
-          if [ $PENDING_MIGRATIONS -gt 0 ]; then
-            echo "❌ ERROR: $PENDING_MIGRATIONS migrations are still pending!"
-            echo "=== Pending migrations ==="
-            $PHP_BINARY artisan migrate:status | grep "Pending"
-            echo "=== Attempting to run pending migrations individually ==="
-            
-            # Try to run pending migrations one by one and report which ones fail
-            $PHP_BINARY artisan migrate:status | grep "Pending" | while read -r line; do
-              MIGRATION_NAME=$(echo "$line" | awk '{print $1}')
-              echo "Attempting to run: $MIGRATION_NAME"
-              if $PHP_BINARY artisan migrate --path=database/migrations/${MIGRATION_NAME}.php --force 2>/dev/null; then
-                echo "✅ Successfully ran: $MIGRATION_NAME"
-              else
-                echo "❌ Failed to run: $MIGRATION_NAME"
-                # Don't exit on individual migration failure, continue with deployment
-              fi
-            done
-          else
-            echo "✅ All migrations completed successfully!"
-          fi
-          
-          # Final migration status check
-          echo "=== Final migration status ==="
-          $PHP_BINARY artisan migrate:status
-          
-          echo "Seeding database with default data..."
-          $PHP_BINARY artisan db:seed --force
-          
-          echo "Final cache optimization and cleanup..."
-          # Clear any problematic caches that might cause 405 errors
-          $PHP_BINARY artisan config:clear
-          $PHP_BINARY artisan route:clear
-          # Keep view and config caches cleared to prevent 405 issues
-
-          # Check for SQL/database errors in the Laravel log after seeding
-          if grep -i 'SQL error' storage/logs/laravel.log; then
-            echo '❌ Database seeding or migration error detected in laravel.log! Failing deployment.'
-            exit 1
-          fi
-
-          echo "Setting final permissions..."
-          chmod -R 755 public/
-          chmod 644 public/index.php
-          
-          # Create symlink to web directory if it doesn't exist
-          if [ ! -L "${{ secrets.DREAMHOST_PATH }}/4xhacker.com/ealifecycle" ]; then
-            ln -s ${{ secrets.DREAMHOST_PATH }}/ealifecycle/public ${{ secrets.DREAMHOST_PATH }}/4xhacker.com/ealifecycle
-          fi
-          
-          # After deployment, check for Vite manifest
-          if [ ! -f public/build/manifest.json ]; then
-            echo '❌ Vite manifest not found! public/build/manifest.json is missing. Deployment failed.'
-            exit 1
-          fi
+          # Cleanup
+          echo "Cleaning up..."
+          rm -f deploy.tar.gz
           
           echo "Deployment completed successfully!"
           
