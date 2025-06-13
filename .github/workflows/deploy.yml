@@ -57,6 +57,21 @@ jobs:
         php artisan key:generate
         php artisan migrate --force
 
+    - name: Delete SQLite test database
+      run: |
+        if [ -f database/database.sqlite ]; then
+          rm database/database.sqlite
+        fi
+
+    - name: Create SQLite test database
+      run: touch database/database.sqlite
+
+    - name: Clear Laravel caches and regenerate autoload
+      run: |
+        php artisan config:clear
+        php artisan cache:clear
+        composer dump-autoload
+
     - name: Run tests
       run: vendor/bin/phpunit
 
