@@ -239,13 +239,8 @@ jobs:
             cp /tmp/env-backup ealifecycle/.env
           fi
           
-          # Set proper permissions
-          cd ealifecycle
-          echo "Setting permissions..."
-          chmod -R 775 storage bootstrap/cache
-          chown -R ${{ secrets.DREAMHOST_USERNAME }}:www-data .
-          
           # Install dependencies and build assets
+          cd ealifecycle
           echo "Installing dependencies..."
           which composer || echo "Composer not found in PATH"
           which npm || echo "NPM not found in PATH"
