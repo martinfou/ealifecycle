@@ -218,12 +218,12 @@ jobs:
           # Set proper permissions
           cd ealifecycle
           chmod -R 775 storage bootstrap/cache
-          chown -R ${{ secrets.DREAMHOST_USERNAME }}:${{ secrets.DREAMHOST_USERNAME }} .
+          chown -R ${{ secrets.DREAMHOST_USERNAME }}:www-data .
           
           # Install dependencies and build assets
-          composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist
-          npm ci
-          npm run build
+          /usr/local/bin/composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist
+          /usr/local/bin/npm ci
+          /usr/local/bin/npm run build
           
           # Clear all caches
           php artisan optimize:clear
@@ -240,7 +240,7 @@ jobs:
           
           # Restart PHP-FPM if needed
           if command -v systemctl &> /dev/null; then
-            sudo systemctl restart php8.4-fpm
+            sudo -S systemctl restart php8.4-fpm <<< "${{ secrets.SUDO_PASSWORD }}"
           fi
           
     - name: Upload deployment package
@@ -251,7 +251,8 @@ jobs:
         key: ${{ secrets.DREAMHOST_SSH_KEY }}
         port: 22
         source: "deploy.tar.gz"
-        target: "${{ secrets.DREAMHOST_PATH }}/ealifecycle/"
+        target: "${{ secrets.DREAMHOST_PATH }}"
+        strip_components: 0
         
     - name: Extract and configure application
       uses: appleboy/ssh-action@v1.0.3
