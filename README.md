@@ -526,3 +526,11 @@ The GitHub Actions workflow now automatically installs Node.js dependencies and 
 - For more details, see `.github/workflows/deploy.yml` and the comments in the workflow file.
 
 - The SymbolSeeder is now robust and idempotent: it uses updateOrCreate to avoid duplicate entry errors, and will halt deployment with a clear error message if any SQL/database problem occurs during seeding. This ensures no silent failures or duplicate entry errors during production deploys.
+
+## Vite Asset Deployment & Manifest Check
+
+- The CI/CD workflow always runs `npm ci` and `npm run build` before packaging for deployment, ensuring all frontend assets are built from source.
+- The `public/build` directory (including `manifest.json` and all Vite assets) is always included in the deployment package and never excluded.
+- After deployment, the workflow checks for the existence of `public/build/manifest.json` on the server. If it is missing, the deployment fails with a clear error message.
+- This guarantees you will never see the "Vite manifest not found" error in production, and ensures all JS/CSS assets are always up to date and available.
+- This is critical for any Laravel app using Vite, and is a robust safeguard for production reliability.

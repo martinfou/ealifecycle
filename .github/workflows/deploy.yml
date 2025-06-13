@@ -159,7 +159,7 @@ jobs:
           --exclude='.DS_Store' \
           --exclude='Thumbs.db' \
           --exclude='deploy-staging'
-          # DO NOT exclude vendor directory so production always has dependencies
+          # DO NOT exclude public/build so Vite manifest is deployed
         
         # List contents to verify everything is there
         echo "=== Contents of deploy-staging ==="
@@ -403,6 +403,12 @@ jobs:
           # Create symlink to web directory if it doesn't exist
           if [ ! -L "${{ secrets.DREAMHOST_PATH }}/4xhacker.com/ealifecycle" ]; then
             ln -s ${{ secrets.DREAMHOST_PATH }}/ealifecycle/public ${{ secrets.DREAMHOST_PATH }}/4xhacker.com/ealifecycle
+          fi
+          
+          # After deployment, check for Vite manifest
+          if [ ! -f public/build/manifest.json ]; then
+            echo '❌ Vite manifest not found! public/build/manifest.json is missing. Deployment failed.'
+            exit 1
           fi
           
           echo "Deployment completed successfully!"
