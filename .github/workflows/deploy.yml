@@ -218,17 +218,12 @@ jobs:
           mkdir -p ealifecycle
           tar -xzf deploy.tar.gz -C ealifecycle
           
-          # Restore environment files
-          if [ -f "/tmp/env-production-backup" ]; then
-            echo "Restoring .env.production"
-            cp /tmp/env-production-backup ealifecycle/.env.production
-            rm /tmp/env-production-backup
-          fi
-          
-          if [ -f "/tmp/env-backup" ]; then
-            echo "Restoring .env"
-            cp /tmp/env-backup ealifecycle/.env
-            rm /tmp/env-backup
+          # Restore environment files from backup
+          echo "Restoring environment files from backup..."
+          if [ -f "${BACKUP_NAME}.tar.gz" ]; then
+            tar -xzf "${BACKUP_NAME}.tar.gz" ealifecycle/.env.production ealifecycle/.env
+            mv ealifecycle/.env.production ealifecycle/.env
+            rm "${BACKUP_NAME}.tar.gz"
           fi
           
           # Set proper permissions
