@@ -159,7 +159,7 @@
                                        data-source-url="{{ route('strategies.downloadSourceCode', $strategy) }}"
                                        data-filename="{{ $strategy->source_code_original_filename ?? basename($strategy->source_code_path) }}">
                                         View
-                                    </a>
+                                        </a>
                                     <button type="button" class="text-red-400 hover:text-red-600 font-medium ml-2 delete-source-btn" data-url="{{ route('strategies.update', $strategy) }}" data-token="{{ csrf_token() }}">Delete</button>
                                 </div>
                                 <p class="text-xs text-gray-500">Uploading a new file will replace the current one.</p>
@@ -362,9 +362,9 @@
             if (isResizing) {
                 isResizing = false;
                 document.body.style.userSelect = '';
-            }
-        });
-
+                }
+            });
+            
         // Source Code Modal logic
         const sourceLinks = document.querySelectorAll('.view-source-link');
         const sourceModal = document.getElementById('sourceModal');
@@ -440,10 +440,10 @@
             if (isResizingSource) {
                 isResizingSource = false;
                 document.body.style.userSelect = '';
-            }
+                    }
         });
-    });
-
+            });
+            
     // Scroll to section after redirect if ?scroll=source-file or ?scroll=report-file is present
     window.addEventListener('DOMContentLoaded', function() {
         const params = new URLSearchParams(window.location.search);
@@ -511,6 +511,6 @@
             })
             .catch(() => alert('Failed to delete backtest report.'));
         });
-    });
+        });
     </script>
 </x-app-layout> 

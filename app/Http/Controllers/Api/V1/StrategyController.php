@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Timeframe;
 
 /**
  * @OA\Tag(
@@ -52,15 +53,15 @@ class StrategyController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"name","timeframe_ids","primary_timeframe_id","status_id"},
+     *             required={"name","timeframe_names","primary_timeframe_name","status_id"},
      *             @OA\Property(property="name", type="string"),
      *             @OA\Property(property="description", type="string"),
      *             @OA\Property(property="symbols_traded", type="string"),
      *             @OA\Property(property="magic_number", type="integer"),
-     *             @OA\Property(property="timeframe_ids", type="array", @OA\Items(type="integer")),
-     *             @OA\Property(property="primary_timeframe_id", type="integer"),
+     *             @OA\Property(property="timeframe_names", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="primary_timeframe_name", type="string"),
      *             @OA\Property(property="group_id", type="integer"),
-     *             @OA\Property(property="status_id", type="integer")
+     *             @OA\Property(property="status_name", type="string")
      *         )
      *     ),
      *     @OA\Response(response=201, description="Strategy created"),
@@ -76,11 +77,11 @@ class StrategyController extends Controller
             'description' => 'nullable|string',
             'symbols_traded' => 'nullable|string',
             'magic_number' => 'nullable|integer|unique:strategies,magic_number',
-            'timeframe_ids' => 'required|array|min:1',
-            'timeframe_ids.*' => 'exists:timeframes,id',
-            'primary_timeframe_id' => 'required|exists:timeframes,id',
+            'timeframe_names' => 'required|array|min:1',
+            'timeframe_names.*' => 'exists:timeframes,name',
+            'primary_timeframe_name' => 'required|exists:timeframes,name',
             'group_id' => 'nullable|exists:groups,id',
-            'status_id' => 'required|exists:statuses,id',
+            'status_name' => 'required|exists:statuses,name',
         ]);
 
         if ($validator->fails()) {
@@ -96,20 +97,29 @@ class StrategyController extends Controller
         $validated['user_id'] = $user->id;
         $validated['date_in_status'] = now();
 
+        // Get status ID from name
+        $status = Status::where('name', $validated['status_name'])->first();
+        $validated['status_id'] = $status->id;
+        unset($validated['status_name']);
+
         $strategy = DB::transaction(function () use ($validated) {
             $strategyData = $validated;
-            unset($strategyData['timeframe_ids'], $strategyData['primary_timeframe_id']);
+            unset($strategyData['timeframe_names'], $strategyData['primary_timeframe_name']);
             
             $strategy = Strategy::create($strategyData);
 
+            // Get timeframe IDs from names
+            $timeframes = Timeframe::findByNames($validated['timeframe_names']);
+            $primaryTimeframe = Timeframe::findByName($validated['primary_timeframe_name']);
+
             $timeframeData = [];
-            foreach ($validated['timeframe_ids'] as $timeframeId) {
-                $timeframeData[$timeframeId] = ['is_primary' => ($timeframeId == $validated['primary_timeframe_id'])];
+            foreach ($timeframes as $timeframe) {
+                $timeframeData[$timeframe->id] = ['is_primary' => ($timeframe->id === $primaryTimeframe->id)];
             }
             $strategy->timeframes()->sync($timeframeData);
-            
+
             $strategy->statusHistory()->create([
-                'status_id' => $strategy->status_id,
+                'new_status_id' => $strategy->status_id,
                 'changed_by_user_id' => $strategy->user_id,
             ]);
 
@@ -153,15 +163,15 @@ class StrategyController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"name","timeframe_ids","primary_timeframe_id","status_id"},
+     *             required={"name","timeframe_names","primary_timeframe_name","status_id"},
      *             @OA\Property(property="name", type="string"),
      *             @OA\Property(property="description", type="string"),
      *             @OA\Property(property="symbols_traded", type="string"),
      *             @OA\Property(property="magic_number", type="integer"),
-     *             @OA\Property(property="timeframe_ids", type="array", @OA\Items(type="integer")),
-     *             @OA\Property(property="primary_timeframe_id", type="integer"),
+     *             @OA\Property(property="timeframe_names", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="primary_timeframe_name", type="string"),
      *             @OA\Property(property="group_id", type="integer"),
-     *             @OA\Property(property="status_id", type="integer")
+     *             @OA\Property(property="status_name", type="string")
      *         )
      *     ),
      *     @OA\Response(response=200, description="Strategy updated"),
@@ -182,11 +192,11 @@ class StrategyController extends Controller
             'description' => 'nullable|string',
             'symbols_traded' => 'nullable|string',
             'magic_number' => 'nullable|integer|unique:strategies,magic_number,' . $strategy->id,
-            'timeframe_ids' => 'required|array|min:1',
-            'timeframe_ids.*' => 'exists:timeframes,id',
-            'primary_timeframe_id' => 'required|exists:timeframes,id',
+            'timeframe_names' => 'required|array|min:1',
+            'timeframe_names.*' => 'exists:timeframes,name',
+            'primary_timeframe_name' => 'required|exists:timeframes,name',
             'group_id' => 'nullable|exists:groups,id',
-            'status_id' => 'required|exists:statuses,id',
+            'status_name' => 'required|exists:statuses,name',
         ]);
 
         if ($validator->fails()) {
@@ -199,26 +209,30 @@ class StrategyController extends Controller
             return response()->json(['message' => 'You do not have permission to assign a strategy to this group.'], 403);
         }
 
-        DB::transaction(function () use ($validated, $strategy, $user) {
+        $strategy = DB::transaction(function () use ($strategy, $validated) {
             $strategyData = $validated;
-            unset($strategyData['timeframe_ids'], $strategyData['primary_timeframe_id']);
-
-            if ($strategy->status_id != $validated['status_id']) {
-                $strategyData['date_in_status'] = now();
-                $strategy->statusHistory()->create([
-                    'previous_status_id' => $strategy->status_id,
-                    'new_status_id' => $validated['status_id'],
-                    'changed_by_user_id' => $user->id,
-                ]);
-            }
+            unset($strategyData['timeframe_names'], $strategyData['primary_timeframe_name']);
             
             $strategy->update($strategyData);
 
+            // Get timeframe IDs from names
+            $timeframes = Timeframe::findByNames($validated['timeframe_names']);
+            $primaryTimeframe = Timeframe::findByName($validated['primary_timeframe_name']);
+
             $timeframeData = [];
-            foreach ($validated['timeframe_ids'] as $timeframeId) {
-                $timeframeData[$timeframeId] = ['is_primary' => ($timeframeId == $validated['primary_timeframe_id'])];
+            foreach ($timeframes as $timeframe) {
+                $timeframeData[$timeframe->id] = ['is_primary' => ($timeframe->id === $primaryTimeframe->id)];
             }
             $strategy->timeframes()->sync($timeframeData);
+
+            if ($strategy->wasChanged('status_id')) {
+                $strategy->statusHistory()->create([
+                    'new_status_id' => $strategy->status_id,
+                    'changed_by_user_id' => Auth::id(),
+                ]);
+            }
+
+            return $strategy;
         });
 
         return new StrategyResource($strategy->load(['status', 'timeframes', 'user', 'group']));

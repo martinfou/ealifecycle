@@ -180,7 +180,7 @@ jobs:
         
         # Create tar archive from staging directory  
         tar -czf deploy.tar.gz -C deploy-staging .
-          
+        
     - name: Upload deployment package
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -191,7 +191,7 @@ jobs:
         source: "deploy.tar.gz"
         target: "${{ secrets.DREAMHOST_PATH }}"
         strip_components: 0
-
+          
     - name: Deploy to Dreamhost via SSH
       uses: appleboy/ssh-action@v1.0.3
       with:
@@ -274,4 +274,4 @@ jobs:
           cd ..
           rm -f deploy.tar.gz
           
-          echo "Deployment completed successfully!" 
+          echo "Deployment completed successfully!"

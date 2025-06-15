@@ -21,13 +21,13 @@ class SymbolSeeder extends Seeder
         fgetcsv($csvFile);
         
         try {
-            // Read and insert each line
-            while (($data = fgetcsv($csvFile)) !== false) {
+        // Read and insert each line
+        while (($data = fgetcsv($csvFile)) !== false) {
                 Symbol::updateOrCreate(
                     ['code' => $data[0]],
                     [
-                        'symbol' => $data[1],
-                        'updated_at' => now(),
+                'symbol' => $data[1],
+                'updated_at' => now(),
                     ]
                 );
             }
