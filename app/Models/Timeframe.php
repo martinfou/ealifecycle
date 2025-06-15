@@ -43,4 +43,20 @@ class Timeframe extends Model
     {
         return $query->orderBy('sort_order');
     }
+
+    /**
+     * Find a timeframe by its name.
+     */
+    public static function findByName($name)
+    {
+        return static::where('name', $name)->first();
+    }
+
+    /**
+     * Find multiple timeframes by their names.
+     */
+    public static function findByNames(array $names)
+    {
+        return static::whereIn('name', $names)->get();
+    }
 }
